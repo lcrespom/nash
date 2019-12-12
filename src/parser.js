@@ -23,38 +23,63 @@ function skipSeparators(pos, line) {
 	return pos
 }
 
-function parseArgument(pos, line) {
-	let text = ''
-	let type = null
-	let quote = ''
-	let openQuote = false
-	if (isQuote(line[pos])) {
-		quote = line[pos]
+function parseQuotedArgument(pos, line) {
+	let arg = {
+		quote: line[pos],
+		text: '',
+		type: ParamType.text,
+		openQuote: false
+	}
+	pos++
+	while (line[pos] != arg.quote && pos < line.length) {
+		arg.text += line[pos]
 		pos++
-		type = ParamType.text
-		while (line[pos] != quote && pos < line.length) {
-			text += line[pos]
-			pos++
-		}
-		// Skip quote char
-		if (line[pos] == quote) pos++
-		else openQuote = true
+	}
+	if (line[pos] == arg.quote) pos++
+	else arg.openQuote = true
+	return [pos, arg]
+}
+
+function parseUnquotedArgument(pos, line) {
+	let arg = {
+		quote: false,
+		text: '',
+		type: ParamType.text
+	}
+	while (pos < line.length && !isSeparator(line[pos])) {
+		arg.text += line[pos]
+		pos++
+	}
+	arg.type = arg.text[0] == '$'
+		? ParamType.env
+		: ParamType.text
+	return [pos, arg]
+}
+
+function parseJavaScript(pos, line) {
+	let arg = {
+		quote: '$(',
+		text: '',
+		type: ParamType.javascript,
+		openQuote: false
+	}
+	throw new Error('TBD')
+	return [pos, arg]
+}
+
+function parseArgument(pos, line) {
+	let arg = null
+	if (isQuote(line[pos])) {
+		[pos, arg] = parseQuotedArgument(pos, line)
 	}
 	else if (isJavaScript(pos, line)) {
-		type = ParamType.javascript
-		throw new Error('TBD')
+		[pos, arg] = parseJavaScript(pos, line)
 	}
 	else {
-		while (pos < line.length && !isSeparator(line[pos])) {
-			text += line[pos]
-			pos++
-		}
-		type = text[0] == '$'
-			? ParamType.env
-			: ParamType.text
+		[pos, arg] = parseUnquotedArgument(pos, line)
 	}
 	pos = skipSeparators(pos, line)
-	return [pos, { type, text, quote, openQuote }]
+	return [pos, arg]
 }
 
 function parseLine(line) {
