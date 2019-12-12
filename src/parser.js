@@ -1,8 +1,8 @@
-const ParseMode = {
-	command: 1,
-	param: 2,
-	squotes: 3,
-	dquotes: 4,
+const ParamType = {
+	unquoted: 1,
+	env: 2,
+	squoted: 3,
+	dquoted: 4,
 	javascript: 5
 }
 
@@ -28,22 +28,33 @@ function readWord(pos, line) {
 	return [pos, word]
 }
 
+function readParam(pos, line) {
+	let text = ''
+	while (!isSeparator(line[pos]) && pos < line.length) {
+		text += line[pos]
+		pos++
+	}
+	pos = skipSeparators(pos, line)
+	let prm = {
+		type: ParamType.unquoted,
+		text
+	}
+	return [pos, prm]
+}
+
 function parse(line) {
-	let mode = ParseMode.command
+	let parsingCommand = true
 	let pos = 0
 	let command = null
 	let param = null, params = []
 	while (pos < line.length) {
-		switch (mode) {
-			case ParseMode.command:
-				[pos, command] = readWord(pos, line)
-				mode = ParseMode.param
-				break
-			case ParseMode.param:
-				[pos, param] = readParam(pos, line)
-				break
-			default:
-				throw new Error(`Unexpected parse mode: ${mode}`)
+		if (parsingCommand) {
+			[pos, command] = readWord(pos, line)
+			parsingCommand = false
+		}
+		else {
+			[pos, param] = readParam(pos, line)
+			params.push(param)
 		}
 	}
 	return {
@@ -53,5 +64,6 @@ function parse(line) {
 }
 
 module.exports = {
-	parse
+	parse,
+	ParamType
 }
