@@ -42,6 +42,16 @@ test('Command and quotes', () => {
 	expect(args[2].quote).toBe("'")
 })
 
+test('Quotes in quotes', () => {
+	let cmd = `echo "He said \\"hello\\" to me"`
+	let args = parser.parseLine(cmd)
+	expect(args.length).toBe(2)
+	expect(args[1].text).toBe('He said \\"hello\\" to me')
+	args = parser.parseLine(`echo 'Single "with" double'`)
+	expect(args.length).toBe(2)
+	expect(args[1].text).toBe('Single "with" double')
+})
+
 test('Weird quoted and unquoted together', () => {
 	let args = parser.parseLine('echo "Hello"world')
 	expect(args.length).toBe(3)

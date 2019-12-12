@@ -8,8 +8,13 @@ function isSeparator(ch) {
 	return ch == ' ' || ch == '\t' || ch == '\n'
 }
 
-function isQuote(ch) {
+function isQuoteStart(ch) {
 	return ch == '"' || ch == "'"
+}
+
+function isQuoteEnd(pos, line, quote) {
+	return line[pos] == quote &&
+		line[pos - 1] != '\\'
 }
 
 function isJavaScriptStart(pos, line) {
@@ -35,7 +40,7 @@ function parseQuotedArgument(pos, line) {
 		openQuote: false
 	}
 	pos++
-	while (pos < line.length && line[pos] != arg.quote) {
+	while (pos < line.length && !isQuoteEnd(pos, line, arg.quote)) {
 		arg.text += line[pos]
 		pos++
 	}
@@ -87,7 +92,7 @@ function parseJavaScript(pos, line) {
 
 function parseArgument(pos, line) {
 	let arg = null
-	if (isQuote(line[pos])) {
+	if (isQuoteStart(line[pos])) {
 		[pos, arg] = parseQuotedArgument(pos, line)
 	}
 	else if (isJavaScriptStart(pos, line)) {
