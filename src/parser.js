@@ -22,18 +22,7 @@ function skipSeparators(pos, line) {
 	return pos
 }
 
-function parseWord(pos, line) {
-	let word = ''
-	pos = skipSeparators(pos, line)
-	while (pos < line.length && !isSeparator(line[pos])) {
-		word += line[pos]
-		pos++
-	}
-	pos = skipSeparators(pos, line)
-	return [pos, word]
-}
-
-function parseParam(pos, line) {
+function parseArgument(pos, line) {
 	let text = ''
 	let type = ParamType.ERROR
 	if (isQuote(line[pos])) {
@@ -60,28 +49,17 @@ function parseParam(pos, line) {
 	return [pos, { type, text }]
 }
 
-function parse(line) {
-	let parsingCommand = true
-	let pos = 0
-	let command = null
-	let param = null, params = []
+function parseLine(line) {
+	let arg = null, args = []
+	let pos = skipSeparators(0, line)
 	while (pos < line.length) {
-		if (parsingCommand) {
-			[pos, command] = parseWord(pos, line)
-			parsingCommand = false
-		}
-		else {
-			[pos, param] = parseParam(pos, line)
-			params.push(param)
-		}
+		[pos, arg] = parseArgument(pos, line)
+		args.push(arg)
 	}
-	return {
-		command,
-		params
-	}
+	return args
 }
 
 module.exports = {
-	parse,
+	parseLine,
 	ParamType
 }
