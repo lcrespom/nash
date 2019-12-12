@@ -15,6 +15,10 @@ function isQuote(ch) {
 	return ch == '"' || ch == "'"
 }
 
+function isJavaScript(pos, line) {
+	return line.substr(pos, 2) == '$('
+}
+
 function skipSeparators(pos, line) {
 	while (pos < line.length && isSeparator(line[pos])) {
 		pos++
@@ -37,13 +41,19 @@ function parseArgument(pos, line) {
 		}
 		// Skip quote char
 		if (line[pos] == quote) pos++
+		//TODO else error = true
+	}
+	else if (isJavaScript(pos, line)) {
+		throw new Error('TBD')
 	}
 	else {
-		type = ParamType.unquoted
 		while (pos < line.length && !isSeparator(line[pos])) {
 			text += line[pos]
 			pos++
 		}
+		type = text[0] == '$'
+			? ParamType.env
+			: ParamType.unquoted
 	}
 	pos = skipSeparators(pos, line)
 	return [pos, { type, text }]

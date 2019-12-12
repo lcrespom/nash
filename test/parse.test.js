@@ -39,3 +39,8 @@ test('Command and quotes', () => {
 	expect(args[2].type).toBe(parser.ParamType.squoted)
 	expect(args[2].text).toBe('single quoted')
 })
+
+test('Env', () => {
+	let args = parser.parseLine('echo $PATH')
+	checkArg(args[1], parser.ParamType.env, '$PATH')
+})
