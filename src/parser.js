@@ -1,10 +1,7 @@
 const ParamType = {
-	ERROR: 0,
-	unquoted: 1,
+	text: 1,
 	env: 2,
-	squoted: 3,
-	dquoted: 4,
-	javascript: 5
+	javascript: 3
 }
 
 function isSeparator(ch) {
@@ -28,22 +25,23 @@ function skipSeparators(pos, line) {
 
 function parseArgument(pos, line) {
 	let text = ''
-	let type = ParamType.ERROR
+	let type = null
+	let quote = ''
+	let openQuote = false
 	if (isQuote(line[pos])) {
-		let quote = line[pos]
+		quote = line[pos]
 		pos++
-		type = quote == '"'
-			? ParamType.dquoted
-			: ParamType.squoted
+		type = ParamType.text
 		while (line[pos] != quote && pos < line.length) {
 			text += line[pos]
 			pos++
 		}
 		// Skip quote char
 		if (line[pos] == quote) pos++
-		//TODO else error = true
+		else openQuote = true
 	}
 	else if (isJavaScript(pos, line)) {
+		type = ParamType.javascript
 		throw new Error('TBD')
 	}
 	else {
@@ -53,10 +51,10 @@ function parseArgument(pos, line) {
 		}
 		type = text[0] == '$'
 			? ParamType.env
-			: ParamType.unquoted
+			: ParamType.text
 	}
 	pos = skipSeparators(pos, line)
-	return [pos, { type, text }]
+	return [pos, { type, text, quote, openQuote }]
 }
 
 function parseLine(line) {
