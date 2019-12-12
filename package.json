@@ -1,0 +1,16 @@
+{
+  "name": "nash",
+  "version": "1.0.0",
+  "description": "Node Shell",
+  "main": "nash.js",
+  "scripts": {
+    "test": "jest --watch"
+  },
+  "keywords": [],
+  "author": "Luis Crespo",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^24.0.23",
+    "jest": "^24.9.0"
+  }
+}
