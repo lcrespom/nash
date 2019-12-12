@@ -21,8 +21,8 @@ test('Single command with blanks', () => {
 
 test('Command and unquoted params', () => {
 	let args = parser.parseLine('ls -la *.txt')
-	expect(args[0].text).toBe('ls')
 	expect(args.length).toBe(3)
+	expect(args[0].text).toBe('ls')
 	expect(args[1].type).toBe(parser.ParamType.text)
 	expect(args[1].text).toBe('-la')
 	expect(args[2].type).toBe(parser.ParamType.text)
@@ -32,8 +32,8 @@ test('Command and unquoted params', () => {
 test('Command and quotes', () => {
 	let cmd = `echo  "Hello, world!" 'single quoted'`
 	let args = parser.parseLine(cmd)
-	expect(args[0].text).toBe('echo')
 	expect(args.length).toBe(3)
+	expect(args[0].text).toBe('echo')
 	expect(args[1].type).toBe(parser.ParamType.text)
 	expect(args[1].text).toBe('Hello, world!')
 	expect(args[1].quote).toBe('"')
@@ -42,7 +42,25 @@ test('Command and quotes', () => {
 	expect(args[2].quote).toBe("'")
 })
 
+test('Weird quoted and unquoted together', () => {
+	let args = parser.parseLine('echo "Hello"world')
+	expect(args.length).toBe(3)
+	expect(args[1].quote).toBe('"')
+	expect(args[1].text).toBe('Hello')
+	expect(args[2].quote).not.toBe('"')
+	expect(args[2].text).toBe('world')
+})
+
 test('Env', () => {
 	let args = parser.parseLine('echo $PATH')
 	checkArg(args[1], parser.ParamType.env, '$PATH')
+})
+
+test('JavaScript', () => {
+	let args = parser.parseLine('echo $( "Hello from JS" $) foo')
+	expect(args.length).toBe(3)
+	expect(args[1].type).toBe(parser.ParamType.javascript)
+	expect(args[1].text).toBe(' "Hello from JS" ')
+	expect(args[2].type).toBe(parser.ParamType.text)
+	expect(args[2].text).toBe('foo')
 })

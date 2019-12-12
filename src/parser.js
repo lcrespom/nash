@@ -12,8 +12,12 @@ function isQuote(ch) {
 	return ch == '"' || ch == "'"
 }
 
-function isJavaScript(pos, line) {
+function isJavaScriptStart(pos, line) {
 	return line.substr(pos, 2) == '$('
+}
+
+function isJavaScriptEnd(pos, line) {
+	return line.substr(pos, 2) == '$)'
 }
 
 function skipSeparators(pos, line) {
@@ -31,18 +35,22 @@ function parseQuotedArgument(pos, line) {
 		openQuote: false
 	}
 	pos++
-	while (line[pos] != arg.quote && pos < line.length) {
+	while (pos < line.length && line[pos] != arg.quote) {
 		arg.text += line[pos]
 		pos++
 	}
-	if (line[pos] == arg.quote) pos++
-	else arg.openQuote = true
+	if (line[pos] == arg.quote) {
+		pos++
+	}
+	else {
+		arg.openQuote = true
+	}
 	return [pos, arg]
 }
 
 function parseUnquotedArgument(pos, line) {
 	let arg = {
-		quote: false,
+		quote: '',
 		text: '',
 		type: ParamType.text
 	}
@@ -63,7 +71,17 @@ function parseJavaScript(pos, line) {
 		type: ParamType.javascript,
 		openQuote: false
 	}
-	throw new Error('TBD')
+	pos += 2
+	while (pos < line.length && !isJavaScriptEnd(pos, line)) {
+		arg.text += line[pos]
+		pos++
+	}
+	if (isJavaScriptEnd(pos, line)) {
+		pos += 2
+	}
+	else {
+		arg.openQuote = true
+	}
 	return [pos, arg]
 }
 
@@ -72,7 +90,7 @@ function parseArgument(pos, line) {
 	if (isQuote(line[pos])) {
 		[pos, arg] = parseQuotedArgument(pos, line)
 	}
-	else if (isJavaScript(pos, line)) {
+	else if (isJavaScriptStart(pos, line)) {
 		[pos, arg] = parseJavaScript(pos, line)
 	}
 	else {
