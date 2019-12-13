@@ -3,6 +3,10 @@ const keypress = require('keypress')
 
 const print = console.log.bind(console)
 
+let nash = {
+	line: ''
+}
+
 function put(str) {
 	process.stdout.write(str)
 }
@@ -24,17 +28,19 @@ function isPlainKey(ch, key) {
 	//	fork, fix and send pull request
 }
 
-function readKeys() {
+function handleKeypress(ch, key) {
+	if (isPlainKey(ch, key)) put(ch)
+	else print(`\nch: '${ch}' (${ch.charCodeAt(0)})`, '- key:', key)
+	if (key && key.ctrl && key.name == 'c') {
+		process.stdin.pause()
+	}
+}
+
+function listenKeyboard() {
 	process.stdin.setRawMode(true)
 	process.stdin.resume()
 	keypress(process.stdin)
-	process.stdin.on('keypress', function(ch, key) {
-		if (isPlainKey(ch, key)) put(ch)
-		else print(`\nch: '${ch}' (${ch.charCodeAt(0)})`, '- key:', key)
-		if (key && key.ctrl && key.name == 'c') {
-			process.stdin.pause()
-		}
-	})
+	process.stdin.on('keypress', handleKeypress
 }
 
 function checkInteractive() {
@@ -46,7 +52,7 @@ function checkInteractive() {
 function main() {
 	checkInteractive()
 	put(prompt())
-	readKeys()
+	listenKeyboard()
 }
 
 main()
