@@ -11,13 +11,29 @@ function prompt() {
 	return 'nash> '
 }
 
+function unescape(buf) {
+	let s = ''
+	if (buf[0] == 27) {
+		s = '\\'
+		for (let i = 1; i < buf.length; i++)
+			s +=  String.fromCharCode(buf[i])
+	}
+	else if (buf[0] < 27) {
+		s = '^' + String.fromCharCode(buf[0] + 64)
+	}
+	else {
+		s = String.fromCharCode(buf[0])
+	}
+	console.log(s)
+}
+
 function readline() {
 	const BUF_SIZE = 8
 	process.stdin.resume()
 	process.stdin.setRawMode(true)
 	process.stdin.on('data', function(buf) {
 		console.dir(buf)
-		console.log(buf.toString())
+		unescape(buf)
 		if (buf[0] == 3) process.exit()
 	})
 }
