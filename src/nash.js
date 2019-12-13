@@ -28,9 +28,20 @@ function isPlainKey(ch, key) {
 	//	fork, fix and send pull request
 }
 
+function debugKey(ch, key) {
+	let code = ch ? ` (${ch.charCodeAt(0)})` : ''
+	print(`\nch: '${ch}'${code}`, '- key:', key)
+}
+
 function handleKeypress(ch, key) {
-	if (isPlainKey(ch, key)) put(ch)
-	else print(`\nch: '${ch}' (${ch.charCodeAt(0)})`, '- key:', key)
+	if (isPlainKey(ch, key)) {
+		put(ch)
+		nash.line += ch		//TODO account for cursor position
+	}
+	else {
+		//applyBinding(ch, key)
+		debugKey(ch, key)
+	}
 	if (key && key.ctrl && key.name == 'c') {
 		process.stdin.pause()
 	}
