@@ -28,7 +28,6 @@ function unescape(buf) {
 }
 
 function readline() {
-	const BUF_SIZE = 8
 	process.stdin.resume()
 	process.stdin.setRawMode(true)
 	process.stdin.on('data', function(buf) {
