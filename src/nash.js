@@ -38,8 +38,9 @@ function readline() {
 }
 
 function checkInteractive() {
-	if (process.stdin.isTTY) return
+	if (process.stdout.isTTY) return
 	print('Non interactive mode is not supported')
+	process.exit(1)
 }
 
 function main() {
