@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const fs = require('fs')
+const keypress = require('keypress')
 
 const print = console.log.bind(console)
 
@@ -11,29 +11,29 @@ function prompt() {
 	return 'nash> '
 }
 
-function unescape(buf) {
-	let s = ''
-	if (buf[0] == 27) {
-		s = '\\'
-		for (let i = 1; i < buf.length; i++)
-			s +=  String.fromCharCode(buf[i])
-	}
-	else if (buf[0] < 27) {
-		s = '^' + String.fromCharCode(buf[0] + 64)
-	}
-	else {
-		s = String.fromCharCode(buf[0])
-	}
-	console.log(s)
+function isPlainKey(ch, key) {
+	const SPACE = 32
+	const BACKSPACE = 127
+	if (key === undefined) return true // Unicode characters
+	if (key.meta || key.ctrl) return false
+	if (!ch) return false
+	let code = ch.charCodeAt(0)
+	if (ch.length == 1 && code >= SPACE && code != BACKSPACE) return true
+	return false
+	//TODO: emojis are not supported by kepress
+	//	fork, fix and send pull request
 }
 
-function readline() {
-	process.stdin.resume()
+function readKeys() {
 	process.stdin.setRawMode(true)
-	process.stdin.on('data', function(buf) {
-		console.dir(buf)
-		unescape(buf)
-		if (buf[0] == 3) process.exit()
+	process.stdin.resume()
+	keypress(process.stdin)
+	process.stdin.on('keypress', function(ch, key) {
+		if (isPlainKey(ch, key)) put(ch)
+		else print(`\nch: '${ch}' (${ch.charCodeAt(0)})`, '- key:', key)
+		if (key && key.ctrl && key.name == 'c') {
+			process.stdin.pause()
+		}
 	})
 }
 
@@ -46,7 +46,7 @@ function checkInteractive() {
 function main() {
 	checkInteractive()
 	put(prompt())
-	let line = readline()
+	readKeys()
 }
 
 main()

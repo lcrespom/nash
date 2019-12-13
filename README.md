@@ -3,8 +3,13 @@ Nash is a command-line shell that uses JavaScript and Node.js for scripting.
 
 ## TODO
 - [x] Parse
-- [ ] Read from console
-- [ ] Basic cursor movement
+- [x] Read from console
+- [ ] Line editing
+	- [x] Simple chars
+	- [ ] Enter / Backspace
+	- [ ] Basic cursor movement
+	- [ ] Ctrl-C
+	- [ ] Ctrl-D
 - [ ] Execute commands
 - [ ] Substitution
 	- [ ] Env variables
