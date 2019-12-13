@@ -40,7 +40,7 @@ function listenKeyboard() {
 	process.stdin.setRawMode(true)
 	process.stdin.resume()
 	keypress(process.stdin)
-	process.stdin.on('keypress', handleKeypress
+	process.stdin.on('keypress', handleKeypress)
 }
 
 function checkInteractive() {
