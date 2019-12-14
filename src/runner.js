@@ -1,5 +1,5 @@
 const parser = require('./parser')
-const { execFile, execFileSync } = require('child_process')
+const { spawn, execFileSync } = require('child_process')
 
 function typeName(type) {
 	for (let k of Object.keys(parser.ParamType)) {
@@ -45,20 +45,31 @@ function which(command) {
 }
 
 function runExternalCommand(args) {
-	let fullPath = which(args[0].text)
-	console.log(`full path: '${fullPath}'`)
-	//process.stdout.write('TBD: runExternalCommand\n')
-	// echo "Hello:" $0
-	// sh -c 'ps -p $$ -o ppid=' | xargs ps -o comm= -p
-	// , (e, out, err) => {
-	// 	if (e) {
-	// 		console.error(`execFile error: ${e}`);
-	// 	}
-	// 	else {
-	// 		console.log(`stdout: ${out}`);
-	// 		console.error(`stderr: ${err}`);
-	// 	}
-	// })
+	let command = args[0].text
+	let fullPath = which(command)
+	if (!fullPath) {
+		process.stderr.write(`nash: Unknown command '${command}'\n`)
+		return
+	}
+	let cmdArgs = args.slice(1).map(arg => arg.text)
+	//TODO (!!!!!)
+	// - pipe: command | command
+	// - redirect: command > filename
+	// Maybe use shell option?
+	process.stdin.pause()
+	let child = spawn(fullPath, cmdArgs,
+		{ stdio: 'inherit' }
+		//{ stdio: ['pipe', 'inherit', 'inherit' ] }
+	)
+	child.on('close', (code) => {
+		if (code != 0)
+			process.stderr.write(`Error: exit code ${code}`);
+		process.stdin.resume()
+	})
+	child.on('error', (err) => {
+		process.stderr.write(`nash: could not execute '${command}': ${err}\n`)
+		process.stdin.resume()
+	})
 }
 
 function runTheCommand(args) {
