@@ -5,6 +5,7 @@ const print = console.log.bind(console)
 
 let status = {
 	cursorX: 0,
+	cols: 80,
 	line: {
 		left: '',
 		right: ''
@@ -19,12 +20,12 @@ function prompt() {
 	let promptStr = 'nash > '
 	put(promptStr)
 	status.cursorX = promptStr.length
+	status.cols = process.stdout.columns
 	// Check https://stackoverflow.com/questions/8343250/how-can-i-get-position-of-cursor-in-terminal
 }
 
 function applyBinding(key) {
 	let b = bindings.getBinding(key)
-	//debugKey('', key)
 	if (!b) return {
 		left: status.line.left + '*',
 		right: status.line.right
@@ -52,7 +53,11 @@ function debugKey(ch, key) {
 
 function updateLine(newLine) {
 	process.stdout.cursorTo(status.cursorX)
-	put(newLine.left + newLine.right)
+	let fullLine = newLine.left + newLine.right
+	put(fullLine)
+	if (status.cursorX + fullLine.length > status.cols) {
+		//TODO multi-line editing
+	}
 	process.stdout.clearLine(1)
 	process.stdout.cursorTo(status.cursorX + newLine.left.length)
 	status.line = newLine
