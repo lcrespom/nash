@@ -19,7 +19,7 @@ function checkInteractive() {
 
 function main() {
 	checkInteractive()
-	editor.put(editor.prompt())
+	editor.prompt()
 	listenKeyboard()
 }
 

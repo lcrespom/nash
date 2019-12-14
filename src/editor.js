@@ -1,8 +1,14 @@
+const bindings = require('./key-bindings')
+
+
 const print = console.log.bind(console)
 
-let line = {
-	left: '',
-	right: ''
+let status = {
+	cursorX: 0,
+	line: {
+		left: '',
+		right: ''
+	}
 }
 
 function put(str) {
@@ -10,7 +16,19 @@ function put(str) {
 }
 
 function prompt() {
-	return 'nash> '
+	let promptStr = 'nash > '
+	put(promptStr)
+	status.cursorX = promptStr.length
+	// Check https://stackoverflow.com/questions/8343250/how-can-i-get-position-of-cursor-in-terminal
+}
+
+function applyBinding(key) {
+	let b = bindings.bindings[key.name]
+	if (!b) return {
+		left: status.line.left + '*',
+		right: status.line.right
+	}
+	return b(status.line)
 }
 
 function isPlainKey(ch, key) {
@@ -31,15 +49,27 @@ function debugKey(ch, key) {
 	print(`\nch: '${ch}'${code}`, '- key:', key)
 }
 
+function updateLine(newLine) {
+	process.stdout.cursorTo(status.cursorX)
+	put(newLine.left + newLine.right)
+	process.stdout.clearLine(1)
+	process.stdout.cursorTo(status.cursorX + newLine.left.length)
+	status.line = newLine
+}
+
 function handleKeypress(ch, key) {
+	let newLine
 	if (isPlainKey(ch, key)) {
-		put(ch)
-		line.left += ch		//TODO account for cursor position
+		newLine = {
+			left: status.line.left + ch,
+			right: status.line.right
+		}
 	}
 	else {
-		//applyBinding(ch, key)
-		debugKey(ch, key)
+		newLine = applyBinding(key)
+		//debugKey(ch, key)
 	}
+	updateLine(newLine)
 	if (key && key.ctrl && key.name == 'c') {
 		process.stdin.pause()
 	}
@@ -50,5 +80,4 @@ module.exports = {
 	handleKeypress,
 	prompt,
 	print,
-	put
 }
