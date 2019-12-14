@@ -1,3 +1,6 @@
+const runner = require('./runner')
+
+
 function removeLastChar(str) {
 	return [
 		str.charAt(str.length - 1),
@@ -51,12 +54,18 @@ function endOfLine(line) {
 	}
 }
 
+function acceptLine(line) {
+	runner.runCommand(line.left + line.right)
+	return { left: '', right: '' }
+}
+
 let bindings = {
 	backspace: backwardDeleteChar,
 	left: backwardChar,
 	right: forwardChar,
 	home: beginningOfLine,
-	end: endOfLine
+	end: endOfLine,
+	return: acceptLine
 }
 
 function getBinding(key) {

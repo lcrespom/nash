@@ -1,8 +1,6 @@
 const bindings = require('./key-bindings')
 
 
-const print = console.log.bind(console)
-
 let status = {
 	cursorX: 0,
 	cols: 80,
@@ -11,6 +9,8 @@ let status = {
 		right: ''
 	}
 }
+
+const print = console.log.bind(console)
 
 function put(str) {
 	process.stdout.write(str)

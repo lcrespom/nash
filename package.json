@@ -4,7 +4,8 @@
   "description": "Node Shell",
   "main": "nash.js",
   "scripts": {
-    "test": "jest --watch"
+    "test": "jest --watch",
+    "start": "node src/nash.js"
   },
   "keywords": [],
   "author": "Luis Crespo",
