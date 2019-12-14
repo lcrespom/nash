@@ -51,7 +51,7 @@ function endOfLine(line) {
 	}
 }
 
-let defaultBindings = {
+let bindings = {
 	backspace: backwardDeleteChar,
 	left: backwardChar,
 	right: forwardChar,
@@ -59,10 +59,11 @@ let defaultBindings = {
 	end: endOfLine
 }
 
-let bindings = { ...defaultBindings }
+function getBinding(name) {
+	return bindings[name]
+}
 
 
 module.exports = {
-	defaultBindings,
-	bindings
+	getBinding
 }
