@@ -23,7 +23,8 @@ function prompt() {
 }
 
 function applyBinding(key) {
-	let b = bindings.getBinding(key.name)
+	let b = bindings.getBinding(key)
+	//debugKey('', key)
 	if (!b) return {
 		left: status.line.left + '*',
 		right: status.line.right

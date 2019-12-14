@@ -59,7 +59,9 @@ let bindings = {
 	end: endOfLine
 }
 
-function getBinding(name) {
+function getBinding(key) {
+	let name = key.name
+	if (key.meta) name = 'meta_' + key
 	return bindings[name]
 }
 
