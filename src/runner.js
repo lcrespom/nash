@@ -1,4 +1,5 @@
 const parser = require('./parser')
+const editor = require('./editor')
 const { spawn, execFileSync } = require('child_process')
 
 function typeName(type) {
@@ -91,7 +92,7 @@ function runCommand(line) {
 	}
 	//debugArgs(args)
 	//TODO: get prompt from configuration
-	process.stdout.write('nash > ')
+	editor.putPrompt()
 }
 
 

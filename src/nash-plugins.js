@@ -1,11 +1,7 @@
-const { bindKey } = require('./editor')
-
-function prompt() {
-	return 'nash> '
-}
+const { bindKey, setPrompt } = require('./editor')
 
 module.exports = {
-	prompt,
+	setPrompt,
 	bindKey
 	// Others: syntax highlight, suggestions, tab-completion...
 }

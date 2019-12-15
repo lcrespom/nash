@@ -23,8 +23,9 @@ function checkInteractive() {
 
 function main() {
 	loadPlugin('./plugins/key-bindings')
+	loadPlugin('./plugins/prompt')
 	checkInteractive()
-	editor.prompt()
+	editor.putPrompt()
 	listenKeyboard()
 }
 

@@ -1,3 +1,6 @@
+let keyBindings = {}
+let prompt = () => 'nash> '
+
 let status = {
 	cursorX: 0,
 	cols: 80,
@@ -7,7 +10,6 @@ let status = {
 	}
 }
 
-let keyBindings = {}
 
 function getKeyBinding(key) {
 	let name = key.name
@@ -20,14 +22,18 @@ function bindKey(key, code, desc) {
 	keyBindings[key] = [code, desc]
 }
 
+function setPrompt(code) {
+	prompt = code
+}
+
 const print = console.log.bind(console)
 
 function put(str) {
 	process.stdout.write(str)
 }
 
-function prompt() {
-	let promptStr = 'nash > '
+function putPrompt() {
+	let promptStr = prompt()
 	put(promptStr)
 	status.cursorX = promptStr.length
 	status.cols = process.stdout.columns
@@ -94,8 +100,9 @@ function handleKeypress(ch, key) {
 
 module.exports = {
 	handleKeypress,
-	prompt,
 	print,
 	getKeyBinding,
-	bindKey
+	bindKey,
+	setPrompt,
+	putPrompt
 }
