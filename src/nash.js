@@ -4,6 +4,10 @@ const keypress = require('keypress')
 const editor = require('./editor')
 
 
+function loadPlugin(pname) {
+	require(pname)
+}
+
 function listenKeyboard() {
 	process.stdin.setRawMode(true)
 	process.stdin.resume()
@@ -18,6 +22,7 @@ function checkInteractive() {
 }
 
 function main() {
+	loadPlugin('./plugins/key-bindings')
 	checkInteractive()
 	editor.prompt()
 	listenKeyboard()

@@ -1,4 +1,5 @@
-const runner = require('./runner')
+const { bindKey } = require('../nash-plugins')
+const runner = require('../runner')
 
 
 function removeLastChar(str) {
@@ -59,22 +60,10 @@ function acceptLine(line) {
 	return { left: '', right: '' }
 }
 
-let bindings = {
-	backspace: backwardDeleteChar,
-	left: backwardChar,
-	right: forwardChar,
-	home: beginningOfLine,
-	end: endOfLine,
-	return: acceptLine
-}
 
-function getBinding(key) {
-	let name = key.name
-	if (key.meta) name = 'meta_' + key
-	return bindings[name]
-}
-
-
-module.exports = {
-	getBinding
-}
+bindKey('backspace', backwardDeleteChar, 'Delete character left of cursor')
+bindKey('left', backwardChar, 'Move cursor left')
+bindKey('right', forwardChar, 'Move cursor right')
+bindKey('home', beginningOfLine, 'Move cursor to beginning of line')
+bindKey('end', endOfLine, 'Move cursor to end of line')
+bindKey('return', acceptLine, 'Run command in line')

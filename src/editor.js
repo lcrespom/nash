@@ -1,6 +1,3 @@
-const bindings = require('./key-bindings')
-
-
 let status = {
 	cursorX: 0,
 	cols: 80,
@@ -8,6 +5,19 @@ let status = {
 		left: '',
 		right: ''
 	}
+}
+
+let keyBindings = {}
+
+function getKeyBinding(key) {
+	let name = key.name
+	if (key.meta) name = 'meta_' + key
+	let binding = keyBindings[name]
+	return binding ? binding[0] : undefined
+}
+
+function bindKey(key, code, desc) {
+	keyBindings[key] = [code, desc]
 }
 
 const print = console.log.bind(console)
@@ -25,7 +35,7 @@ function prompt() {
 }
 
 function applyBinding(key) {
-	let b = bindings.getBinding(key)
+	let b = getKeyBinding(key)
 	if (!b) return {
 		left: status.line.left + '*',
 		right: status.line.right
@@ -86,4 +96,6 @@ module.exports = {
 	handleKeypress,
 	prompt,
 	print,
+	getKeyBinding,
+	bindKey
 }

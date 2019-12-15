@@ -64,10 +64,12 @@ function runExternalCommand(args) {
 		if (code != 0)
 			process.stderr.write(`Error: exit code ${code}`);
 		process.stdin.resume()
+		//TODO invoke callback to notify end of execution (and display prompt)
 	})
 	child.on('error', (err) => {
 		process.stderr.write(`nash: could not execute '${command}': ${err}\n`)
 		process.stdin.resume()
+		//TODO invoke callback to notify end of execution (and display prompt)
 	})
 }
 
