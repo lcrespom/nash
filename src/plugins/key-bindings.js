@@ -57,7 +57,7 @@ function endOfLine(line) {
 
 function acceptLine(line) {
 	runner.runCommand(line.left + line.right)
-	return { left: '', right: '' }
+	return { left: '', right: '', isAsync: true }
 }
 
 

@@ -54,9 +54,6 @@ function runBuiltin(args) {
 
 //-------------------- Running --------------------
 
-let running = false
-let runCompleteListener = undefined
-
 function runExternalCommand(args, cb) {
 	let command = args[0].text
 	// let fullPath = which(command)
@@ -96,30 +93,23 @@ function runTheCommand(args, cb) {
 	}
 }
 
-function runCommand(line) {
+function runCommand(line, cb) {
 	process.stdout.write('\n')
 	let args = parser.parseLine(line)
 	if (args.length > 0) {
 		args = expandArgs(args)
-		running = true
 		runTheCommand(args, () => {
 			editor.putPrompt()
-			running = false
-			if (runCompleteListener) {
-				runCompleteListener()
-				runCompleteListener = undefined
-			}
+			if (cb) cb()
 		})
 	}
-}
-
-function waitForRunner(cb) {
-	if (!running) cb()
-	else runCompleteListener = cb
+	else {
+		editor.putPrompt()
+		if (cb) cb()
+	}
 }
 
 
 module.exports = {
-	runCommand,
-	waitForRunner
+	runCommand
 }

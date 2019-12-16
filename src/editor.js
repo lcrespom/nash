@@ -37,6 +37,7 @@ function putPrompt() {
 	put(promptStr)
 	status.cursorX = promptStr.length
 	status.cols = process.stdout.columns
+	updateLine({ left: '', right: '' })
 	// Check https://stackoverflow.com/questions/8343250/how-can-i-get-position-of-cursor-in-terminal
 }
 
@@ -90,13 +91,16 @@ function handleKeypress(ch, key) {
 			left: status.line.left + ch,
 			right: status.line.right
 		}
+		updateLine(newLine)
 	}
 	else {
-		newLine = applyBinding(key)
 		//debugKey(ch, key)
+		newLine = applyBinding(key)
+		//TODO: deal with asynchronous bindings
+		if (!newLine.isAsync) {
+			updateLine(newLine)
+		}
 	}
-	//runner.waitForRunner(() => updateLine(newLine))
-	updateLine(newLine)
 }
 
 
