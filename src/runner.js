@@ -1,6 +1,10 @@
+const { spawn, execFileSync } = require('child_process')
+
 const parser = require('./parser')
 const editor = require('./editor')
-const { spawn, execFileSync } = require('child_process')
+
+
+//-------------------- Debugging --------------------
 
 function typeName(type) {
 	for (let k of Object.keys(parser.ParamType)) {
@@ -18,6 +22,9 @@ function debugArgs(args) {
 		console.log(`${tname}: ${qtext}`)
 	}
 }
+
+
+//-------------------- Argument pre-processiong --------------------
 
 function expandArgs(args) {
 	//TODO
@@ -45,7 +52,12 @@ function runBuiltin(args) {
 // 	}
 // }
 
-function runExternalCommand(args) {
+//-------------------- Running --------------------
+
+let running = false
+let runCompleteListener = undefined
+
+function runExternalCommand(args, cb) {
 	let command = args[0].text
 	// let fullPath = which(command)
 	// if (!fullPath) {
@@ -65,37 +77,49 @@ function runExternalCommand(args) {
 		if (code != 0)
 			process.stderr.write(`Error: exit code ${code}`);
 		process.stdin.resume()
-		//TODO invoke callback to notify end of execution (and display prompt)
+		cb()
 	})
 	child.on('error', (err) => {
 		process.stderr.write(`nash: could not execute '${command}': ${err}\n`)
 		process.stdin.resume()
-		//TODO invoke callback to notify end of execution (and display prompt)
+		cb()
 	})
 }
 
-function runTheCommand(args) {
+function runTheCommand(args, cb) {
 	if (isBuiltin(args[0].text)) {
 		runBuiltin(args)
+		cb()
 	}
 	else {
-		runExternalCommand(args)
+		runExternalCommand(args, cb)
 	}
 }
 
 function runCommand(line) {
-	let args = parser.parseLine(line)
 	process.stdout.write('\n')
+	let args = parser.parseLine(line)
 	if (args.length > 0) {
 		args = expandArgs(args)
-		runTheCommand(args)
+		running = true
+		runTheCommand(args, () => {
+			editor.putPrompt()
+			running = false
+			if (runCompleteListener) {
+				runCompleteListener()
+				runCompleteListener = undefined
+			}
+		})
 	}
-	//debugArgs(args)
-	//TODO: get prompt from configuration
-	editor.putPrompt()
+}
+
+function waitForRunner(cb) {
+	if (!running) cb()
+	else runCompleteListener = cb
 }
 
 
 module.exports = {
-	runCommand
+	runCommand,
+	waitForRunner
 }

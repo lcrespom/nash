@@ -81,7 +81,11 @@ function updateLine(newLine) {
 
 function handleKeypress(ch, key) {
 	let newLine
-	if (isPlainKey(ch, key)) {
+	if (key && key.ctrl && key.name == 'c') {
+		process.stdin.pause()
+		return
+	}
+	else if (isPlainKey(ch, key)) {
 		newLine = {
 			left: status.line.left + ch,
 			right: status.line.right
@@ -91,10 +95,8 @@ function handleKeypress(ch, key) {
 		newLine = applyBinding(key)
 		//debugKey(ch, key)
 	}
+	//runner.waitForRunner(() => updateLine(newLine))
 	updateLine(newLine)
-	if (key && key.ctrl && key.name == 'c') {
-		process.stdin.pause()
-	}
 }
 
 
