@@ -35,40 +35,45 @@ function expandArgs(args) {
 }
 
 function isBuiltin(txt) {
-	// Required builtin: `source`
-	return false
+	return txt == 'cd'
+}
+
+//TODO move builtins to a separate module
+function builtin_cd(args) {
+	if (args.length > 2) {
+		console.error('nash: cd: too may arguments')
+		return
+	}
+	if (args.length < 2) {
+		// Do nothing
+		return
+	}
+	let dir = args[1].text
+	try {
+		process.chdir(dir)
+	}
+	catch (err) {
+		console.error(`nash: cd: could not cd to '${dir}': ${err}`)
+	}
 }
 
 function runBuiltin(args) {
-	throw new Error('runBuiltin not yet implemented')
+	let command = args[0].text
+	if (command != 'cd')
+		throw new Error(`Builtin '${command}' not yet implemented`)
+	builtin_cd(args)	
 }
 
-// function which(command) {
-// 	try {
-// 		return execFileSync('/usr/bin/which', [ command ]).toString().trim()
-// 	}
-// 	catch (e) {
-// 		return null
-// 	}
-// }
 
 //-------------------- Running --------------------
 
 function runExternalCommand(args, cb) {
 	let command = args[0].text
-	// let fullPath = which(command)
-	// if (!fullPath) {
-	// 	process.stderr.write(`nash: Unknown command '${command}'\n`)
-	// 	return
-	// }
 	let cmdArgs = args.slice(1).map(arg => arg.text)
 	process.stdin.pause()
 	let child = spawn(command, cmdArgs, {
 		stdio: 'inherit',	// Child process I/O is automatically sent to parent
-		shell: true			// Shell handles environment, pipe, redirection, etc.
-		//TODO: eventually, `shell: true` will not be used, and nash should support
-		//	pipes, redirection, environment variables, glob expansion, builtins, etc etc.
-
+		shell: true			// External shell is the real command interpreter
 	})
 	child.on('close', (code) => {
 		if (code != 0)
