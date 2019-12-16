@@ -28,9 +28,7 @@ function debugArgs(args) {
 
 function expandArgs(args) {
 	//TODO
-	//  - Expand $env into values
 	//	- Execute JS args and replace into returned text
-	//  - Expand glob expressions into fond files
 	return args
 }
 

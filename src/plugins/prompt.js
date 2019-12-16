@@ -1,16 +1,9 @@
-const os = require('os')
-
 const { setPrompt } = require('../nash-plugins')
 
 
-function prompt() {
-	let cwd = process.cwd()
-	let homedir = os.homedir()
-	if (cwd.startsWith(homedir))
-		cwd = '~' + cwd.substr(homedir.length)
-	let uname = os.userInfo().username
-	let hname = os.hostname().split('.')[0]
-	return `${uname}@${hname} ${cwd}> `
+function prompt({ cwd, username, hostname }) {
+	hostname = hostname.split('.')[0]
+	return `${username}@${hostname} ${cwd}> `
 }
 
 

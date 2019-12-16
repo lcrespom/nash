@@ -1,3 +1,6 @@
+const os = require('os')
+
+
 let keyBindings = {}
 let prompt = () => 'nash> '
 
@@ -32,8 +35,22 @@ function put(str) {
 	process.stdout.write(str)
 }
 
+function getPromptInfo() {
+	let cwd = process.cwd()
+	let homedir = os.homedir()
+	if (cwd.startsWith(homedir))
+		cwd = '~' + cwd.substr(homedir.length)
+	let username = os.userInfo().username
+	let hostname = os.hostname()
+	return {
+		cwd,
+		username,
+		hostname
+	}
+}
+
 function putPrompt() {
-	let promptStr = prompt()
+	let promptStr = prompt(getPromptInfo())
 	put(promptStr)
 	status.cursorX = promptStr.length
 	status.cols = process.stdout.columns
