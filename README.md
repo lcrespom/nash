@@ -12,10 +12,11 @@ Nash is a command-line shell that uses JavaScript and Node.js for scripting.
 	- [ ] Ctrl-D
 	- [ ] Lines longer than the terminal width
 	- [ ] Multi-line (open quotes, `\`)
+	- [x] History navigation
 - [ ] Execute commands
 	- [x] Delegate to external shell
 	- [ ] Builtins
-		- [ ] cd, alias, ...
+		- [ ] cd, alias, history...
 		- [ ] Environment variable assignment (with limitations)
 		- [ ] Customization: plugin loading, key bindings, etc.
 - [ ] Substitution
