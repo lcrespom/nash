@@ -2,6 +2,7 @@ const { spawn, execFileSync } = require('child_process')
 
 const parser = require('./parser')
 const editor = require('./editor')
+const history = require('./history')
 
 
 //-------------------- Debugging --------------------
@@ -100,6 +101,7 @@ function runCommand(line, cb) {
 	process.stdout.write('\n')
 	let args = parser.parseLine(line)
 	if (args.length > 0) {
+		history.push(line)
 		args = expandArgs(args)
 		runTheCommand(args, () => {
 			editor.putPrompt()

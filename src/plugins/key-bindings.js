@@ -1,5 +1,6 @@
 const { bindKey } = require('../nash-plugins')
 const runner = require('../runner')
+const history = require('../history')
 
 
 function removeLastChar(str) {
@@ -60,6 +61,18 @@ function acceptLine(line) {
 	return { left: '', right: '', isAsync: true }
 }
 
+function upLineOrHistory(line) {
+	let left = history.back()
+	if (left) return { left, right: '' }
+	else return line
+}
+
+function downLineOrHistory(line) {
+	let left = history.forward()
+	if (left) return { left, right: '' }
+	else return line
+}
+
 
 bindKey('backspace', backwardDeleteChar, 'Delete character left of cursor')
 bindKey('left', backwardChar, 'Move cursor left')
@@ -67,3 +80,5 @@ bindKey('right', forwardChar, 'Move cursor right')
 bindKey('home', beginningOfLine, 'Move cursor to beginning of line')
 bindKey('end', endOfLine, 'Move cursor to end of line')
 bindKey('return', acceptLine, 'Run command in line')
+bindKey('up', upLineOrHistory, 'Move backwards through history')
+bindKey('down', downLineOrHistory, 'Move forward through history')
