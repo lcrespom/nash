@@ -2,7 +2,7 @@ const os = require('os')
 
 
 let keyBindings = {}
-let prompt = () => 'nash> '
+let prompt = (pinfo) => 'nash> '
 
 let status = {
 	cursorX: 0,
@@ -35,6 +35,10 @@ function put(str) {
 	process.stdout.write(str)
 }
 
+function removeAnsiColorCodes(str) {
+	return str.replace(/\x1b\[[0-9;]*m/g, '')
+}
+
 function getPromptInfo() {
 	let cwd = process.cwd()
 	let homedir = os.homedir()
@@ -54,7 +58,7 @@ function getPromptInfo() {
 function putPrompt() {
 	let promptStr = prompt(getPromptInfo())
 	put(promptStr)
-	status.cursorX = promptStr.length
+	status.cursorX = removeAnsiColorCodes(promptStr).length
 	status.cols = process.stdout.columns
 	updateLine({ left: '', right: '' })
 	// Check https://stackoverflow.com/questions/8343250/how-can-i-get-position-of-cursor-in-terminal
@@ -95,7 +99,7 @@ function updateLine(newLine) {
 		//TODO multi-line editing
 	}
 	process.stdout.clearLine(1)
-	process.stdout.cursorTo(status.cursorX + newLine.left.length)
+	process.stdout.cursorTo(status.cursorX + removeAnsiColorCodes(newLine.left).length)
 	status.line = newLine
 }
 
