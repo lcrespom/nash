@@ -1,9 +1,12 @@
+const chalk = require('chalk')
+
 const { setPrompt } = require('../nash-plugins')
 
 
 function prompt({ cwd, username, hostname }) {
-	hostname = hostname.split('.')[0]
 	return `${username}@${hostname} ${cwd}> `
+	//TODO compute visible length
+	//return chalk.green(username + '@' + hostname) + ' ' + chalk.yellow(cwd) + '> '
 }
 
 

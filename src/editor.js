@@ -41,11 +41,13 @@ function getPromptInfo() {
 	if (cwd.startsWith(homedir))
 		cwd = '~' + cwd.substr(homedir.length)
 	let username = os.userInfo().username
-	let hostname = os.hostname()
+	let fqdn = os.hostname()
+	let hostname = fqdn.split('.')[0]
 	return {
 		cwd,
 		username,
-		hostname
+		hostname,
+		fqdn
 	}
 }
 
