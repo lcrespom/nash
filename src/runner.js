@@ -60,7 +60,7 @@ function runBuiltin(args) {
 	let command = args[0].text
 	if (command != 'cd')
 		throw new Error(`Builtin '${command}' not yet implemented`)
-	builtin_cd(args)	
+	builtin_cd(args)
 }
 
 
@@ -76,7 +76,7 @@ function runExternalCommand(args, cb) {
 	})
 	child.on('close', (code) => {
 		if (code != 0)
-			process.stderr.write(`Error: exit code ${code}`);
+			process.stderr.write(`Error: exit code ${code}\n`);
 		process.stdin.resume()
 		cb()
 	})

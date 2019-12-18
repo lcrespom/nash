@@ -8,8 +8,8 @@ Nash is a command-line shell that uses JavaScript and Node.js for scripting.
 	- [x] Simple chars
 	- [x] Basic movement: left, right, backspace, home, end
 	- [x] Enter
-	- [ ] Ctrl-C
-	- [ ] Ctrl-D
+	- [x] Ctrl-C
+	- [x] Ctrl-D
 	- [ ] Lines longer than the terminal width
 	- [ ] Multi-line (open quotes, `\`)
 	- [x] History navigation
@@ -20,9 +20,8 @@ Nash is a command-line shell that uses JavaScript and Node.js for scripting.
 		- [ ] Environment variable assignment (with limitations)
 		- [ ] Customization: plugin loading, key bindings, etc.
 - [ ] Substitution
-	- [ ] Env variables
 	- [ ] JavaScript
-	- [ ] Glob expansion
+	- Environment variables and globa expansion is handled by /bin/sh
 - [ ] Syntax highlight
 - [ ] Configuration (json)
 - [ ] Extensions (bindings / handlers)

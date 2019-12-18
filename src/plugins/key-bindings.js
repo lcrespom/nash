@@ -24,6 +24,15 @@ function backwardDeleteChar(line) {
 	}
 }
 
+function deleteChar(line) {
+	if (line.right.length == 0) return line
+	let [ch, right] = removeFirstChar(line.right)
+	return {
+		left: line.left,
+		right
+	}
+}
+
 function backwardChar(line) {
 	if (line.left.length == 0) return line
 	let [ch, left] = removeLastChar(line.left)
@@ -56,10 +65,6 @@ function endOfLine(line) {
 	}
 }
 
-function acceptLine(line) {
-	runner.runCommand(line.left + line.right)
-	return { left: '', right: '', isAsync: true }
-}
 
 function upLineOrHistory(line) {
 	let left = history.back()
@@ -74,11 +79,36 @@ function downLineOrHistory(line) {
 }
 
 
+function acceptLine(line) {
+	runner.runCommand(line.left + line.right)
+	return { left: '', right: '', isAsync: true }
+}
+
+function goodbye(line) {
+	if (line.left.length + line.right.length > 0) return line
+	process.stdin.pause()
+	process.stdout.write('\n')
+	return { left: '', right: '', isAsync: true }
+}
+
+function discardLine() {
+	return acceptLine({ left: '', right: '' })
+}
+
+
+// Line movement and deletion
 bindKey('backspace', backwardDeleteChar, 'Delete character left of cursor')
+bindKey('delete', deleteChar, 'Delete char at cursor')
 bindKey('left', backwardChar, 'Move cursor left')
 bindKey('right', forwardChar, 'Move cursor right')
 bindKey(['home', 'ctrl-a'], beginningOfLine, 'Move cursor to beginning of line')
 bindKey(['end', 'ctrl-e'], endOfLine, 'Move cursor to end of line')
-bindKey('return', acceptLine, 'Run command in line')
+
+// History navigation
 bindKey('up', upLineOrHistory, 'Move backwards through history')
 bindKey('down', downLineOrHistory, 'Move forward through history')
+
+// Keys that break the editing process
+bindKey('return', acceptLine, 'Run command in line')
+bindKey('ctrl-d', goodbye, 'Close terminal (only if line is empty)')
+bindKey('ctrl-c', discardLine, 'Discards the line')

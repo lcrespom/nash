@@ -122,12 +122,7 @@ function updateLine(newLine) {
 
 function handleKeypress(ch, key) {
 	let newLine
-	if (key && key.ctrl && key.name == 'c') {
-		process.stdin.pause()
-		print()
-		return
-	}
-	else if (isPlainKey(ch, key)) {
+	if (isPlainKey(ch, key)) {
 		newLine = {
 			left: status.line.left + ch,
 			right: status.line.right
