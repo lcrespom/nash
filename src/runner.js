@@ -1,7 +1,6 @@
-const { spawn, execFileSync } = require('child_process')
+const { spawn } = require('child_process')
 
 const parser = require('./parser')
-const editor = require('./editor')
 const history = require('./history')
 
 
@@ -103,13 +102,9 @@ function runCommand(line, cb = () => {}) {
 	if (args.length > 0) {
 		history.push(line)
 		args = expandArgs(args)
-		runTheCommand(args, () => {
-			editor.putPrompt()
-			cb()
-		})
+		runTheCommand(args, cb)
 	}
 	else {
-		editor.putPrompt()
 		setTimeout(cb, 0)
 	}
 }

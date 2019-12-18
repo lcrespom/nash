@@ -96,6 +96,7 @@ function goodbye(line) {
 	process.stdout.write('\n')
 	return {
 		isAsync: true,
+		showPrompt: false,
 		whenDone: function(done) { done() }
 	}
 }
