@@ -120,35 +120,12 @@ function reportUnknownKey(key) {
 	return status.line
 }
 
-function improveKeyName(key) {
-	// Name ctrl+char 'ctrl-char' and meta+char 'meta-char'
-	if (key.name.length > 1) return			// Key already has a proper name
-	if (!(key.ctrl || key.meta)) return		// No ctrl or meta is pressed
-	if (key.meta)
-		key.name = 'meta-' + key.name
-	if (key.ctrl)
-		key.name = 'ctrl-' + key.name
-}
-
 function applyBinding(key) {
-	improveKeyName(key)
 	let b = getKeyBinding(key)
 	if (!b) return reportUnknownKey(key)
 	return b(status.line)
 }
 
-function isPlainKey(ch, key) {
-	const SPACE = 32
-	const BACKSPACE = 127
-	if (key === undefined) return true // Unicode characters
-	if (key.meta || key.ctrl) return false
-	if (!ch) return false
-	let code = ch.charCodeAt(0)
-	if (ch.length == 1 && code >= SPACE && code != BACKSPACE) return true
-	return false
-	//TODO: emojis are not supported by kepress
-	//	fork, fix and send pull request
-}
 
 function updateLine(newLine) {
 	process.stdout.cursorTo(status.cursorX)
@@ -162,13 +139,13 @@ function updateLine(newLine) {
 	status.line = newLine
 }
 
-function doNothingKeyListener(ch, key) {}
+function doNothingKeyListener(key) {}
 
-function editorKeyListener(ch, key) {
+function editorKeyListener(key) {
 	let newLine
-	if (isPlainKey(ch, key)) {
+	if (key.plain) {
 		newLine = {
-			left: status.line.left + ch,
+			left: status.line.left + key.ch,
 			right: status.line.right
 		}
 		updateLine(newLine)
@@ -189,8 +166,41 @@ function editorKeyListener(ch, key) {
 	}
 }
 
+
+function isPlainKey(ch, key) {
+	const SPACE = 32
+	const BACKSPACE = 127
+	if (key === undefined) return true // Unicode characters
+	if (key.meta || key.ctrl) return false
+	if (!ch) return false
+	let code = ch.charCodeAt(0)
+	if (ch.length == 1 && code >= SPACE && code != BACKSPACE) return true
+	return false
+	//TODO: emojis are not supported by kepress
+	//	fork, fix and send pull request
+}
+
+function improveKeyName(key) {
+	// Name ctrl+char 'ctrl-char' and meta+char 'meta-char'
+	if (key.name.length > 1) return			// Key already has a proper name
+	if (!(key.ctrl || key.meta)) return		// No ctrl or meta is pressed
+	if (key.meta)
+		key.name = 'meta-' + key.name
+	if (key.ctrl)
+		key.name = 'ctrl-' + key.name
+}
+
+function analyzeKey(ch, key) {
+	if (key === undefined) key = {}
+	key.plain = isPlainKey(ch, key)
+	if (key.plain) key.ch = ch
+	else improveKeyName(key)
+	return key
+}
+
 function handleKeypress(ch, key) {
-	status.keyListener(ch, key)
+	key = analyzeKey(ch, key)
+	status.keyListener(key)
 }
 
 

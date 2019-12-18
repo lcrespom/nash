@@ -106,10 +106,21 @@ function discardLine() {
 }
 
 
-function describeNextKey() {
+function describeNextKey(line) {
+	let commandDone = () => {}
 	if (line.left.length + line.right.length > 0) return line
-	//TODO wait for asynchronous binding support from editor
 	process.stdout.write('\nType a key: ')
+	return {
+		isAsync: true,
+		whenDone: function(done) {
+			commandDone = done
+		},
+		keyListener: function(key) {
+			process.stdout.write(key.name ? key.name : key.ch)
+			process.stdout.write('\n')
+			commandDone()
+		}
+	}
 }
 
 
@@ -131,5 +142,5 @@ bindKey('ctrl-d', goodbye, 'Close terminal (only if line is empty)')
 bindKey('ctrl-c', discardLine, 'Discards the line')
 
 // Interactive commands
-// bindKey('ctrl-k', describeNextKey,
-// 	'Names typed key (to be used with the binkdKey function)')
+bindKey('ctrl-k', describeNextKey,
+ 	'Names typed key (to be used with the binkdKey function)')
