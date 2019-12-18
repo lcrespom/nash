@@ -21,7 +21,7 @@ Nash is a command-line shell that uses JavaScript and Node.js for scripting.
 		- [ ] Advanced (navigate over list)
 - [ ] Execute commands
 	- [x] Delegate to external shell
-	- [ ] Investigate continuoulsy live child shell process
+	- [ ] Investigate continuously live child shell process
 	- [ ] Builtins
 		- [ ] cd, alias, history...
 		- [ ] Environment variable assignment (with limitations)
@@ -34,5 +34,5 @@ Nash is a command-line shell that uses JavaScript and Node.js for scripting.
 	- [ ] Alias
 	- Environment variables and global expansion is handled by /bin/sh
 - [ ] Syntax highlight
-- [ ] Configuration (json)
+- [ ] Configuration (.nash.json / .nash.js)
 - [ ] Extensions (bindings / handlers)
