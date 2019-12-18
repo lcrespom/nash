@@ -121,5 +121,5 @@ bindKey('ctrl-d', goodbye, 'Close terminal (only if line is empty)')
 bindKey('ctrl-c', discardLine, 'Discards the line')
 
 // Interactive commands
-bindKey('ctrl-k', describeNextKey,
-	'Names typed key (to be used with the binkdKey function)')
+// bindKey('ctrl-k', describeNextKey,
+// 	'Names typed key (to be used with the binkdKey function)')
