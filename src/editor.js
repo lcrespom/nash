@@ -21,8 +21,11 @@ function getKeyBinding(key) {
 	return binding ? binding[0] : undefined
 }
 
-function bindKey(key, code, desc) {
-	keyBindings[key] = [code, desc]
+function bindKey(knames, code, desc) {
+	if (!Array.isArray(knames))
+		knames = [ knames ]
+	for (let key of knames)
+		keyBindings[key] = [code, desc]
 }
 
 function setPrompt(code) {
@@ -55,21 +58,40 @@ function getPromptInfo() {
 	}
 }
 
-function putPrompt() {
+function putPrompt(clearLine = true) {
 	let promptStr = prompt(getPromptInfo())
 	put(promptStr)
 	status.cursorX = removeAnsiColorCodes(promptStr).length
 	status.cols = process.stdout.columns
-	updateLine({ left: '', right: '' })
-	// Check https://stackoverflow.com/questions/8343250/how-can-i-get-position-of-cursor-in-terminal
+	if (clearLine)
+		updateLine({ left: '', right: '' })
+}
+
+function debugKey(ch, key) {
+	let code = ch ? ` (${ch.charCodeAt(0)})` : ''
+	print(`\nch: '${ch}'${code}`, '- key:', key)
+}
+
+function reportUnknownKey(key) {
+	print('\nUnbound key: ' + key.name)
+	putPrompt(false)
+	return status.line
+}
+
+function improveKeyName(key) {
+	// Name ctrl+char 'ctrl-char' and meta+char 'meta-char'
+	if (key.name.length > 1) return			// Key already has a proper name
+	if (!(key.ctrl || key.meta)) return		// No ctrl or meta is pressed
+	if (key.meta)
+		key.name = 'meta-' + key.name
+	if (key.ctrl)
+		key.name = 'ctrl-' + key.name
 }
 
 function applyBinding(key) {
+	improveKeyName(key)
 	let b = getKeyBinding(key)
-	if (!b) return {
-		left: status.line.left + '*',
-		right: status.line.right
-	}
+	if (!b) return reportUnknownKey(key)
 	return b(status.line)
 }
 
@@ -84,11 +106,6 @@ function isPlainKey(ch, key) {
 	return false
 	//TODO: emojis are not supported by kepress
 	//	fork, fix and send pull request
-}
-
-function debugKey(ch, key) {
-	let code = ch ? ` (${ch.charCodeAt(0)})` : ''
-	print(`\nch: '${ch}'${code}`, '- key:', key)
 }
 
 function updateLine(newLine) {
@@ -107,6 +124,7 @@ function handleKeypress(ch, key) {
 	let newLine
 	if (key && key.ctrl && key.name == 'c') {
 		process.stdin.pause()
+		print()
 		return
 	}
 	else if (isPlainKey(ch, key)) {
@@ -117,7 +135,6 @@ function handleKeypress(ch, key) {
 		updateLine(newLine)
 	}
 	else {
-		//debugKey(ch, key)
 		newLine = applyBinding(key)
 		//TODO: deal with asynchronous bindings
 		if (!newLine.isAsync) {
