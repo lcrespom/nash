@@ -15,13 +15,15 @@ Nash is a command-line shell that uses JavaScript and Node.js for scripting.
 	- [x] History navigation
 - [ ] Execute commands
 	- [x] Delegate to external shell
+	- [ ] Investigate continuoulsy live child shell process
 	- [ ] Builtins
 		- [ ] cd, alias, history...
 		- [ ] Environment variable assignment (with limitations)
 		- [ ] Customization: plugin loading, key bindings, etc.
 - [ ] Substitution
 	- [ ] JavaScript
-	- Environment variables and globa expansion is handled by /bin/sh
+	- [ ] Alias
+	- Environment variables and global expansion is handled by /bin/sh
 - [ ] Syntax highlight
 - [ ] Configuration (json)
 - [ ] Extensions (bindings / handlers)
