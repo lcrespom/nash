@@ -96,6 +96,13 @@ function discardLine() {
 }
 
 
+function describeNextKey() {
+	if (line.left.length + line.right.length > 0) return line
+	//TODO wait for asynchronous binding support from editor
+	process.stdout.write('\nType a key: ')
+}
+
+
 // Line movement and deletion
 bindKey('backspace', backwardDeleteChar, 'Delete character left of cursor')
 bindKey('delete', deleteChar, 'Delete char at cursor')
@@ -112,3 +119,7 @@ bindKey('down', downLineOrHistory, 'Move forward through history')
 bindKey('return', acceptLine, 'Run command in line')
 bindKey('ctrl-d', goodbye, 'Close terminal (only if line is empty)')
 bindKey('ctrl-c', discardLine, 'Discards the line')
+
+// Interactive commands
+bindKey('ctrl-k', describeNextKey,
+	'Names typed key (to be used with the binkdKey function)')
