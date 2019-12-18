@@ -10,7 +10,8 @@ let status = {
 	line: {
 		left: '',
 		right: ''
-	}
+	},
+	keyListener: editorKeyListener
 }
 
 
@@ -120,7 +121,10 @@ function updateLine(newLine) {
 	status.line = newLine
 }
 
-function handleKeypress(ch, key) {
+function doNothingKeyListener(ch, key) {
+}
+
+function editorKeyListener(ch, key) {
 	let newLine
 	if (isPlainKey(ch, key)) {
 		newLine = {
@@ -131,11 +135,20 @@ function handleKeypress(ch, key) {
 	}
 	else {
 		newLine = applyBinding(key)
-		//TODO: deal with asynchronous bindings
-		if (!newLine.isAsync) {
+		if (newLine.isAsync) {
+			status.keyListener = newLine.keyListener || doNothingKeyListener
+			newLine.whenDone(() => {
+				status.keyListener = editorKeyListener
+			})
+		}
+		else {
 			updateLine(newLine)
 		}
 	}
+}
+
+function handleKeypress(ch, key) {
+	status.keyListener(ch, key)
 }
 
 

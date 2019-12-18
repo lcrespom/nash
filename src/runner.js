@@ -90,14 +90,14 @@ function runExternalCommand(args, cb) {
 function runTheCommand(args, cb) {
 	if (isBuiltin(args[0].text)) {
 		runBuiltin(args)
-		cb()
+		setTimeout(cb, 0)
 	}
 	else {
 		runExternalCommand(args, cb)
 	}
 }
 
-function runCommand(line, cb) {
+function runCommand(line, cb = () => {}) {
 	process.stdout.write('\n')
 	let args = parser.parseLine(line)
 	if (args.length > 0) {
@@ -105,12 +105,12 @@ function runCommand(line, cb) {
 		args = expandArgs(args)
 		runTheCommand(args, () => {
 			editor.putPrompt()
-			if (cb) cb()
+			cb()
 		})
 	}
 	else {
 		editor.putPrompt()
-		if (cb) cb()
+		setTimeout(cb, 0)
 	}
 }
 

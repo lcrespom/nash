@@ -80,15 +80,24 @@ function downLineOrHistory(line) {
 
 
 function acceptLine(line) {
-	runner.runCommand(line.left + line.right)
-	return { left: '', right: '', isAsync: true }
+	let commandDone = () => {}
+	runner.runCommand(line.left + line.right, () => commandDone())
+	return {
+		isAsync: true,
+		whenDone: function(done) {
+			commandDone = done
+		}
+	}
 }
 
 function goodbye(line) {
 	if (line.left.length + line.right.length > 0) return line
 	process.stdin.pause()
 	process.stdout.write('\n')
-	return { left: '', right: '', isAsync: true }
+	return {
+		isAsync: true,
+		whenDone: function(done) { done() }
+	}
 }
 
 function discardLine() {
