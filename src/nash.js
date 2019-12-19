@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+const fs = require('fs')
+const os = require('os')
 const keypress = require('keypress')
 
 const editor = require('./editor')
@@ -6,6 +8,12 @@ const editor = require('./editor')
 
 function loadPlugin(pname) {
 	require(pname)
+}
+
+function loadNashRC() {
+	let rcname = os.homedir() + '/.nashrc.js'
+	if (!fs.existsSync(rcname)) return
+	loadPlugin(rcname)
 }
 
 function listenKeyboard() {
@@ -17,14 +25,15 @@ function listenKeyboard() {
 
 function checkInteractive() {
 	if (process.stdout.isTTY) return
-	editor.print('Non interactive mode is not supported')
+	editor.print('Non-interactive mode is not supported')
 	process.exit(1)
 }
 
 function main() {
+	checkInteractive()
 	loadPlugin('./plugins/key-bindings')
 	loadPlugin('./plugins/prompt')
-	checkInteractive()
+	loadNashRC()
 	editor.putPrompt()
 	listenKeyboard()
 }
