@@ -74,3 +74,10 @@ test('JavaScript', () => {
 	expect(args[2].type).toBe(parser.ParamType.text)
 	expect(args[2].text).toBe('foo')
 })
+
+test('Shell scripts', () => {
+	let args = parser.parseLine('./shellname.sh')
+	expect(args.length).toBe(1)
+	expect(args[0].type).toBe(parser.ParamType.text)
+	expect(args[0].text).toBe('./shellname.sh')
+})
