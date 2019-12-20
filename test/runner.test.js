@@ -1,5 +1,9 @@
 const runner = require('../src/runner');
 
-test('TBD', () => {
-	expect(true).toBe(false)
+test('Echo', done => {
+	runner.runCommand('echo Hello', () => {
+		//TODO capture stdout and stderr
+		expect(true).toBe(true)
+		done()
+	})
 })
