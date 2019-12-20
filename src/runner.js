@@ -74,20 +74,28 @@ function buildCommand(args) {
 function runExternalCommand(args, cb) {
 	let fullCommand = buildCommand(args)
 	process.stdin.pause()
+	let captureOut = cb.length > 0
 	let child = spawn(fullCommand, [], {
-		stdio: 'inherit',	// Child process I/O is automatically sent to parent
+		// If 'inherit', child process I/O is automatically sent to parent
+		stdio: captureOut ? undefined : 'inherit',
 		shell: true			// External shell is the real command interpreter
 	})
+	let outbuf = ''
+	let errbuf = ''
+	if (captureOut) {
+		child.stdout.on('data', buf => outbuf += buf.toString())
+		child.stderr.on('data', buf => errbuf += buf.toString())
+	}
 	child.on('close', (code) => {
 		if (code != 0)
 			process.stderr.write(`Error: exit code ${code}\n`);
 		process.stdin.resume()
-		cb()
+		cb(outbuf, errbuf)
 	})
 	child.on('error', (err) => {
 		process.stderr.write(`nash: command failed: ${err}\n`)
 		process.stdin.resume()
-		cb()
+		cb(outbuf, errbuf)
 	})
 }
 

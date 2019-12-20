@@ -1,9 +1,12 @@
-const runner = require('../src/runner');
+const runner = require('../src/runner')
+
+function nocrlf(str) {
+	return str.replace(/\r\n/g, '\n')	// In case we are in Windows (ew!)
+}
 
 test('Echo', done => {
-	runner.runCommand('echo Hello', () => {
-		//TODO capture stdout and stderr
-		expect(true).toBe(true)
+	runner.runCommand('echo Hello', out => {
+		expect(nocrlf(out)).toBe('Hello\n')
 		done()
 	})
 })
