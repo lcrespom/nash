@@ -65,11 +65,16 @@ function runBuiltin(args) {
 
 //-------------------- Running --------------------
 
+function buildCommand(args) {
+	return args
+		.map(arg => arg.quote + arg.text + arg.quote)
+		.join(' ')
+}
+
 function runExternalCommand(args, cb) {
-	let command = args[0].text
-	let cmdArgs = args.slice(1).map(arg => arg.text)
+	let fullCommand = buildCommand(args)
 	process.stdin.pause()
-	let child = spawn(command, cmdArgs, {
+	let child = spawn(fullCommand, [], {
 		stdio: 'inherit',	// Child process I/O is automatically sent to parent
 		shell: true			// External shell is the real command interpreter
 	})
@@ -80,7 +85,7 @@ function runExternalCommand(args, cb) {
 		cb()
 	})
 	child.on('error', (err) => {
-		process.stderr.write(`nash: could not execute '${command}': ${err}\n`)
+		process.stderr.write(`nash: command failed: ${err}\n`)
 		process.stdin.resume()
 		cb()
 	})
