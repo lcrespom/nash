@@ -100,6 +100,19 @@ function getPromptInfo() {
 	}
 }
 
+function captureCursorPosition() {
+	process.stdin.on('data', buf => {
+		let s = buf.toString()
+		if (buf.length < 6) return
+		let m = s.match(/\x1b\[([0-9]+);([0-9]+)R/)
+		if (!m || m.length < 3) return
+		status.cursor = {
+			x: parseInt(m[2]) - 1,
+			y: parseInt(m[1]) - 1
+		}
+	})
+}
+
 function putPrompt(clearLine = true) {
 	const GET_CURSOR_POSITION = '\x1b[6n'
 	let promptStr = prompt(getPromptInfo())
@@ -114,18 +127,6 @@ function putPrompt(clearLine = true) {
 	if (clearLine)
 		updateLine({ left: '', right: '' })
 }
-
-process.stdin.on('data', buf => {
-	let s = buf.toString()
-	if (buf.length < 6) return
-	let m = s.match(/\x1b\[([0-9]+);([0-9]+)R/)
-	if (!m || m.length < 3) return
-	status.cursor = {
-		x: parseInt(m[2]) - 1,
-		y: parseInt(m[1]) - 1
-	}
-	//console.log('****', m[1], m[2])
-})
 
 function debugKey(ch, key) {
 	let code = ch ? ` (${ch.charCodeAt(0)})` : ''
@@ -152,7 +153,7 @@ function putCursor(len) {
 	if (status.cursor) {
 		let ll = status.cursor.x + len
 		let x = ll % status.cols
-		let y = status.cursor.y
+		let y = status.cursor.y + Math.floor(ll / status.cols)
 		process.stdout.cursorTo(x, y)
 	}
 	else {
@@ -163,18 +164,14 @@ function putCursor(len) {
 function updateLine(newLine) {
 	let fullLine = newLine.left + newLine.right
 	let len = removeAnsiColorCodes(newLine.left).length
-	// let rows = Math.floor(x / (status.cols + 1))
-	// process.stdout.moveCursor(0, -status.rows)
-	// process.stdout.cursorTo(status.cursorX)
 	putCursor(0)
-	put(fullLine)
+	put(fullLine +  ' ')
 	process.stdout.clearLine(1)
 	putCursor(len)
 	status.line = {
 		left: newLine.left,
 		right: newLine.right
 	}
-	//status.rows = rows
 }
 
 function doNothingKeyListener(key) {}
@@ -223,15 +220,8 @@ function isPlainKey(ch, key) {
 }
 
 function improveKeyName(key) {
-	// Name ctrl+char 'ctrl-char' and meta+char 'meta-char'
-	if (key.name.length > 1) {
-		if (key.shift)
-			key.name = key.name.toUpperCase()
-		return			// Key already has a proper name
-	}
-	if (!(key.ctrl || key.meta)) return		// No ctrl or meta is pressed
 	if (key.shift)
-		key.name = key.name.toUpperCase()
+		key.name = 'shift-' + key.name
 	if (key.meta)
 		key.name = 'meta-' + key.name
 	if (key.ctrl)
@@ -251,6 +241,8 @@ function handleKeypress(ch, key) {
 	status.keyListener(key)
 }
 
+
+captureCursorPosition()
 
 module.exports = {
 	handleKeypress,
