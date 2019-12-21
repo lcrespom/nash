@@ -65,6 +65,16 @@ function endOfLine(line) {
 	}
 }
 
+function clearScreen(line) {
+	process.stdout.cursorTo(0, 0)
+	process.stdout.clearScreenDown()
+	return { showPrompt: true, ...line }
+}
+
+function killWholeLine(line) {
+	return { left: '', right: '' }
+}
+
 
 function upLineOrHistory(line) {
 	let left = history.back()
@@ -131,6 +141,8 @@ bindKey('left', backwardChar, 'Move cursor left')
 bindKey('right', forwardChar, 'Move cursor right')
 bindKey(['home', 'ctrl-a'], beginningOfLine, 'Move cursor to beginning of line')
 bindKey(['end', 'ctrl-e'], endOfLine, 'Move cursor to end of line')
+bindKey(['escape', 'ctrl-u'], killWholeLine, 'Clears the current line')
+bindKey('ctrl-l', clearScreen, 'Clears the screen')
 
 // History navigation
 bindKey('up', upLineOrHistory, 'Move backwards through history')

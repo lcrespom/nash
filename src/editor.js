@@ -161,6 +161,8 @@ function editorKeyListener(key) {
 			})
 		}
 		else {
+			if (newLine.showPrompt === true)
+				putPrompt()
 			updateLine(newLine)
 		}
 	}

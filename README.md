@@ -35,7 +35,7 @@ Nash is a command-line shell that uses JavaScript and Node.js for scripting.
 	- [x] Shell commands: ignore any typed key
 	- [x] Interactive bindings: forward key events
 - [ ] Substitution
-	- [ ] JavaScript
+	- [x] JavaScript
 	- [ ] Alias
 	- Environment variables and global expansion is handled by /bin/sh
 - [ ] Syntax highlight
