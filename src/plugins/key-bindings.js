@@ -68,7 +68,10 @@ function endOfLine(line) {
 function clearScreen(line) {
 	process.stdout.cursorTo(0, 0)
 	process.stdout.clearScreenDown()
-	return { showPrompt: true, ...line }
+	return {
+		showPrompt: true,
+		...line
+	}
 }
 
 function killWholeLine(line) {
@@ -90,12 +93,10 @@ function downLineOrHistory(line) {
 
 
 function acceptLine(line) {
-	let commandDone = () => {}
-	runner.runCommand(line.left + line.right, () => commandDone())
 	return {
 		isAsync: true,
 		whenDone: function(done) {
-			commandDone = done
+			runner.runCommand(line.left + line.right, done)
 		}
 	}
 }
@@ -135,11 +136,13 @@ function describeNextKey(line) {
 
 
 // Line movement and deletion
-bindKey('backspace', backwardDeleteChar, 'Delete character left of cursor')
+bindKey('backspace', backwardDeleteChar,
+	'Delete character left of cursor')
 bindKey('delete', deleteChar, 'Delete char at cursor')
 bindKey('left', backwardChar, 'Move cursor left')
 bindKey('right', forwardChar, 'Move cursor right')
-bindKey(['home', 'ctrl-a'], beginningOfLine, 'Move cursor to beginning of line')
+bindKey(['home', 'ctrl-a'], beginningOfLine,
+	'Move cursor to beginning of line')
 bindKey(['end', 'ctrl-e'], endOfLine, 'Move cursor to end of line')
 bindKey(['escape', 'ctrl-u'], killWholeLine, 'Clears the current line')
 bindKey('ctrl-l', clearScreen, 'Clears the screen')

@@ -7,7 +7,6 @@ let prompt = (pinfo) => 'nash> '
 let status = {
 	cursorX: 0,
 	cols: 80,
-	rows: 0,
 	line: {
 		left: '',
 		right: ''
@@ -102,8 +101,11 @@ function getPromptInfo() {
 }
 
 function putPrompt(clearLine = true) {
+	const GET_CURSOR_POSITION = '\x1b[6n'
 	let promptStr = prompt(getPromptInfo())
 	put(promptStr)
+	status.cursor = null
+	process.stdout.write(GET_CURSOR_POSITION)
 	status.cursorX =
 		removeAnsiColorCodes(promptStr)
 		.split('\n').pop().length
@@ -113,15 +115,31 @@ function putPrompt(clearLine = true) {
 		updateLine({ left: '', right: '' })
 }
 
+process.stdin.on('data', buf => {
+	let s = buf.toString()
+	if (buf.length < 6) return
+	let m = s.match(/\x1b\[([0-9]+);([0-9]+)R/)
+	if (!m || m.length < 3) return
+	status.cursor = {
+		x: parseInt(m[2]) - 1,
+		y: parseInt(m[1]) - 1
+	}
+	//console.log('****', m[1], m[2])
+})
+
 function debugKey(ch, key) {
 	let code = ch ? ` (${ch.charCodeAt(0)})` : ''
 	print(`\nch: '${ch}'${code}`, '- key:', key)
 }
 
 function reportUnknownKey(key) {
-	print('\nUnbound key: ' + key.name)
-	putPrompt(false)
-	return status.line
+	// print('\nUnbound key: ' + key.name)
+	// console.dir(key)
+	//putPrompt(false)
+	return {
+		left: status.line.left,
+		right: status.line.right
+	}
 }
 
 function applyBinding(key) {
@@ -134,14 +152,23 @@ function applyBinding(key) {
 function updateLine(newLine) {
 	let fullLine = newLine.left + newLine.right
 	let x = status.cursorX + removeAnsiColorCodes(newLine.left).length
-	let rows = Math.floor(x / (status.cols + 1))
-	process.stdout.moveCursor(0, -status.rows)
-	process.stdout.cursorTo(status.cursorX)
+	// let rows = Math.floor(x / (status.cols + 1))
+	// process.stdout.moveCursor(0, -status.rows)
+	// process.stdout.cursorTo(status.cursorX)
+	if (status.cursor) {
+		process.stdout.cursorTo(status.cursor.x, status.cursor.y)
+	}
+	else {
+		process.stdout.cursorTo(status.cursorX)
+	}
 	put(fullLine)
 	process.stdout.clearLine(1)
 	process.stdout.cursorTo(x % status.cols)
-	status.line = newLine
-	status.rows = rows
+	status.line = {
+		left: newLine.left,
+		right: newLine.right
+	}
+	//status.rows = rows
 }
 
 function doNothingKeyListener(key) {}
@@ -163,6 +190,8 @@ function editorKeyListener(key) {
 				status.keyListener = editorKeyListener
 				if (newLine.showPrompt !== false)
 					putPrompt()
+				if (newLine.left !== undefined)
+					updateLine(newLine)
 			})
 		}
 		else {
@@ -189,8 +218,14 @@ function isPlainKey(ch, key) {
 
 function improveKeyName(key) {
 	// Name ctrl+char 'ctrl-char' and meta+char 'meta-char'
-	if (key.name.length > 1) return			// Key already has a proper name
+	if (key.name.length > 1) {
+		if (key.shift)
+			key.name = key.name.toUpperCase()
+		return			// Key already has a proper name
+	}
 	if (!(key.ctrl || key.meta)) return		// No ctrl or meta is pressed
+	if (key.shift)
+		key.name = key.name.toUpperCase()
 	if (key.meta)
 		key.name = 'meta-' + key.name
 	if (key.ctrl)
