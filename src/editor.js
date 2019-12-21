@@ -148,22 +148,28 @@ function applyBinding(key) {
 	return b(status.line)
 }
 
+function putCursor(len) {
+	if (status.cursor) {
+		let ll = status.cursor.x + len
+		let x = ll % status.cols
+		let y = status.cursor.y
+		process.stdout.cursorTo(x, y)
+	}
+	else {
+		process.stdout.cursorTo(status.cursorX + len)
+	}
+}
 
 function updateLine(newLine) {
 	let fullLine = newLine.left + newLine.right
-	let x = status.cursorX + removeAnsiColorCodes(newLine.left).length
+	let len = removeAnsiColorCodes(newLine.left).length
 	// let rows = Math.floor(x / (status.cols + 1))
 	// process.stdout.moveCursor(0, -status.rows)
 	// process.stdout.cursorTo(status.cursorX)
-	if (status.cursor) {
-		process.stdout.cursorTo(status.cursor.x, status.cursor.y)
-	}
-	else {
-		process.stdout.cursorTo(status.cursorX)
-	}
+	putCursor(0)
 	put(fullLine)
 	process.stdout.clearLine(1)
-	process.stdout.cursorTo(x % status.cols)
+	putCursor(len)
 	status.line = {
 		left: newLine.left,
 		right: newLine.right
