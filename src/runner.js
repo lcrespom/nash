@@ -4,31 +4,28 @@ const parser = require('./parser')
 const history = require('./history')
 
 
-//-------------------- Debugging --------------------
-
-function typeName(type) {
-	for (let k of Object.keys(parser.ParamType)) {
-		if (parser.ParamType[k] === type) return k
-	}
-	return `Unknown (${type})`
-}
-
-function debugArgs(args) {
-	for (let arg of args) {
-		let tname = typeName(arg.type)
-		let qtext = arg.quote + arg.text +
-			(arg.openQuote ? ' [open quote]': arg.quote)
-		// TODO: closequote
-		console.log(`${tname}: ${qtext}`)
-	}
-}
-
-
 //-------------------- Argument pre-processiong --------------------
 
+function runJS(jscode) {
+	let context = process.env
+	return function(txt) {
+		try {
+			return eval(txt)
+		}
+		catch (e) {
+			console.error('Error evaluating JavaScript: ' + e)
+			return ''
+		}
+	}.call(context, jscode);
+}
+
 function expandArgs(args) {
-	//TODO
-	//	- Execute JS args and replace into returned text
+	for (let arg of args) {
+		if (arg.type == parser.ParamType.javascript) {
+			arg.quote = ''
+			arg.text = runJS(arg.text)
+		}
+	}
 	return args
 }
 
@@ -78,7 +75,8 @@ function runExternalCommand(args, cb) {
 	let child = spawn(fullCommand, [], {
 		// If 'inherit', child process I/O is automatically sent to parent
 		stdio: captureOut ? undefined : 'inherit',
-		shell: true			// External shell is the real command interpreter
+		// External shell is the real command interpreter
+		shell: true
 	})
 	let outbuf = ''
 	let errbuf = ''

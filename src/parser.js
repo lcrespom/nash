@@ -18,11 +18,11 @@ function isQuoteEnd(pos, line, quote) {
 }
 
 function isJavaScriptStart(pos, line) {
-	return line.substr(pos, 2) == '$('
+	return line.substr(pos, 2) == '$['
 }
 
 function isJavaScriptEnd(pos, line) {
-	return line.substr(pos, 2) == '$)'
+	return line.substr(pos, 2) == '$]'
 }
 
 function skipSeparators(pos, line) {

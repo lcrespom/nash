@@ -67,7 +67,7 @@ test('Env', () => {
 })
 
 test('JavaScript', () => {
-	let args = parser.parseLine('echo $( "Hello from JS" $) foo')
+	let args = parser.parseLine('echo $[ "Hello from JS" $] foo')
 	expect(args.length).toBe(3)
 	expect(args[1].type).toBe(parser.ParamType.javascript)
 	expect(args[1].text).toBe(' "Hello from JS" ')
@@ -80,4 +80,16 @@ test('Shell scripts', () => {
 	expect(args.length).toBe(1)
 	expect(args[0].type).toBe(parser.ParamType.text)
 	expect(args[0].text).toBe('./shellname.sh')
+})
+
+test('Pipe', () => {
+	let args = parser.parseLine('echo hello world | wc')
+	expect(args.length).toBe(5)
+	expect(args[3].type).toBe(parser.ParamType.text)
+	expect(args[3].text).toBe('|')
+	//TODO: deal with >, >>, <, <<, |, ||, &, &&, ;, 2>, ....
+	// args = parser.parseLine('echo hello world|wc')
+	// expect(args.length).toBe(5)
+	// expect(args[3].type).toBe(parser.ParamType.text)
+	// expect(args[3].text).toBe('|')
 })
