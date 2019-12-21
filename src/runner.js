@@ -1,4 +1,5 @@
 const { spawn } = require('child_process')
+const fs = require('fs')
 
 const parser = require('./parser')
 const history = require('./history')
@@ -68,6 +69,14 @@ function buildCommand(args) {
 		.join(' ')
 }
 
+function getShell() {
+	let shell = process.env.SHELL
+	if (shell && fs.existsSync(shell))
+		return shell
+	else
+		return true
+}
+
 function runExternalCommand(args, cb) {
 	let fullCommand = buildCommand(args)
 	process.stdin.pause()
@@ -76,7 +85,7 @@ function runExternalCommand(args, cb) {
 		// If 'inherit', child process I/O is automatically sent to parent
 		stdio: captureOut ? undefined : 'inherit',
 		// External shell is the real command interpreter
-		shell: true
+		shell: getShell()
 	})
 	let outbuf = ''
 	let errbuf = ''

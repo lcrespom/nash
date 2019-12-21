@@ -7,6 +7,7 @@ let prompt = (pinfo) => 'nash> '
 let status = {
 	cursorX: 0,
 	cols: 80,
+	rows: 0,
 	line: {
 		left: '',
 		right: ''
@@ -103,8 +104,11 @@ function getPromptInfo() {
 function putPrompt(clearLine = true) {
 	let promptStr = prompt(getPromptInfo())
 	put(promptStr)
-	status.cursorX = removeAnsiColorCodes(promptStr).length
+	status.cursorX =
+		removeAnsiColorCodes(promptStr)
+		.split('\n').pop().length
 	status.cols = process.stdout.columns
+	status.rows = 0
 	if (clearLine)
 		updateLine({ left: '', right: '' })
 }
@@ -128,15 +132,16 @@ function applyBinding(key) {
 
 
 function updateLine(newLine) {
-	process.stdout.cursorTo(status.cursorX)
 	let fullLine = newLine.left + newLine.right
+	let x = status.cursorX + removeAnsiColorCodes(newLine.left).length
+	let rows = Math.floor(x / (status.cols + 1))
+	process.stdout.moveCursor(0, -status.rows)
+	process.stdout.cursorTo(status.cursorX)
 	put(fullLine)
-	if (status.cursorX + fullLine.length > status.cols) {
-		//TODO multi-line editing
-	}
 	process.stdout.clearLine(1)
-	process.stdout.cursorTo(status.cursorX + removeAnsiColorCodes(newLine.left).length)
+	process.stdout.cursorTo(x % status.cols)
 	status.line = newLine
+	status.rows = rows
 }
 
 function doNothingKeyListener(key) {}
