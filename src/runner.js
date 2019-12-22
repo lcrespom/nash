@@ -3,6 +3,7 @@ const fs = require('fs')
 
 const parser = require('./parser')
 const history = require('./history')
+const builtins = require('./builtins')
 
 
 //-------------------- Argument pre-processiong --------------------
@@ -21,6 +22,12 @@ function runJS(jscode) {
 }
 
 function expandArgs(args) {
+	if (args[0].type == parser.ParamType.text) {
+		//TODO delegate on external shell interpreter
+		let alias = builtins.getAlias(args[0].text)
+		if (alias)
+			args[0].text = alias
+	}
 	for (let arg of args) {
 		if (arg.type == parser.ParamType.javascript) {
 			arg.quote = ''
@@ -28,36 +35,6 @@ function expandArgs(args) {
 		}
 	}
 	return args
-}
-
-function isBuiltin(txt) {
-	return txt == 'cd'
-}
-
-//TODO move builtins to a separate module
-function builtin_cd(args) {
-	if (args.length > 2) {
-		console.error('nash: cd: too may arguments')
-		return
-	}
-	if (args.length < 2) {
-		// Do nothing
-		return
-	}
-	let dir = args[1].text
-	try {
-		process.chdir(dir)
-	}
-	catch (err) {
-		console.error(`nash: cd: could not cd to '${dir}': ${err}`)
-	}
-}
-
-function runBuiltin(args) {
-	let command = args[0].text
-	if (command != 'cd')
-		throw new Error(`Builtin '${command}' not yet implemented`)
-	builtin_cd(args)
 }
 
 
@@ -107,8 +84,8 @@ function runExternalCommand(args, cb) {
 }
 
 function runTheCommand(args, cb) {
-	if (isBuiltin(args[0].text)) {
-		runBuiltin(args)
+	if (builtins.isBuiltin(args[0].text)) {
+		builtins.runBuiltin(args)
 		setTimeout(cb, 0)
 	}
 	else {

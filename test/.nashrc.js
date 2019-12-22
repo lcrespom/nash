@@ -1,6 +1,6 @@
 const chalk = module.parent.require('chalk')
 
-const { setPrompt } = module.parent.require('./nash-plugins')
+const { setPrompt, runCommand } = module.parent.require('./nash-plugins')
 
 
 const SEGMENT_SEPARATOR = '\ue0b0'
@@ -17,3 +17,4 @@ function prompt({ cwd, username, hostname }) {
 
 
 setPrompt(prompt)
+runCommand('alias ls="ls -G"')
