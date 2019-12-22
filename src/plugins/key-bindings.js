@@ -113,13 +113,17 @@ function acceptLine(line) {
 	return {
 		isAsync: true,
 		whenDone: function(done) {
-			runner.runCommand(line.left + line.right, done)
+			let cmd = line.left + line.right
+			if (cmd.trim().length > 0)
+				history.push(cmd)
+			runner.runCommand(cmd, done)
 		}
 	}
 }
 
 function goodbye(line) {
 	if (line.left.length + line.right.length > 0) return line
+	history.save()
 	process.stdin.pause()
 	process.stdout.write('\n')
 	return {

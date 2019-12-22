@@ -1,3 +1,7 @@
+const os = require('os')
+const fs = require('fs')
+
+
 let history = []
 let index = 0
 let maxSize = 1000
@@ -40,12 +44,21 @@ function all() {
     return history
 }
 
+
+function getHistoryPath() {
+    return os.homedir() + '/.nash_history'
+}
 function load() {
-    //TODO load from file
+    let hpath = getHistoryPath()
+    if (!fs.existsSync(hpath)) return
+    fs.readFile(hpath, (err, data) => {
+        if (err) return
+        history = data.toString().split('\n')
+    })
 }
 
 function save() {
-    //TODO save to file
+    fs.writeFile(getHistoryPath(), history.join('\n'), () => {})
 }
 
 

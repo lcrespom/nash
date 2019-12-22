@@ -97,7 +97,6 @@ function runCommand(line, cb = () => {}) {
 	process.stdout.write('\n')
 	let args = parser.parseLine(line)
 	if (args.length > 0) {
-		history.push(line)
 		args = expandArgs(args)
 		runTheCommand(args, cb)
 	}

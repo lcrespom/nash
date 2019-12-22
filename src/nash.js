@@ -4,6 +4,7 @@ const os = require('os')
 const keypress = require('keypress')
 
 const editor = require('./editor')
+const history = require('./history')
 
 
 function loadPlugin(pname) {
@@ -35,6 +36,7 @@ function main() {
 	loadPlugin('./plugins/prompt')
 	loadNashRC()
 	editor.putPrompt()
+	history.load()
 	listenKeyboard()
 }
 
