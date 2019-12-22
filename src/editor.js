@@ -100,6 +100,10 @@ function getPromptInfo() {
 	}
 }
 
+const HIDE_TEXT = '\x1b[30m\x1b[?25l'
+const SHOW_TEXT = '\x1b[0m\x1b[?25h'
+const GET_CURSOR_POS = '\x1b[6n'
+
 function captureCursorPosition() {
 	process.stdin.on('data', buf => {
 		let s = buf.toString()
@@ -110,15 +114,15 @@ function captureCursorPosition() {
 			x: parseInt(m[2]) - 1,
 			y: parseInt(m[1]) - 1
 		}
+		process.stdout.write(SHOW_TEXT)
 	})
 }
 
 function putPrompt(clearLine = true) {
-	const GET_CURSOR_POSITION = '\x1b[6n'
 	let promptStr = prompt(getPromptInfo())
 	put(promptStr)
 	status.cursor = null
-	process.stdout.write(GET_CURSOR_POSITION)
+	process.stdout.write(HIDE_TEXT + GET_CURSOR_POS)
 	status.cursorX =
 		removeAnsiColorCodes(promptStr)
 		.split('\n').pop().length
@@ -127,6 +131,7 @@ function putPrompt(clearLine = true) {
 	if (clearLine)
 		updateLine({ left: '', right: '' })
 }
+
 
 function debugKey(ch, key) {
 	let code = ch ? ` (${ch.charCodeAt(0)})` : ''

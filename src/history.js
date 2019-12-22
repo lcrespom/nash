@@ -1,10 +1,11 @@
 let history = []
-let index = 1
+let index = 0
 let maxSize = 1000
 
 
 function clear() {
     history = []
+    index = history.length
 }
 
 function push(cmd) {
