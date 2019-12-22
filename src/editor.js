@@ -1,7 +1,6 @@
 const os = require('os')
 
 
-let keyBindings = {}
 let prompt = (pinfo) => 'nash> '
 
 let status = {
@@ -11,17 +10,14 @@ let status = {
 		left: '',
 		right: ''
 	},
-	keyListener: editorKeyListener
+	keyListener: editorKeyListener,
+	lastBinding: null
 }
 
 
-function getKeyBinding(key) {
-	let name = key.name
-	if (key.meta) name = 'meta_' + key
-	let binding = keyBindings[name]
-	return binding ? binding[0] : undefined
-}
+//-------------------- Key bindings --------------------
 
+let keyBindings = {}
 
 /**
  * Binds a given key or key combination to a function, which will be invoked
@@ -54,6 +50,37 @@ function bindKey(knames, code, desc) {
 		keyBindings[key] = [code, desc]
 }
 
+function getKeyBinding(key) {
+	let name = key.name
+	if (key.meta) name = 'meta_' + key
+	let binding = keyBindings[name]
+	return binding ? binding[0] : undefined
+}
+
+function unknownKey(key) {
+	// print('\nUnbound key: ' + key.name)
+	// console.dir(key)
+	//putPrompt(false)
+	return {
+		left: status.line.left,
+		right: status.line.right
+	}
+}
+
+function applyBinding(key) {
+	let b = getKeyBinding(key)
+	if (!b) return unknownKey(key)
+	let newLine = b(status.line)
+	status.lastBinding = b
+	return newLine
+}
+
+function getLastBinding() {
+	return status.lastBinding
+}
+
+
+//-------------------- Prompt --------------------
 
 /**
  * Sets the function that will be invoked for building the prompt string
@@ -114,7 +141,7 @@ function captureCursorPosition() {
 			x: parseInt(m[2]) - 1,
 			y: parseInt(m[1]) - 1
 		}
-		process.stdout.write(SHOW_TEXT)
+		put(SHOW_TEXT)
 	})
 }
 
@@ -122,7 +149,7 @@ function putPrompt(clearLine = true) {
 	let promptStr = prompt(getPromptInfo())
 	put(promptStr)
 	status.cursor = null
-	process.stdout.write(HIDE_TEXT + GET_CURSOR_POS)
+	put(HIDE_TEXT + GET_CURSOR_POS)
 	status.cursorX =
 		removeAnsiColorCodes(promptStr)
 		.split('\n').pop().length
@@ -133,26 +160,7 @@ function putPrompt(clearLine = true) {
 }
 
 
-function debugKey(ch, key) {
-	let code = ch ? ` (${ch.charCodeAt(0)})` : ''
-	print(`\nch: '${ch}'${code}`, '- key:', key)
-}
-
-function reportUnknownKey(key) {
-	// print('\nUnbound key: ' + key.name)
-	// console.dir(key)
-	//putPrompt(false)
-	return {
-		left: status.line.left,
-		right: status.line.right
-	}
-}
-
-function applyBinding(key) {
-	let b = getKeyBinding(key)
-	if (!b) return reportUnknownKey(key)
-	return b(status.line)
-}
+//-------------------- Line & key handling --------------------
 
 function putCursor(len) {
 	if (status.cursor) {
@@ -189,6 +197,7 @@ function editorKeyListener(key) {
 			right: status.line.right
 		}
 		updateLine(newLine)
+		status.lastBinding = null
 	}
 	else {
 		newLine = applyBinding(key)
@@ -209,7 +218,6 @@ function editorKeyListener(key) {
 		}
 	}
 }
-
 
 function isPlainKey(ch, key) {
 	const SPACE = 32
@@ -252,8 +260,8 @@ captureCursorPosition()
 module.exports = {
 	handleKeypress,
 	print,
-	getKeyBinding,
 	bindKey,
+	getLastBinding,
 	setPrompt,
 	putPrompt
 }

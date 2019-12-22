@@ -1,7 +1,9 @@
-const { bindKey } = require('../nash-plugins')
+const { bindKey, getLastBinding } = require('../nash-plugins')
 const runner = require('../runner')
 const history = require('../history')
 
+
+//--------------- Line movement and deletion ---------------
 
 function removeLastChar(str) {
 	return [
@@ -79,18 +81,33 @@ function killWholeLine(line) {
 }
 
 
+//-------------------- History navigation --------------------
+
+let hSearch = ''
+
+function getSearchText(txt) {
+	let lb = getLastBinding()
+	if (lb != upLineOrHistory && lb != downLineOrHistory) {
+		history.toEnd()
+		hSearch = txt
+	}
+	return hSearch
+}
+
 function upLineOrHistory(line) {
-	let left = history.back()	// line.left
+	let left = history.back(getSearchText(line.left))
 	if (left) return { left, right: '' }
 	else return line
 }
 
 function downLineOrHistory(line) {
-	let left = history.forward()	// line.left
+	let left = history.forward(getSearchText(line.left))
 	if (left) return { left, right: '' }
 	else return line
 }
 
+
+//--------------- Keys that break the editing process ---------------
 
 function acceptLine(line) {
 	return {
