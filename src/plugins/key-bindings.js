@@ -80,13 +80,13 @@ function killWholeLine(line) {
 
 
 function upLineOrHistory(line) {
-	let left = history.back()
+	let left = history.back()	// line.left
 	if (left) return { left, right: '' }
 	else return line
 }
 
 function downLineOrHistory(line) {
-	let left = history.forward()
+	let left = history.forward()	// line.left
 	if (left) return { left, right: '' }
 	else return line
 }

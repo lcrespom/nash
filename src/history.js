@@ -2,22 +2,37 @@ let history = []
 let index = 1
 let maxSize = 1000
 
+
+function clear() {
+    history = []
+}
+
 function push(cmd) {
     history.push(cmd)
     if (history.length > maxSize) history.splice(0, 1)
     index = history.length
 }
 
-function back() {
-    if (index == 0) return null
-    index--
-    return history[index]
+function back(text = '') {
+    while (index > 0) {
+        index--
+        if (history[index].startsWith(text))
+            return history[index]
+    }
+    return null
 }
 
-function forward() {
-    if (index == history.length - 1) return null
-    index++
-    return history[index]
+function forward(text = '') {
+    while (index < history.length - 1) {
+        index++
+        if (history[index].startsWith(text))
+            return history[index]
+    }
+    return null
+}
+
+function toEnd() {
+    index = history.length
 }
 
 function all() {
@@ -34,9 +49,11 @@ function save() {
 
 
 module.exports = {
+    clear,
     push,
     back,
     forward,
+    toEnd,
     all,
     load,
     save
