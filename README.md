@@ -22,7 +22,7 @@ Nash is a command-line shell that uses JavaScript and Node.js for scripting.
 		- [ ] Advanced (navigate over list)
 - [ ] Execute commands
 	- [x] Delegate to external shell
-	- [ ] Update $? (...etc)
+	- [ ] Update "$?" (...etc)
 	- [ ] Use command line interpreter library:
 		- See https://github.com/mvdan/sh
 		- Node-Go integration: https://medium.com/learning-the-go-programming-language/calling-go-functions-from-other-languages-4c7d8bcc69bf
@@ -36,7 +36,7 @@ Nash is a command-line shell that uses JavaScript and Node.js for scripting.
 - [x] Configuration (.nash.json / .nash.js)
 - [ ] Substitution
 	- [x] JavaScript
-	- [ ] Alias
+	- [x] Alias
 	- Environment variables and glob expansion handled by external shell
 - [ ] Cool extensions
 	- [ ] Syntax highlight
