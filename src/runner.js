@@ -1,5 +1,3 @@
-const { spawn } = require('child_process')
-const os = require('os')
 let pty = require('node-pty')
 
 const parser = require('./parser')
@@ -32,32 +30,39 @@ function expandArgs(args) {
 }
 
 
-//-------------------- Shell setup --------------------
+//-------------------- Pseudo-terminal management --------------------
 
-let isWindows = os.platform() == 'win32'
 let promptCB = null
-
-function setPrompt(ptyProcess) {
-	if (isWindows) {
-		ptyProcess.write('function Prompt { "\\n<)(>\\n"}\n')
-	}
-	else {
-		ptyProcess.write('export PS1="\\n<)(>\\n"\n\n')
-	}	
-}
+let theCommand = null
 
 function getShellName() {
-	let shell = process.argv[2] || process.env.SHELL
-	if (shell)
-		return shell
-	else
-		return isWindows ? 'powershell.exe' : 'bash'
+	return process.argv[2] || process.env.SHELL || 'bash'
+}
+
+function sholuldEcho() {
+	return theCommand
+}
+
+function dataFromShell(data) {
+	if (!sholuldEcho()) return
+	let prompt = '\r\r\n<)(>\r\r\n'
+	if (data.endsWith(prompt)) {
+		data = data.substr(0, data.length - prompt.length)
+		process.stdout.write(data)
+		if (promptCB) promptCB()
+		promptCB = null
+		theCommand = null
+	}
+	else {
+		process.stdout.write(data)
+	}
 }
 
 function startShell() {
     let shell = getShellName()
     let term = process.env.TERM || 'xterm-256color'
-    let dir = process.cwd() || (isWindows ? process.env.USERPROFILE : process.env.HOME)
+    let dir = process.cwd() || process.env.HOME
+	process.env.PS1 = '\\n<)(>\\n'
     let ptyProcess = pty.spawn(shell, [], {
         name: term,
         cols: process.stdout.columns,
@@ -65,22 +70,10 @@ function startShell() {
         cwd: dir,
         env: process.env
 	})
-	setPrompt(ptyProcess)
     process.stdout.on('resize', () => {
         ptyProcess.resize(process.stdout.columns, process.stdout.rows)
     })
-    ptyProcess.onData(data => {
-        let prompt = '\r\r\n<)(>\r\r\n'
-        if (data.endsWith(prompt)) {
-            data = data.substr(0, data.length - prompt.length)
-			process.stdout.write(data)
-			if (promptCB) promptCB()
-			promptCB = null
-        }
-		else {
-			process.stdout.write(data)
-		}
-    })
+    ptyProcess.onData(dataFromShell)
     ptyProcess.onExit(evt => {
         console.log('Exited with code ' + evt.exitCode)
         ptyProcess.kill(evt.signal)
@@ -92,12 +85,13 @@ function startShell() {
 //-------------------- Running --------------------
 
 function runTheCommand(args, cb) {
-	let fullCommand = args
+	theCommand = args
 		.map(arg => arg.quote + arg.text + arg.quote)
 		.join(' ')
+	theCommand += '\n'
 	promptCB = cb
 	// TODO hide the command, or it will appear twice
-	ptyProcess.write(fullCommand + '\n')	// Write the command
+	ptyProcess.write(theCommand)	// Write the command
 	//TODO to support interactive programs,
 	//	capture and write all keys until prompt appears back
 }
@@ -106,6 +100,7 @@ function runTheCommand(args, cb) {
 function runCommand(line, cb = () => {}) {
 	process.stdout.write('\n')
 	// TODO simplify parser (and let syntax highlighter parse by itself)
+	// TODO fix / adapt / remove all failing tests
 	let args = parser.parseLine(line)
 	if (args.length > 0) {
 		args = expandArgs(args)
@@ -121,6 +116,5 @@ let ptyProcess = startShell()
 
 
 module.exports = {
-	runCommand,
-	isWindows
+	runCommand
 }

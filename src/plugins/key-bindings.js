@@ -124,13 +124,8 @@ function acceptLine(line) {
 function goodbye(line) {
 	if (line.left.length + line.right.length > 0) return line
 	history.save()
-	process.stdin.pause()
-	process.stdout.write('\n')
-	return {
-		isAsync: true,
-		showPrompt: false,
-		whenDone: function(done) { done() }
-	}
+	line.left = 'exit'
+	return acceptLine(line)
 }
 
 function discardLine() {
