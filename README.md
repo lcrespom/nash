@@ -22,22 +22,15 @@ Nash is a command-line shell that uses JavaScript and Node.js for scripting.
 		- [ ] Advanced (navigate over list)
 - [ ] Execute commands
 	- [x] Delegate to external shell
-	- [ ] Update "$?" (...etc)
-	- [ ] Use command line interpreter library:
-		- See https://github.com/mvdan/sh
-		- Node-Go integration: https://medium.com/learning-the-go-programming-language/calling-go-functions-from-other-languages-4c7d8bcc69bf
-	- [ ] Builtins
-		- [ ] cd, alias, history...
-		- [ ] Environment variable assignment (with limitations)
-		- [ ] Customization: plugin loading, key bindings, etc.
+	- [x] Permanent redirection via pseudo-tty
+	- [ ] Improve runner: hide command sent to pty
 - [x] Properly handle asynchronous key bindings
 	- [x] Shell commands: ignore any typed key
 	- [x] Interactive bindings: forward key events
 - [x] Configuration (.nash.json / .nash.js)
-- [ ] Substitution
-	- [x] JavaScript
-	- [x] Alias
-	- Environment variables and glob expansion handled by external shell
+- [x] JavaScript
+	- [x] Detect, execute, replace
+	- [x] Abort execution on error
 - [ ] Cool extensions
 	- [ ] Syntax highlight
 	- [ ] Suggestions

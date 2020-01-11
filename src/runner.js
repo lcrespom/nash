@@ -1,10 +1,10 @@
 let pty = require('node-pty')
 
-const parser = require('./parser')
-
 const NASH_MARK = '\x1E\x1E>'
 
 //-------------------- Argument pre-processiong --------------------
+
+let jsError = false
 
 function runJS(jscode) {
 	let context = process.env
@@ -14,20 +14,19 @@ function runJS(jscode) {
 		}
 		catch (e) {
 			console.error('Error evaluating JavaScript: ' + e)
+			jsError = true
 			return ''
-			// TODO do not execute command in case of JS error
 		}
-	}.call(context, jscode);
+	}.call(context, jscode)
 }
 
-function expandArgs(args) {
-	for (let arg of args) {
-		if (arg.type == parser.ParamType.javascript) {
-			arg.quote = ''
-			arg.text = runJS(arg.text)
-		}
-	}
-	return args
+function expandJS(line) {
+	jsError = false
+	let replaced = line.replace(/\$\[([^\$]+)\$\]/g, (_, js) => runJS(js))
+	if (jsError)
+		return null
+	else
+		return replaced
 }
 
 
@@ -45,7 +44,7 @@ function dataFromShell(data) {
 	if (data.endsWith(NASH_MARK)) {
 		data = data.substr(0, data.length - NASH_MARK.length)
 		process.stdout.write(data)
-		if (promptCB) promptCB()
+		if (promptCB) promptCB()  // TODO collect output and pass it to cb
 		promptCB = null
 		theCommand = null
 	}
@@ -84,22 +83,18 @@ function write(txt) {
 
 //-------------------- Running --------------------
 
-function runTheCommand(args, cb) {
-	theCommand = args
-		.map(arg => arg.quote + arg.text + arg.quote)
-		.join(' ')
+function runTheCommand(line, cb) {
+	theCommand = line
 	promptCB = cb
 	ptyProcess.write(theCommand + '\n')	// Write the command
 }
 
 
 function runCommand(line, cb = () => {}) {
-	// TODO simplify parser (and let syntax highlighter parse by itself)
 	// TODO fix / adapt / remove all failing tests
-	let args = parser.parseLine(line)
-	if (args.length > 0) {
-		args = expandArgs(args)
-		runTheCommand(args, cb)
+	line = expandJS(line.trim())
+	if (line) {
+		runTheCommand(line, cb)
 	}
 	else {
 		setTimeout(cb, 0)
