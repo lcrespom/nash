@@ -2,6 +2,7 @@ let pty = require('node-pty')
 
 const parser = require('./parser')
 
+const NASH_MARK = '<)(>'
 
 //-------------------- Argument pre-processiong --------------------
 
@@ -39,13 +40,9 @@ function getShellName() {
 	return process.argv[2] || process.env.SHELL || 'bash'
 }
 
-function sholuldEcho() {
-	return theCommand
-}
-
 function dataFromShell(data) {
-	if (!sholuldEcho()) return
-	let prompt = '\r\r\n<)(>\r\r\n'
+	if (!theCommand) return
+	let prompt = '\r\r\n' + NASH_MARK + '\r\r\n'
 	if (data.endsWith(prompt)) {
 		data = data.substr(0, data.length - prompt.length)
 		process.stdout.write(data)
@@ -62,7 +59,7 @@ function startShell() {
     let shell = getShellName()
     let term = process.env.TERM || 'xterm-256color'
     let dir = process.cwd() || process.env.HOME
-	process.env.PS1 = '\\n<)(>\\n'
+	process.env.PS1 = '\\n' + NASH_MARK + '\\n'
     let ptyProcess = pty.spawn(shell, [], {
         name: term,
         cols: process.stdout.columns,
@@ -88,10 +85,9 @@ function runTheCommand(args, cb) {
 	theCommand = args
 		.map(arg => arg.quote + arg.text + arg.quote)
 		.join(' ')
-	theCommand += '\n'
 	promptCB = cb
 	// TODO hide the command, or it will appear twice
-	ptyProcess.write(theCommand)	// Write the command
+	ptyProcess.write(theCommand + '\n')	// Write the command
 	//TODO to support interactive programs,
 	//	capture and write all keys until prompt appears back
 }
