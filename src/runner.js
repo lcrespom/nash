@@ -2,7 +2,7 @@ let pty = require('node-pty')
 
 const parser = require('./parser')
 
-const NASH_MARK = '<)(>'
+const NASH_MARK = '\x1E\x1E>'
 
 //-------------------- Argument pre-processiong --------------------
 
@@ -42,9 +42,8 @@ function getShellName() {
 
 function dataFromShell(data) {
 	if (!theCommand) return
-	let prompt = '\r\r\n' + NASH_MARK + '\r\r\n'
-	if (data.endsWith(prompt)) {
-		data = data.substr(0, data.length - prompt.length)
+	if (data.endsWith(NASH_MARK)) {
+		data = data.substr(0, data.length - NASH_MARK.length)
 		process.stdout.write(data)
 		if (promptCB) promptCB()
 		promptCB = null
@@ -59,9 +58,7 @@ function startShell() {
     let shell = getShellName()
     let term = process.env.TERM || 'xterm-256color'
 	let dir = process.cwd() || process.env.HOME
-	// TODO maybe NASH prompt it should be shorter and invisible,
-	// 	to avoid glitches where the prompt is not detected
-	process.env.PS1 = '\\n' + NASH_MARK + '\\n'
+	process.env.PS1 = NASH_MARK
     let ptyProcess = pty.spawn(shell, [], {
         name: term,
         cols: process.stdout.columns,
