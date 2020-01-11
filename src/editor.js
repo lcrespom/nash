@@ -174,6 +174,11 @@ function putCursor(len) {
 	}
 }
 
+function clearCommand() {
+	putCursor(0)
+	process.stdout.clearScreenDown()
+}
+
 function updateLine(newLine) {
 	let fullLine = newLine.left + newLine.right
 	let len = removeAnsiColorCodes(newLine.left).length
@@ -263,5 +268,6 @@ module.exports = {
 	bindKey,
 	getLastBinding,
 	setPrompt,
-	putPrompt
+	putPrompt,
+	clearCommand
 }

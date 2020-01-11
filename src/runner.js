@@ -58,7 +58,8 @@ function dataFromShell(data) {
 function startShell() {
     let shell = getShellName()
     let term = process.env.TERM || 'xterm-256color'
-    let dir = process.cwd() || process.env.HOME
+	let dir = process.cwd() || process.env.HOME
+	// TODO maybe NASH prompt it should be shorter and invisible
 	process.env.PS1 = '\\n' + NASH_MARK + '\\n'
     let ptyProcess = pty.spawn(shell, [], {
         name: term,
@@ -94,7 +95,6 @@ function runTheCommand(args, cb) {
 
 
 function runCommand(line, cb = () => {}) {
-	process.stdout.write('\n')
 	// TODO simplify parser (and let syntax highlighter parse by itself)
 	// TODO fix / adapt / remove all failing tests
 	let args = parser.parseLine(line)

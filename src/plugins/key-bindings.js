@@ -1,4 +1,4 @@
-const { bindKey, getLastBinding } = require('../nash-plugins')
+const { bindKey, getLastBinding, clearCommand } = require('../nash-plugins')
 const runner = require('../runner')
 const history = require('../history')
 
@@ -110,6 +110,7 @@ function downLineOrHistory(line) {
 //--------------- Keys that break the editing process ---------------
 
 function acceptLine(line) {
+	clearCommand()
 	return {
 		isAsync: true,
 		whenDone: function(done) {
