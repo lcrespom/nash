@@ -59,7 +59,8 @@ function startShell() {
     let shell = getShellName()
     let term = process.env.TERM || 'xterm-256color'
 	let dir = process.cwd() || process.env.HOME
-	// TODO maybe NASH prompt it should be shorter and invisible
+	// TODO maybe NASH prompt it should be shorter and invisible,
+	// 	to avoid glitches where the prompt is not detected
 	process.env.PS1 = '\\n' + NASH_MARK + '\\n'
     let ptyProcess = pty.spawn(shell, [], {
         name: term,
@@ -80,6 +81,10 @@ function startShell() {
 	return ptyProcess
 }
 
+function write(txt) {
+	ptyProcess.write(txt)
+}
+
 //-------------------- Running --------------------
 
 function runTheCommand(args, cb) {
@@ -87,10 +92,7 @@ function runTheCommand(args, cb) {
 		.map(arg => arg.quote + arg.text + arg.quote)
 		.join(' ')
 	promptCB = cb
-	// TODO hide the command, or it will appear twice
 	ptyProcess.write(theCommand + '\n')	// Write the command
-	//TODO to support interactive programs,
-	//	capture and write all keys until prompt appears back
 }
 
 
@@ -112,5 +114,6 @@ let ptyProcess = startShell()
 
 
 module.exports = {
-	runCommand
+	runCommand,
+	write
 }

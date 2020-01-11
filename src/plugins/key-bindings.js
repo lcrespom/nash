@@ -118,6 +118,9 @@ function acceptLine(line) {
 			if (cmd.trim().length > 0)
 				history.push(cmd)
 			runner.runCommand(cmd, done)
+		},
+		keyListener: function(key) {
+			runner.write(key.ch || key.sequence)
 		}
 	}
 }
