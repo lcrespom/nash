@@ -104,25 +104,12 @@ function write(txt) {
 
 //-------------------- Running --------------------
 
-function runTheCommand(line, cb) {
+function runCommand(line, cb = () => {}) {
+	// TODO fix / adapt / remove all failing tests
+	line = expandJS(line.trim())
 	theCommand = line
 	promptCB = cb
 	ptyProcess.write(theCommand + '\n')	// Write the command
-}
-
-
-function runCommand(line, cb = () => {}) {
-	// TODO fix / adapt / remove all failing tests
-	// line = line.trim()
-	// TODO allow for empty lines and pass them along
-	line = expandJS(line.trim())
-	runTheCommand(line, cb)
-	// if (line) {
-	// 	runTheCommand(line, cb)
-	// }
-	// else {		
-	// 	setTimeout(cb, 0)
-	// }
 }
 
 
