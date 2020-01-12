@@ -1,5 +1,5 @@
 const {
-	bindKey, setPrompt, getLastBinding, clearCommand
+	bindKey, setPrompt, getLastBinding
 } = require('./editor')
 const { runCommand } = require('./runner')
 
@@ -11,7 +11,6 @@ module.exports = {
 	setPrompt,
 	bindKey,
 	getLastBinding,
-	clearCommand,
 	setTerminalTitle,
 	runCommand
 	// Others: syntax highlight, suggestions, tab-completion...
