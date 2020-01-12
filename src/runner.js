@@ -62,7 +62,7 @@ function dataFromShell(data) {
 	if (data.endsWith(NASH_MARK)) {
 		data = data.substr(0, data.length - NASH_MARK.length)
 		process.stdout.write(data)
-		if (promptCB) promptCB()  // TODO collect output and pass it to cb
+		if (promptCB) promptCB()
 		promptCB = null
 	}
 	else {
@@ -105,7 +105,6 @@ function write(txt) {
 //-------------------- Running --------------------
 
 function runCommand(line, cb = () => {}) {
-	// TODO fix / adapt / remove all failing tests
 	line = expandJS(line.trim())
 	theCommand = line
 	promptCB = cb
