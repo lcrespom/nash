@@ -35,22 +35,43 @@ function expandJS(line) {
 let promptCB = null
 let theCommand = null
 
-function getShellName() {
-	return process.argv[2] || process.env.SHELL || 'bash'
+function commonInitialChars(str1, str2) {
+	let len = Math.min(str1.length, str2.length)
+	let i
+	for (i = 0; i < len; i++) {
+		if (str1[i] !== str2[i]) break
+	}
+	return i
+}
+
+function hideCommand(data) {
+	if (theCommand === null || theCommand.length === 0) {
+		return data
+	}
+	let cic = commonInitialChars(data, theCommand)
+	if (cic > 0) {
+		data = data.substr(cic)
+		theCommand = theCommand.substr(cic)
+	}	
+	return data
 }
 
 function dataFromShell(data) {
-	if (!theCommand) return
+	if (!promptCB) return
+	data = hideCommand(data)
 	if (data.endsWith(NASH_MARK)) {
 		data = data.substr(0, data.length - NASH_MARK.length)
 		process.stdout.write(data)
 		if (promptCB) promptCB()  // TODO collect output and pass it to cb
 		promptCB = null
-		theCommand = null
 	}
 	else {
 		process.stdout.write(data)
 	}
+}
+
+function getShellName() {
+	return process.argv[2] || process.env.SHELL || 'bash'
 }
 
 function startShell() {
@@ -92,13 +113,16 @@ function runTheCommand(line, cb) {
 
 function runCommand(line, cb = () => {}) {
 	// TODO fix / adapt / remove all failing tests
+	// line = line.trim()
+	// TODO allow for empty lines and pass them along
 	line = expandJS(line.trim())
-	if (line) {
-		runTheCommand(line, cb)
-	}
-	else {
-		setTimeout(cb, 0)
-	}
+	runTheCommand(line, cb)
+	// if (line) {
+	// 	runTheCommand(line, cb)
+	// }
+	// else {		
+	// 	setTimeout(cb, 0)
+	// }
 }
 
 

@@ -20,10 +20,10 @@ Nash is a command-line shell that uses JavaScript and Node.js for scripting.
 	- [ ] Completion
 		- [ ] Basic (tab)
 		- [ ] Advanced (navigate over list)
-- [ ] Execute commands
+- [x] Execute commands
 	- [x] Delegate to external shell
 	- [x] Permanent redirection via pseudo-tty
-	- [ ] Improve runner: hide command sent to pty
+	- [x] Improve runner: hide command sent to pty
 - [x] Properly handle asynchronous key bindings
 	- [x] Shell commands: ignore any typed key
 	- [x] Interactive bindings: forward key events

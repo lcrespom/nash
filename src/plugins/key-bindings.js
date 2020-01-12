@@ -110,7 +110,7 @@ function downLineOrHistory(line) {
 //--------------- Keys that break the editing process ---------------
 
 function acceptLine(line) {
-	clearCommand()
+	//clearCommand()
 	return {
 		isAsync: true,
 		whenDone: function(done) {
