@@ -1,6 +1,7 @@
 let pty = require('node-pty')
 
 const NASH_MARK = '\x1E\x1E>'
+let ptyProcess = null
 
 //-------------------- Argument pre-processiong --------------------
 
@@ -81,7 +82,7 @@ function startShell() {
     let term = process.env.TERM || 'xterm-256color'
 	let dir = process.cwd() || process.env.HOME
 	process.env.PS1 = NASH_MARK
-    let ptyProcess = pty.spawn(shell, params, {
+    ptyProcess = pty.spawn(shell, params, {
         name: term,
         cols: process.stdout.columns,
         rows: process.stdout.rows,
@@ -97,7 +98,6 @@ function startShell() {
         ptyProcess.kill(evt.signal)
         process.exit(evt.exitCode)
     })
-	return ptyProcess
 }
 
 function write(txt) {
@@ -114,10 +114,8 @@ function runCommand(line, cb = () => {}) {
 }
 
 
-let ptyProcess = startShell()
-
-
 module.exports = {
 	runCommand,
-	write
+	write,
+	startShell
 }
