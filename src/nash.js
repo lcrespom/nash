@@ -43,7 +43,8 @@ function createRCFileIfRequired() {
 PS1=$'\\x1E\\x1E>'
 
 # Enable colors in ls command
-alias ls="ls ${getLsOptions()}"`
+alias ls="ls ${getLsOptions()}"
+`
 	let rcname = os.homedir() + '/.nashrc'
 	if (fs.existsSync(rcname)) return
 	fs.writeFileSync(rcname, NASH_RC)
