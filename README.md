@@ -1,7 +1,23 @@
 # Nash
-Nash is a command-line shell that uses JavaScript and Node.js for scripting.
+Nash is a command-line editor for `bash` or compatible shells. It handles user input to provide a better user experience, but when the user hits the `Enter` key, it simply passes the command to `bash` for processing.
 
-## TODO
+Nash is implemented in JavaScript and is designed to be highly extensible and customizable.
+
+It is currently under development, so some features are still missing. See the ToDo section below for details.
+
+## Installation
+Just clone the repo, install and use `npm start` to open a shell:
+```
+git clone https://github.com/lcrespom/nash.git
+npm install
+npm start
+```
+
+### Windows
+There is no direct Windows support, but an Ubuntu terminal can be installed in windows very easily through the Microsoft Store. See instructions [here](https://tutorials.ubuntu.com/tutorial/tutorial-ubuntu-on-windows). You will need to install the Ubuntu version of `node` and `npm` through the debian package manager, i.e. `sudo apt install node` and `sudo apt install npm`, respectively.
+
+
+## ToDo
 - [x] Parse
 - [x] Read from console
 - [ ] Line editing
@@ -24,6 +40,7 @@ Nash is a command-line shell that uses JavaScript and Node.js for scripting.
 	- [x] Delegate to external shell
 	- [x] Permanent redirection via pseudo-tty
 	- [x] Improve runner: hide command sent to pty
+	- [ ] **Big problem**: get user/cwd from bash
 	- [ ] Non-interactive runner.runCommand(...)
 - [x] Properly handle asynchronous key bindings
 	- [x] Shell commands: ignore any typed key
