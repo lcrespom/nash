@@ -94,9 +94,8 @@ function startShell() {
     })
     ptyProcess.onData(dataFromShell)
     ptyProcess.onExit(evt => {
-        console.log('Exited with code ' + evt.exitCode)
         ptyProcess.kill(evt.signal)
-        process.exit(evt.exitCode)
+        process.exit(0)
     })
 }
 
