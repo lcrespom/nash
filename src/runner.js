@@ -70,16 +70,18 @@ function dataFromShell(data) {
 	}
 }
 
-function getShellName() {
-	return process.argv[2] || process.env.SHELL || 'bash'
+function getShellNameAndParams() {
+	let shell = process.argv[2] || process.env.SHELL || 'bash'
+	params = shell == 'bash' ? ['--rcfile', '~/.nashrc'] : []
+	return [shell, params]
 }
 
 function startShell() {
-    let shell = getShellName()
+    let [shell, params] = getShellNameAndParams()
     let term = process.env.TERM || 'xterm-256color'
 	let dir = process.cwd() || process.env.HOME
 	process.env.PS1 = NASH_MARK
-    let ptyProcess = pty.spawn(shell, [], {
+    let ptyProcess = pty.spawn(shell, params, {
         name: term,
         cols: process.stdout.columns,
         rows: process.stdout.rows,

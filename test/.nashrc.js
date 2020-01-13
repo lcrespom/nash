@@ -1,6 +1,19 @@
+/**
+ * This is an example of a "plugin" file, where the user customizes nash
+ * using the API provided by `nash-plugins`.
+ * 
+ * It will be automatically executed by nash upon startup, if placed in
+ * `~/.nasrc.js`.
+ * 
+ * Notice that for executing standard shell commands during startup
+ * (e.g. for setting up aliases, $PATH, etc.), the equivalent file
+ * `~/.nashrc` should be used.
+ */
+
+
 const chalk = module.parent.require('chalk')
 
-const { setPrompt, runCommand } = module.parent.require('./nash-plugins')
+const { setPrompt } = module.parent.require('./nash-plugins')
 
 
 const SEGMENT_SEPARATOR = '\ue0b0'
@@ -17,4 +30,3 @@ function prompt({ cwd, username, hostname }) {
 
 
 setPrompt(prompt)
-runCommand('alias ls="ls -G"')
