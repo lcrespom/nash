@@ -3,6 +3,7 @@ let pty = require('node-pty')
 const NASH_MARK = '\x1E\x1E>'
 let ptyProcess = null
 
+
 //-------------------- Argument pre-processiong --------------------
 
 let jsError = false
@@ -14,7 +15,7 @@ function runJS(jscode) {
 			return eval(txt)
 		}
 		catch (e) {
-			console.error('Error evaluating JavaScript: ' + e)
+			console.error('\nError evaluating JavaScript: ' + e)
 			jsError = true
 			return ''
 		}
@@ -25,7 +26,7 @@ function expandJS(line) {
 	jsError = false
 	let replaced = line.replace(/\$\[([^\$]+)\$\]/g, (_, js) => runJS(js))
 	if (jsError)
-		return null
+		return ''	// Do not execute command
 	else
 		return replaced
 }
@@ -33,7 +34,7 @@ function expandJS(line) {
 
 //-------------------- Terminal state machine --------------------
 
-let TermStatus = {
+let TermState = {
 	waitingCommand: 'waiting',
 	readingCommand: 'reading',
 	runningCommand: 'running',
@@ -43,10 +44,7 @@ let TermStatus = {
 
 let promptCB = null
 let theCommand = null
-let status = TermStatus.waitingCommand
-
-
-//-------------------- Pseudo-terminal management --------------------
+let state = TermState.waitingCommand
 
 function commonInitialChars(str1, str2) {
 	let len = Math.min(str1.length, str2.length)
@@ -63,10 +61,9 @@ function hideCommand(data) {
 		data = data.substr(cic)
 		theCommand = theCommand.substr(cic)
 		if (theCommand.length === 0) {
-			// status = status == TermStatus.readingCommand
-			// 	? TermStatus.runningCommand
-			// 	: TermStatus.capturingStatus
-			status = TermStatus.runningCommand
+			state = state == TermState.readingCommand
+				? TermState.runningCommand
+				: TermState.capturingStatus
 			if (data.length > 0)
 				dataFromShell(data)
 		}
@@ -81,39 +78,46 @@ function checkPromptAndWrite(data) {
 	if (data.endsWith(NASH_MARK)) {
 		data = data.substr(0, data.length - NASH_MARK.length)
 		process.stdout.write(data)
-		promptCB()
-		status = TermStatus.waitingCommand
+		state = TermState.readingStatus
+		theCommand = 'id;hostname;pwd'
+		ptyProcess.write(theCommand + '\n')		
 	}
 	else {
 		process.stdout.write(data)
 	}
 }
 
-function dataFromShell(data) {
-	switch (status) {
-		case TermStatus.waitingCommand:
-			return
-		case TermStatus.readingCommand:
-			return hideCommand(data)
-		case TermStatus.runningCommand:
-			return checkPromptAndWrite(data)
-/*		case TermStatus.readingStatus:
-			return hideCommand(data)// **** but newStatus will be capturingStatus
-		case TermStatus.capturingStatus:
-			return captureStatus(data)*/
+function captureStatus(data) {
+	if (data.endsWith(NASH_MARK)) {
+		data = data.substr(0, data.length - NASH_MARK.length)
+		//process.stdout.write('<* ' + data + ' *>')	//TODO remove this
+		// TODO userStatus += data, etc.
+		promptCB()
+		state = TermState.waitingCommand
 	}
-	// if (!promptCB) return
-	// data = hideCommand(data)
-	// if (data.endsWith(NASH_MARK)) {
-	// 	data = data.substr(0, data.length - NASH_MARK.length)
-	// 	process.stdout.write(data)
-	// 	if (promptCB) promptCB()
-	// 	promptCB = null
-	// }
-	// else {
-	// 	process.stdout.write(data)
-	// }
+	else {
+		//process.stdout.write('<* ' + data + ' *>')	//TODO remove this
+		// TODO userStatus += data, etc.
+	}
 }
+
+function dataFromShell(data) {
+	switch (state) {
+		case TermState.waitingCommand:
+			return
+		case TermState.readingCommand:
+			return hideCommand(data)
+		case TermState.runningCommand:
+			return checkPromptAndWrite(data)
+		case TermState.readingStatus:
+			return hideCommand(data)
+		case TermState.capturingStatus:
+			return captureStatus(data)
+	}
+}
+
+
+//-------------------- Pseudo-terminal management --------------------
 
 function getShellNameAndParams() {
 	let shell = process.argv[2] || process.env.SHELL || 'bash'
@@ -147,14 +151,16 @@ function write(txt) {
 	ptyProcess.write(txt)
 }
 
+
 //-------------------- Running --------------------
 
 function runCommand(line, cb = () => {}) {
-	line = expandJS(line.trim())
-	theCommand = line
+	theCommand = expandJS(line.trim())
 	promptCB = cb
-	status = TermStatus.readingCommand
-	ptyProcess.write(theCommand + '\n')	// Write the command
+	state = theCommand.length > 0
+		? TermState.readingCommand
+		: TermState.runningCommand
+	ptyProcess.write(theCommand + '\n')
 }
 
 
