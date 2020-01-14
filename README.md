@@ -18,7 +18,6 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 
 
 ## ToDo
-- [x] Parse
 - [x] Read from console
 - [ ] Line editing
 	- [x] Simple chars
@@ -50,6 +49,10 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 - [x] JavaScript
 	- [x] Detect, execute, replace
 	- [x] Abort execution on error
+- [ ] Parse
+	- [ ] Follow strict rules described here: https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html
+	- [ ] Provide useful information for completion and syntax highlight
+	- [ ] Tokenize: commands, parameters, quoted strings, backticks, JavaScript, comments, pipe, redirects, syntax errors...
 - [ ] Cool extensions
 	- [ ] Syntax highlight
 	- [ ] Suggestions
