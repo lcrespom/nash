@@ -104,7 +104,10 @@ function captureStatus(data) {
 	if (data.endsWith(NASH_MARK)) {
 		data = data.substr(0, data.length - NASH_MARK.length)
 		userStatus += data
-		promptCB(parseUserStatus())
+		let ustatus = parseUserStatus()
+		if (process.cwd() != ustatus.cwd)
+			process.chdir(ustatus.cwd)
+		promptCB(ustatus)
 		state = TermState.waitingCommand
 	}
 	else {
