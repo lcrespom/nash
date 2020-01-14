@@ -41,7 +41,7 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [x] Delegate to external shell
 	- [x] Permanent redirection via pseudo-tty
 	- [x] Improve runner: hide command sent to pty
-	- [ ] **Big problem**: get user/cwd from bash
+	- [x] Get user/cwd from bash
 	- [ ] Non-interactive runner.runCommand(...)
 - [x] Properly handle asynchronous key bindings
 	- [x] Shell commands: ignore any typed key
