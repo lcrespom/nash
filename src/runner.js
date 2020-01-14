@@ -45,6 +45,7 @@ let TermState = {
 let promptCB = null
 let theCommand = null
 let state = TermState.waitingCommand
+let userStatus = ''
 
 function commonInitialChars(str1, str2) {
 	let len = Math.min(str1.length, str2.length)
@@ -69,7 +70,8 @@ function hideCommand(data) {
 		}
 	}
 	else {
-		console.dir('Invalid state:', data)
+		// Invalid state...
+		process.stdout.write(data)
 	}
 	return data
 }
@@ -79,7 +81,8 @@ function checkPromptAndWrite(data) {
 		data = data.substr(0, data.length - NASH_MARK.length)
 		process.stdout.write(data)
 		state = TermState.readingStatus
-		theCommand = 'id;hostname;pwd'
+		theCommand = 'whoami;pwd'
+		userStatus = ''
 		ptyProcess.write(theCommand + '\n')		
 	}
 	else {
@@ -87,17 +90,25 @@ function checkPromptAndWrite(data) {
 	}
 }
 
+function parseUserStatus() {
+	let lines = userStatus.split('\n')
+		.map(l => l.trim())
+		.filter(l => l.length > 0)
+	return {
+		username: lines[0],
+		cwd: lines[1]
+	}
+}
+
 function captureStatus(data) {
 	if (data.endsWith(NASH_MARK)) {
 		data = data.substr(0, data.length - NASH_MARK.length)
-		//process.stdout.write('<* ' + data + ' *>')	//TODO remove this
-		// TODO userStatus += data, etc.
-		promptCB()
+		userStatus += data
+		promptCB(parseUserStatus())
 		state = TermState.waitingCommand
 	}
 	else {
-		//process.stdout.write('<* ' + data + ' *>')	//TODO remove this
-		// TODO userStatus += data, etc.
+		userStatus += data
 	}
 }
 

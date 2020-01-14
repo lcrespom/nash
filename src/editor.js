@@ -58,9 +58,6 @@ function getKeyBinding(key) {
 }
 
 function unknownKey(key) {
-	// print('\nUnbound key: ' + key.name)
-	// console.dir(key)
-	//putPrompt(false)
 	return {
 		left: status.line.left,
 		right: status.line.right
@@ -111,12 +108,12 @@ function removeAnsiColorCodes(str) {
 	return str.replace(/\x1b\[[0-9;]*m/g, '')
 }
 
-function getPromptInfo() {
-	let cwd = process.cwd()
+function getPromptInfo(userStatus) {
+	let cwd = userStatus.cwd || process.cwd()
 	let homedir = os.homedir()
 	if (cwd.startsWith(homedir))
 		cwd = '~' + cwd.substr(homedir.length)
-	let username = os.userInfo().username
+	let username = userStatus.username || os.userInfo().username
 	let fqdn = os.hostname()
 	let hostname = fqdn.split('.')[0]
 	return {
@@ -145,8 +142,8 @@ function captureCursorPosition() {
 	})
 }
 
-function putPrompt(clearLine = true) {
-	let promptStr = prompt(getPromptInfo())
+function putPrompt(userStatus = {}) {
+	let promptStr = prompt(getPromptInfo(userStatus))
 	put(promptStr)
 	status.cursor = null
 	put(HIDE_TEXT + GET_CURSOR_POS)
@@ -155,8 +152,7 @@ function putPrompt(clearLine = true) {
 		.split('\n').pop().length
 	status.cols = process.stdout.columns
 	status.rows = 0
-	if (clearLine)
-		updateLine({ left: '', right: '' })
+	updateLine({ left: '', right: '' })
 }
 
 
@@ -203,10 +199,10 @@ function editorKeyListener(key) {
 		newLine = applyBinding(key)
 		if (newLine.isAsync) {
 			status.keyListener = newLine.keyListener || doNothingKeyListener
-			newLine.whenDone(() => {
+			newLine.whenDone(userStatus => {
 				status.keyListener = editorKeyListener
 				if (newLine.showPrompt !== false)
-					putPrompt()
+					putPrompt(userStatus)
 				if (newLine.left !== undefined)
 					updateLine(newLine)
 			})
