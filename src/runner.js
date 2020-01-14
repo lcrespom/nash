@@ -31,10 +31,22 @@ function expandJS(line) {
 }
 
 
-//-------------------- Pseudo-terminal management --------------------
+//-------------------- Terminal state machine --------------------
+
+let TermStatus = {
+	waitingCommand: 'waiting',
+	readingCommand: 'reading',
+	runningCommand: 'running',
+	readingStatus: 'rstatus',
+	capturingStatus: 'cstatus'
+}
 
 let promptCB = null
 let theCommand = null
+let status = TermStatus.waitingCommand
+
+
+//-------------------- Pseudo-terminal management --------------------
 
 function commonInitialChars(str1, str2) {
 	let len = Math.min(str1.length, str2.length)
@@ -46,29 +58,61 @@ function commonInitialChars(str1, str2) {
 }
 
 function hideCommand(data) {
-	if (theCommand === null || theCommand.length === 0) {
-		return data
-	}
 	let cic = commonInitialChars(data, theCommand)
 	if (cic > 0) {
 		data = data.substr(cic)
 		theCommand = theCommand.substr(cic)
-	}	
+		if (theCommand.length === 0) {
+			// status = status == TermStatus.readingCommand
+			// 	? TermStatus.runningCommand
+			// 	: TermStatus.capturingStatus
+			status = TermStatus.runningCommand
+			if (data.length > 0)
+				dataFromShell(data)
+		}
+	}
+	else {
+		console.dir('Invalid state:', data)
+	}
 	return data
 }
 
-function dataFromShell(data) {
-	if (!promptCB) return
-	data = hideCommand(data)
+function checkPromptAndWrite(data) {
 	if (data.endsWith(NASH_MARK)) {
 		data = data.substr(0, data.length - NASH_MARK.length)
 		process.stdout.write(data)
-		if (promptCB) promptCB()
-		promptCB = null
+		promptCB()
+		status = TermStatus.waitingCommand
 	}
 	else {
 		process.stdout.write(data)
 	}
+}
+
+function dataFromShell(data) {
+	switch (status) {
+		case TermStatus.waitingCommand:
+			return
+		case TermStatus.readingCommand:
+			return hideCommand(data)
+		case TermStatus.runningCommand:
+			return checkPromptAndWrite(data)
+/*		case TermStatus.readingStatus:
+			return hideCommand(data)// **** but newStatus will be capturingStatus
+		case TermStatus.capturingStatus:
+			return captureStatus(data)*/
+	}
+	// if (!promptCB) return
+	// data = hideCommand(data)
+	// if (data.endsWith(NASH_MARK)) {
+	// 	data = data.substr(0, data.length - NASH_MARK.length)
+	// 	process.stdout.write(data)
+	// 	if (promptCB) promptCB()
+	// 	promptCB = null
+	// }
+	// else {
+	// 	process.stdout.write(data)
+	// }
 }
 
 function getShellNameAndParams() {
@@ -109,6 +153,7 @@ function runCommand(line, cb = () => {}) {
 	line = expandJS(line.trim())
 	theCommand = line
 	promptCB = cb
+	status = TermStatus.readingCommand
 	ptyProcess.write(theCommand + '\n')	// Write the command
 }
 

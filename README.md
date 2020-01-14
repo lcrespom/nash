@@ -36,6 +36,7 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [ ] Completion
 		- [ ] Basic (tab)
 		- [ ] Advanced (navigate over list)
+	- [ ] Minimize cursor glitches by re-writing from the first different char
 - [ ] Execute commands
 	- [x] Delegate to external shell
 	- [x] Permanent redirection via pseudo-tty
