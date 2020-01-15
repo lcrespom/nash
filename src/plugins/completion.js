@@ -7,6 +7,10 @@ function traverseAST(node, nodeCB) {
         for (cmd of node.commands)
             traverseAST(cmd, nodeCB)
     }
+    else if (node.type == 'LogicalExpression') {
+        traverseAST(node.left, nodeCB)
+        traverseAST(node.right, nodeCB)
+    }
     else {
         nodeCB(node)
     }
@@ -28,22 +32,25 @@ function getNodeInPosition(ast, pos) {
 }
 
 function getLocAndType(node, pos) {
-    if (node.type != 'Command') return null
+    if (!node) return [null, 'unknown']
+    if (node.type != 'Command') return [node.loc, 'unknown']
     if (insideLoc(node.name.loc, pos)) return [node.name.loc, 'command']
-    if (!node.suffix) return null
+    if (!node.suffix) return [node.loc, 'unknown']
     for (let s of node.suffix)
         if (insideLoc(s.loc, pos)) return [s.loc, 'parameter']
     // TODO check suffix: expansion, file, etc
-    return null
+    return  [node.loc, 'unknown']
 }
 
 function getWordAndType(line) {
-    let pos = line.left.length
+    let pos = line.left.length - 1
     let ast = parse(line.left + line.right, { insertLOC: true })
-    pos = Math.min(pos, ast.loc.end.char)
     let node = getNodeInPosition(ast, pos)
     let [loc, type] = getLocAndType(node, pos)
-    return [line.left.substr(loc.start.char), type]
+    if (type == 'unknown')
+        return ['', type]
+    else
+        return [line.left.substr(loc.start.char), type]
 }
 
 

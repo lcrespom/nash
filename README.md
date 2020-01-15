@@ -24,6 +24,7 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [x] Basic movement: left, right, backspace, home, end
 	- [x] Enter: run command
 	- [x] Ctrl-C, Ctrl-D, etc.
+	- [ ] Catch exceptions in bindings to avoid breaking the shell
 	- [ ] Multi-line
 		- [x] Lines longer than the terminal width
 		- [x] Multi-line prompt
