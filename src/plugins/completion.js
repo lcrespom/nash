@@ -13,7 +13,7 @@ function traverseAST(node, nodeCB) {
 }
 
 function insideLoc(loc, pos) {
-    return loc.start.char <= pos && loc.end.char >= pos
+    return loc.start.char <= pos && pos <= loc.end.char
 }
 
 function getNodeInPosition(ast, pos) {
@@ -29,7 +29,6 @@ function getNodeInPosition(ast, pos) {
 
 function getLocAndType(node, pos) {
     if (node.type != 'Command') return null
-    // TODO cut word from loc.start.char to to pos
     if (insideLoc(node.name.loc, pos)) return [node.name.loc, 'command']
     if (!node.suffix) return null
     for (let s of node.suffix)
@@ -41,6 +40,7 @@ function getLocAndType(node, pos) {
 function getWordAndType(line) {
     let pos = line.left.length
     let ast = parse(line.left + line.right, { insertLOC: true })
+    pos = Math.min(pos, ast.loc.end.char)
     let node = getNodeInPosition(ast, pos)
     let [loc, type] = getLocAndType(node, pos)
     return [line.left.substr(loc.start.char), type]
