@@ -2,6 +2,14 @@ const { bindKey } = require('../nash-plugins')
 const parse = require('bash-parser')
 
 
+const SuggestType = {
+    unknown: 'unknown',
+    command: 'command',
+    parameter: 'parameter',
+    environment: 'environment'
+}
+
+
 function traverseAST(node, nodeCB) {
     if (node.commands) {
         for (cmd of node.commands)
@@ -32,34 +40,80 @@ function getNodeInPosition(ast, pos) {
 }
 
 function getLocAndType(node, pos) {
-    if (!node) return [null, 'unknown']
-    if (node.type != 'Command') return [node.loc, 'unknown']
-    if (insideLoc(node.name.loc, pos)) return [node.name.loc, 'command']
-    if (!node.suffix) return [node.loc, 'unknown']
+    if (!node) return [null, SuggestType.unknown]
+    if (node.type != 'Command') return [node.loc, SuggestType.unknown]
+    if (insideLoc(node.name.loc, pos)) return [node.name.loc, SuggestType.command]
+    if (!node.suffix) return [node.loc, SuggestType.unknown]
     for (let s of node.suffix)
-        if (insideLoc(s.loc, pos)) return [s.loc, 'parameter']
+        if (insideLoc(s.loc, pos)) return [s.loc, SuggestType.parameter]
     // TODO check suffix: expansion, file, etc
-    return  [node.loc, 'unknown']
+    return  [node.loc, SuggestType.unknown]
 }
 
 function getWordAndType(line) {
     let pos = line.left.length - 1
-    let ast = parse(line.left + line.right, { insertLOC: true })
-    let node = getNodeInPosition(ast, pos)
-    let [loc, type] = getLocAndType(node, pos)
-    if (type == 'unknown')
-        return ['', type]
-    else
-        return [line.left.substr(loc.start.char), type]
+    try {
+        let ast = parse(line.left + line.right, { insertLOC: true })
+        let node = getNodeInPosition(ast, pos)
+        let [loc, type] = getLocAndType(node, pos)
+        if (type == SuggestType.unknown)
+            return ['', type]
+        else
+            return [line.left.substr(loc.start.char), type]
+    }
+    catch (err) {
+        return ['', SuggestType.unknown]
+    }
 }
 
+function getCommandSuggestions(word) {
+    return  [word + 'command']
+}
+
+function getParameterSuggestions(word) {
+    if (word.startsWith('-'))
+        return [word]
+    return [word +  SuggestType.parameter]
+}
+
+function getEnvironmentSuggestions(word) {
+    return [word + 'environment']
+}
+
+function getSuggestions(word, type) {
+    if (type == SuggestType.parameter && word[0] == '$')
+        //TODO improve environment expansion detection
+        type = SuggestType.environment
+    switch (type) {
+        case SuggestType.unknown: return []
+        case SuggestType.command: return getCommandSuggestions(word)
+        case SuggestType.parameter: return getParameterSuggestions(word)
+        case SuggestType.environment: return getEnvironmentSuggestions(word)
+    }
+}
+
+function cutLastChars(str, numch) {
+    return str.substr(0, str.length - numch)
+}
 
 
 function completeWord(line) {
     if (line.left.length == 0) return line
-    wat = getWordAndType(line)
-    //TODO complete...
-    return line
+    let [word, type] = getWordAndType(line)
+    words = getSuggestions(word, type)
+    if (words.length == 0) {
+        return line
+    }
+    if (words.length == 1) {
+        return {
+            left: cutLastChars(line.left, word.length) + words[0],
+            right: line.right
+        }
+    }
+    else {
+        //TODO show options, let user navigate
+        return line
+    }
 }
 
 

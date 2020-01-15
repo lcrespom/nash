@@ -55,6 +55,7 @@ function main() {
 	createRCFileIfRequired()
 	loadPlugin('./plugins/key-bindings')
 	loadPlugin('./plugins/prompt')
+	loadPlugin('./plugins/completion')
 	loadNashRC()
 	editor.putPrompt()
 	history.load()

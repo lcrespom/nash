@@ -48,3 +48,10 @@ test('Between commands', () => {
     expect(type).toBe('unknown')
     expect(word).toBe('')
 })
+
+test('Environment', () => {
+    let line = { left: 'echo $TERM', right: '' }
+    let [word, type] = completion.getWordAndType(line)
+    expect(type).toBe('parameter')
+    expect(word).toBe('$TERM')
+})
