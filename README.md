@@ -34,7 +34,7 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 		- [x] Basic
 		- [x] Context sensitive
 	- [ ] Completion
-		- [ ] Basic (tab)
+		- [x] Basic (tab)
 		- [ ] Advanced (navigate over list)
 	- [ ] Minimize cursor glitches by re-writing from the first different char
 - [ ] Execute commands
