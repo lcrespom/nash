@@ -101,7 +101,9 @@ function getParameterSuggestions(word) {
 }
 
 function getEnvironmentSuggestions(word) {
-    return [word + 'environment']
+    return Object.keys(process.env)
+        .map(w => '$' + w)
+        .filter(w => w.startsWith(word))
 }
 
 function getSuggestions(word, type) {
