@@ -1,5 +1,7 @@
-const { bindKey } = require('../nash-plugins')
 const parse = require('bash-parser')
+const glob = require('fast-glob')
+
+const { bindKey } = require('../nash-plugins')
 
 
 const SuggestType = {
@@ -73,7 +75,11 @@ function getCommandSuggestions(word) {
 function getParameterSuggestions(word) {
     if (word.startsWith('-'))
         return [word]
-    return [word +  SuggestType.parameter]
+    // Get all files that start with 'word'
+    //  'word' can be a relative or absolute path, even a glob
+    if (!word.includes('*'))
+        word += '*'
+    return glob.sync(word, { onlyFiles: false, markDirectories: true })
 }
 
 function getEnvironmentSuggestions(word) {
