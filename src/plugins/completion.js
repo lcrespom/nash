@@ -4,13 +4,14 @@ const glob = require('fast-glob')
 const { bindKey } = require('../nash-plugins')
 
 
+//------------------------- AST Searching -------------------------
+
 const SuggestType = {
     unknown: 'unknown',
     command: 'command',
     parameter: 'parameter',
     environment: 'environment'
 }
-
 
 function traverseAST(node, nodeCB) {
     if (node.commands) {
@@ -68,8 +69,25 @@ function getWordAndType(line) {
     }
 }
 
+
+//------------------------- Suggestions -------------------------
+
+const builtins = [
+    "break", "cd", "continue", "eval", "exec", "exit", "export",
+    "getopts", "hash", "pwd", "readonly", "return", "shift", "test",
+    "times", "trap", "umask", "unset",
+    "alias", "bind", "builtin", "caller", "command", "declare", "echo",
+    "enable", "help", "let", "local", "logout", "mapfile", "printf",
+    "read", "readarray", "source", "type", "typeset", "ulimit", "unalias"
+].sort()
+
 function getCommandSuggestions(word) {
-    return  [word + 'command']
+    let paths = process.env.PATH
+        .split(':')
+        .map(p => p + '/' + word + '*')
+    return glob.sync(paths)
+        .map(w => w.split('/').pop())
+        .concat(builtins.filter(w => w.startsWith(word)))
 }
 
 function getParameterSuggestions(word) {
@@ -102,6 +120,8 @@ function cutLastChars(str, numch) {
     return str.substr(0, str.length - numch)
 }
 
+
+//------------------------- Key binding -------------------------
 
 function completeWord(line) {
     if (line.left.length == 0) return line
