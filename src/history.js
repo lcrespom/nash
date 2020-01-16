@@ -48,6 +48,7 @@ function all() {
 function getHistoryPath() {
     return os.homedir() + '/.nash_history'
 }
+
 function load() {
     let hpath = getHistoryPath()
     if (!fs.existsSync(hpath)) return

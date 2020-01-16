@@ -10,7 +10,8 @@ const SuggestType = {
     unknown: 'unknown',
     command: 'command',
     parameter: 'parameter',
-    environment: 'environment'
+    environment: 'environment',
+    option: 'option'
 }
 
 function traverseAST(node, nodeCB) {
@@ -91,10 +92,6 @@ function getCommandSuggestions(word) {
 }
 
 function getParameterSuggestions(word) {
-    if (word.startsWith('-'))
-        return [word]
-    // Get all files that start with 'word'
-    //  'word' can be a relative or absolute path, even a glob
     if (!word.includes('*'))
         word += '*'
     return glob.sync(word, { onlyFiles: false, markDirectories: true })
@@ -106,15 +103,32 @@ function getEnvironmentSuggestions(word) {
         .filter(w => w.startsWith(word))
 }
 
+function getOptionSuggestions(word) {
+    //TODO eventually provide extension points for completion
+    return []
+}
+
 function getSuggestions(word, type) {
-    if (type == SuggestType.parameter && word[0] == '$')
-        //TODO improve environment expansion detection
-        type = SuggestType.environment
+    if (type == SuggestType.parameter) {
+        if (word[0] == '$') {
+            //TODO improve environment expansion detection
+            type = SuggestType.environment
+        }
+        else if (word[0] == '-') {
+            type = SuggestType.option
+        }
+    }
     switch (type) {
-        case SuggestType.unknown: return []
-        case SuggestType.command: return getCommandSuggestions(word)
-        case SuggestType.parameter: return getParameterSuggestions(word)
-        case SuggestType.environment: return getEnvironmentSuggestions(word)
+        case SuggestType.unknown:
+            return []
+        case SuggestType.command:
+            return getCommandSuggestions(word)
+        case SuggestType.parameter:
+            return getParameterSuggestions(word)
+        case SuggestType.environment:
+            return getEnvironmentSuggestions(word)
+        case SuggestType.option:
+            return getOptionSuggestions(word)
     }
 }
 
