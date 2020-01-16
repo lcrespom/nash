@@ -128,7 +128,7 @@ function dataFromShell(data) {
 
 function getShellNameAndParams() {
 	let shell = process.argv[2] || process.env.SHELL || 'bash'
-	params = shell.includes('bash') ? ['--rcfile', '~/.nashrc'] : []
+	params = shell.includes('bash') ? ['--rcfile', '~/.nash/nashrc'] : []
 	return [shell, params]
 }
 

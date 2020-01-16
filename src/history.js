@@ -46,7 +46,7 @@ function all() {
 
 
 function getHistoryPath() {
-    return os.homedir() + '/.nash_history'
+    return os.homedir() + '/.nash/history'
 }
 
 function load() {
