@@ -83,11 +83,20 @@ const builtins = [
     "read", "readarray", "source", "type", "typeset", "ulimit", "unalias"
 ].sort()
 
+function safeGlob(paths, options) {
+    try {
+        return glob.sync(paths, options)
+    }
+    catch (err) {
+        return []
+    }
+}
+
 function getCommandSuggestions(word) {
     let paths = process.env.PATH
         .split(':')
         .map(p => p + '/' + word + '*')
-    return glob.sync(paths)
+    return safeGlob(paths)
         .map(w => w.split('/').pop())
         .concat(builtins.filter(w => w.startsWith(word)))
 }
@@ -95,7 +104,7 @@ function getCommandSuggestions(word) {
 function getParameterSuggestions(word) {
     if (!word.includes('*'))
         word += '*'
-    return glob.sync(word, { onlyFiles: false, markDirectories: true })
+    return safeGlob(word, { onlyFiles: false, markDirectories: true })
 }
 
 function getEnvironmentSuggestions(word) {
