@@ -93,6 +93,8 @@ function safeGlob(paths, options) {
 }
 
 function getCommandSuggestions(word) {
+    if (word.includes('/'))
+        return getParameterSuggestions(word)
     let paths = process.env.PATH
         .split(':')
         .map(p => p + '/' + word + '*')
