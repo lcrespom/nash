@@ -1,4 +1,6 @@
-let pty = require('node-pty')
+const pty = require('node-pty')
+
+const { commonInitialChars } = require('./utils')
 
 const NASH_MARK = '\x1E\x1E>'
 let ptyProcess = null
@@ -46,16 +48,6 @@ let promptCB = null
 let theCommand = null
 let state = TermState.waitingCommand
 let userStatus = ''
-
-function commonInitialChars(str1, str2) {
-	//UTIL
-	let len = Math.min(str1.length, str2.length)
-	let i
-	for (i = 0; i < len; i++) {
-		if (str1[i] !== str2[i]) break
-	}
-	return i
-}
 
 function hideCommand(data) {
 	let cic = commonInitialChars(data, theCommand)

@@ -1,6 +1,7 @@
 const parse = require('bash-parser')
 const glob = require('fast-glob')
 
+const { cutLastChars } = require('../utils')
 const { bindKey } = require('../nash-plugins')
 
 
@@ -130,11 +131,6 @@ function getSuggestions(word, type) {
         case SuggestType.option:
             return getOptionSuggestions(word)
     }
-}
-
-function cutLastChars(str, numch) {
-    //UTILS
-    return str.substr(0, str.length - numch)
 }
 
 

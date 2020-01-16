@@ -1,5 +1,6 @@
 const os = require('os')
 
+const { removeAnsiColorCodes } = require('./utils')
 
 let prompt = (pinfo) => 'nash> '
 
@@ -102,11 +103,6 @@ const print = console.log.bind(console)
 
 function put(str) {
 	process.stdout.write(str)
-}
-
-function removeAnsiColorCodes(str) {
-	//UTIL
-	return str.replace(/\x1b\[[0-9;]*m/g, '')
 }
 
 function getPromptInfo(userStatus) {
