@@ -52,6 +52,13 @@ test('Between commands', () => {
 test('Environment', () => {
     let line = { left: 'echo $TERM', right: '' }
     let [word, type] = completion.getWordAndType(line)
-    expect(type).toBe('parameter')
+    expect(type).toBe('environment')
     expect(word).toBe('$TERM')
+})
+
+test('Option', () => {
+    let line = { left: 'ls -lah', right: '' }
+    let [word, type] = completion.getWordAndType(line)
+    expect(type).toBe('option')
+    expect(word).toBe('-lah')
 })

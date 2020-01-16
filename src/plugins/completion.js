@@ -49,9 +49,16 @@ function getLocAndType(node, pos) {
     if (node.type != 'Command') return [node.loc, SuggestType.unknown]
     if (insideLoc(node.name.loc, pos)) return [node.name.loc, SuggestType.command]
     if (!node.suffix) return [node.loc, SuggestType.unknown]
-    for (let s of node.suffix)
-        if (insideLoc(s.loc, pos)) return [s.loc, SuggestType.parameter]
-    // TODO check suffix: expansion, file, etc
+    for (let s of node.suffix) {
+        if (insideLoc(s.loc, pos)) {
+            if (s.text[0] == '$')
+                return [s.loc, SuggestType.environment]
+            else if (s.text[0] == '-')
+                return [s.loc, SuggestType.option]
+            else
+                return [s.loc, SuggestType.parameter]
+        }
+    }
     return  [node.loc, SuggestType.unknown]
 }
 
@@ -121,15 +128,6 @@ function getOptionSuggestions(word) {
 }
 
 function getSuggestions(word, type) {
-    if (type == SuggestType.parameter) {
-        if (word[0] == '$') {
-            //TODO improve environment expansion detection
-            type = SuggestType.environment
-        }
-        else if (word[0] == '-') {
-            type = SuggestType.option
-        }
-    }
     switch (type) {
         case SuggestType.unknown:
             return []
