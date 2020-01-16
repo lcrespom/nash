@@ -18,6 +18,9 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 
 
 ## ToDo
+- [ ] Documentation
+	- [ ] Usage
+	- [ ] Extension API
 - [ ] Line editing
 	- [x] Simple chars
 	- [x] Basic movement: left, right, backspace, home, end
@@ -40,7 +43,6 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 - [x] Tidy .nash* files
 	- [x] Create .nash/ diectory at ~ during startup if not present
 	- [x] Place all .nash* files in there: history, nashrc, nashrc.js, plugins...
-	- [ ] Create sample .nash/nashrc.js file
 - [ ] Execute commands
 	- [x] Delegate to external shell
 	- [x] Permanent redirection via pseudo-tty
