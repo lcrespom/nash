@@ -3,11 +3,11 @@
  * using the API provided by `nash-plugins`.
  * 
  * It will be automatically executed by nash upon startup, if placed in
- * `~/.nasrc.js`.
+ * `~/.nash/nashrc.js`.
  * 
  * Notice that for executing standard shell commands during startup
  * (e.g. for setting up aliases, $PATH, etc.), the equivalent file
- * `~/.nashrc` should be used.
+ * `~/.nash/nashrc` should be used.
  */
 
 

@@ -2,6 +2,8 @@ const fs = require('fs')
 const os = require('os')
 
 
+//------------------------------ RC files ------------------------------
+
 function getLsOptions() {
 	if (process.platform === 'darwin') return '-G'
 	else return '--color=auto'
@@ -21,6 +23,9 @@ alias ls="ls ${getLsOptions()}"
 	fs.writeFileSync(rcname, NASH_RC)
 }
 
+
+//------------------------------ Startup ------------------------------
+
 function createNashDirIfRequired() {
     let nashDir = os.homedir() + '/.nash'
     if (fs.existsSync(nashDir)) return
@@ -33,7 +38,7 @@ function loadPlugin(pname) {
 	require(pname)
 }
 
-function loadNashRC() {
+function loadNashRCJS() {
 	let rcname = os.homedir() + '/.nash/nashrc.js'
 	if (!fs.existsSync(rcname)) return
 	loadPlugin(rcname)
@@ -45,7 +50,7 @@ function nashStartup() {
 	loadPlugin('./plugins/key-bindings')
 	loadPlugin('./plugins/prompt')
 	loadPlugin('./plugins/completion')
-	loadNashRC()
+	loadNashRCJS()
 }
 
 module.exports = {
