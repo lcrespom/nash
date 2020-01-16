@@ -1,4 +1,4 @@
-const { bindKey, getLastBinding } = require('../nash-plugins')
+const { bindKey, getLastBinding, getCursorPosition } = require('../nash-plugins')
 const runner = require('../runner')
 const history = require('../history')
 
@@ -77,6 +77,11 @@ function clearScreen(line) {
 }
 
 function killWholeLine(line) {
+	let cursor = getCursorPosition()
+	if (cursor) {
+		process.stdout.cursorTo(cursor.x, cursor.y)
+	}
+	process.stdout.clearScreenDown()
 	return { left: '', right: '' }
 }
 

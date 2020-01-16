@@ -105,6 +105,7 @@ function put(str) {
 }
 
 function removeAnsiColorCodes(str) {
+	//UTIL
 	return str.replace(/\x1b\[[0-9;]*m/g, '')
 }
 
@@ -140,6 +141,15 @@ function captureCursorPosition() {
 		}
 		put(SHOW_TEXT)
 	})
+}
+
+function getCursorPosition() {
+	if (status.cursor) {
+		return status.cursor
+	}
+	else {
+		return { x: status.cursorX }
+	}
 }
 
 function putPrompt(userStatus = {}) {
@@ -259,5 +269,6 @@ module.exports = {
 	bindKey,
 	getLastBinding,
 	setPrompt,
-	putPrompt
+	putPrompt,
+	getCursorPosition
 }

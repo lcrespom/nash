@@ -48,6 +48,7 @@ let state = TermState.waitingCommand
 let userStatus = ''
 
 function commonInitialChars(str1, str2) {
+	//UTIL
 	let len = Math.min(str1.length, str2.length)
 	let i
 	for (i = 0; i < len; i++) {

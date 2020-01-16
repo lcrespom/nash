@@ -133,6 +133,7 @@ function getSuggestions(word, type) {
 }
 
 function cutLastChars(str, numch) {
+    //UTILS
     return str.substr(0, str.length - numch)
 }
 

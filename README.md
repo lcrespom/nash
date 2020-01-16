@@ -35,6 +35,7 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [ ] Completion
 		- [x] Basic (tab)
 		- [ ] Advanced (navigate over list)
+		- [ ] Customizable (e.g. git command list, etc.)
 	- [ ] Minimize cursor glitches by re-writing from the first different char
 - [ ] Tidy .nash* files
 	- [ ] Create .nash/ diectory at ~ during startup if not present
