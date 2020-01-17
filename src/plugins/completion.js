@@ -1,33 +1,11 @@
-const parse = require('bash-parser')
 const glob = require('fast-glob')
 
 const { cutLastChars } = require('../utils')
 const { bindKey } = require('../nash-plugins')
+const { parseBash, traverseAST, NodeType, builtins } = require('../parser')
 
 
 //------------------------- AST Searching -------------------------
-
-const SuggestType = {
-    unknown: 'unknown',
-    command: 'command',
-    parameter: 'parameter',
-    environment: 'environment',
-    option: 'option'
-}
-
-function traverseAST(node, nodeCB) {
-    if (node.commands) {
-        for (cmd of node.commands)
-            traverseAST(cmd, nodeCB)
-    }
-    else if (node.type == 'LogicalExpression') {
-        traverseAST(node.left, nodeCB)
-        traverseAST(node.right, nodeCB)
-    }
-    else {
-        nodeCB(node)
-    }
-}
 
 function insideLoc(loc, pos) {
     return loc.start.char <= pos && pos <= loc.end.char
@@ -45,50 +23,41 @@ function getNodeInPosition(ast, pos) {
 }
 
 function getLocAndType(node, pos) {
-    if (!node) return [null, SuggestType.unknown]
-    if (node.type != 'Command') return [node.loc, SuggestType.unknown]
-    if (insideLoc(node.name.loc, pos)) return [node.name.loc, SuggestType.command]
-    if (!node.suffix) return [node.loc, SuggestType.unknown]
+    if (!node) return [null, NodeType.unknown]
+    if (node.type != 'Command') return [node.loc, NodeType.unknown]
+    if (insideLoc(node.name.loc, pos)) return [node.name.loc, NodeType.command]
+    if (!node.suffix) return [node.loc, NodeType.unknown]
     for (let s of node.suffix) {
         if (insideLoc(s.loc, pos)) {
             if (s.text[0] == '$')
-                return [s.loc, SuggestType.environment]
+                return [s.loc, NodeType.environment]
             else if (s.text[0] == '-')
-                return [s.loc, SuggestType.option]
+                return [s.loc, NodeType.option]
             else
-                return [s.loc, SuggestType.parameter]
+                return [s.loc, NodeType.parameter]
         }
     }
-    return  [node.loc, SuggestType.unknown]
+    return  [node.loc, NodeType.unknown]
 }
 
 function getWordAndType(line) {
     let pos = line.left.length - 1
     try {
-        let ast = parse(line.left + line.right, { insertLOC: true })
+        let ast = parseBash(line.left + line.right)
         let node = getNodeInPosition(ast, pos)
         let [loc, type] = getLocAndType(node, pos)
-        if (type == SuggestType.unknown)
+        if (type == NodeType.unknown)
             return ['', type]
         else
             return [line.left.substr(loc.start.char), type]
     }
     catch (err) {
-        return ['', SuggestType.unknown]
+        return ['', NodeType.unknown]
     }
 }
 
 
 //------------------------- Suggestions -------------------------
-
-const builtins = [
-    "break", "cd", "continue", "eval", "exec", "exit", "export",
-    "getopts", "hash", "pwd", "readonly", "return", "shift", "test",
-    "times", "trap", "umask", "unset",
-    "alias", "bind", "builtin", "caller", "command", "declare", "echo",
-    "enable", "help", "let", "local", "logout", "mapfile", "printf",
-    "read", "readarray", "source", "type", "typeset", "ulimit", "unalias"
-].sort()
 
 function safeGlob(paths, options) {
     try {
@@ -129,15 +98,15 @@ function getOptionSuggestions(word) {
 
 function getSuggestions(word, type) {
     switch (type) {
-        case SuggestType.unknown:
+        case NodeType.unknown:
             return []
-        case SuggestType.command:
+        case NodeType.command:
             return getCommandSuggestions(word)
-        case SuggestType.parameter:
+        case NodeType.parameter:
             return getParameterSuggestions(word)
-        case SuggestType.environment:
+        case NodeType.environment:
             return getEnvironmentSuggestions(word)
-        case SuggestType.option:
+        case NodeType.option:
             return getOptionSuggestions(word)
     }
 }
@@ -167,4 +136,8 @@ function completeWord(line) {
 
 bindKey('tab', completeWord, 'Complete word under cursor')
 
-module.exports = { completeWord, getWordAndType }
+module.exports = {
+    completeWord,
+    getWordAndType,
+    NodeType
+}

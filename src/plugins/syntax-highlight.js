@@ -1,30 +1,5 @@
-const parse = require('bash-parser')
+const { parseBash, traverseAST, NodeType } = require('../parser')
 
-
-const NodeType = {
-    unknown: 'unknown',
-    command: 'command',
-    parameter: 'parameter',
-    environment: 'environment',
-    option: 'option',
-    quote: 'quote',
-    comment: 'comment'
-}
-
-function traverseAST(node, nodeCB) {
-    // TODO improve by adding more complex cases
-    if (node.commands) {
-        for (cmd of node.commands)
-            traverseAST(cmd, nodeCB)
-    }
-    else if (node.type == 'LogicalExpression') {
-        traverseAST(node.left, nodeCB)
-        traverseAST(node.right, nodeCB)
-    }
-    else {
-        nodeCB(node)
-    }
-}
 
 function makeHL(type, loc) {
     return {
@@ -69,7 +44,7 @@ function highlightComment(line, ast, hls) {
 }
 
 function highlight(line) {
-    let ast = parse(line, { insertLOC: true })
+    let ast = parseBash(line)
     let hls = []
     traverseAST(ast, n => {
         highlightNode(n, hls, line)
