@@ -6,7 +6,9 @@ const NodeType = {
     command: 'command',
     parameter: 'parameter',
     environment: 'environment',
-    option: 'option'
+    option: 'option',
+    quote: 'quote',     //TODO implement detection
+    comment: 'comment'  //TODO implement detection
 }
 
 function traverseAST(node, nodeCB) {
@@ -32,7 +34,7 @@ function makeHL(type, loc) {
     }
 }
 
-function highlightNode(node, hls) {
+function highlightNode(node, hls, line) {
     if (node.type != 'Command')
         return
     hls.push(makeHL(NodeType.command, node.name.loc))
@@ -48,12 +50,25 @@ function highlightNode(node, hls) {
     }
 }
 
-function highlight(commands) {
-    let ast = parse(commands, { insertLOC: true })
+function highlightComment(line, ast, hls) {
+    let extra = line.substr(ast.loc.end.char + 1)
+    if (extra.trim().startsWith('#')) {
+        let pos = ast.loc.end.char + 1
+        hls.push({
+            type: NodeType.comment,
+            start: line.indexOf('#', pos),
+            end: line.length - 1
+        })
+    }
+}
+
+function highlight(line) {
+    let ast = parse(line, { insertLOC: true })
     let hls = []
     traverseAST(ast, n => {
-        highlightNode(n, hls)
+        highlightNode(n, hls, line)
     })
+    highlightComment(line, ast, hls)
     return hls
 }
 

@@ -43,3 +43,10 @@ test('Pipe', () => {
     expect(hls[1].type).toBe(hl.NodeType.parameter)
     expect(hls[2].type).toBe(hl.NodeType.command)
 })
+
+test('Comment', () => {
+    let hls = hl.highlight('abc  # comment')
+    expect(hls.length).toBe(2)
+    expect(hls[0].type).toBe(hl.NodeType.command)
+    expect(hls[1].type).toBe(hl.NodeType.comment)
+})
