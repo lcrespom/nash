@@ -7,8 +7,8 @@ const NodeType = {
     parameter: 'parameter',
     environment: 'environment',
     option: 'option',
-    quote: 'quote',     //TODO implement detection
-    comment: 'comment'  //TODO implement detection
+    quote: 'quote',
+    comment: 'comment'
 }
 
 function traverseAST(node, nodeCB) {
@@ -35,15 +35,14 @@ function makeHL(type, loc) {
 }
 
 function getSuffixType(s, line) {
-    const isQuote = ch => ch == '"' || ch == "'"
-    let type = NodeType.parameter
     if (s.text[0] == '$')
-        type = NodeType.environment
-    else if (s.text[0] == '-')
-        type = NodeType.option
-    else if (isQuote(line[s.loc.start.char]))
-        type = NodeType.quote
-    return type
+        return NodeType.environment
+    if (s.text[0] == '-')
+        return NodeType.option
+    let ch = line[s.loc.start.char]
+    if (ch == '"' || ch == "'")
+        return NodeType.quote
+    return NodeType.parameter
 }
 
 function highlightNode(node, hls, line) {
