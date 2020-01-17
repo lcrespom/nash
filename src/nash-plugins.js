@@ -1,6 +1,7 @@
 const {
-	bindKey, setPrompt, getLastBinding, getCursorPosition
+	bindKey, getLastBinding
 } = require('./editor')
+const { setPrompt, getCursorPosition } = require('./prompt')
 const { runCommand } = require('./runner')
 
 function setTerminalTitle(title) {

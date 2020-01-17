@@ -93,6 +93,7 @@ function getEnvironmentSuggestions(word) {
     return Object.keys(process.env)
         .map(w => '$' + w)
         .filter(w => w.startsWith(word))
+        //TODO case-insensitive match
 }
 
 function getOptionSuggestions(word) {

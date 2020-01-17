@@ -16,7 +16,7 @@ function listenKeyboard() {
 
 function checkInteractive() {
 	if (process.stdout.isTTY) return
-	editor.print('Non-interactive mode is not supported')
+	console.error('Non-interactive mode is not supported')
 	process.exit(1)
 }
 
@@ -24,7 +24,7 @@ function checkInteractive() {
 function main() {
 	checkInteractive()
 	startup.nashStartup()
-	editor.putPrompt()
+	editor.initialize()
 	history.load()
 	runner.startShell()
 	listenKeyboard()
