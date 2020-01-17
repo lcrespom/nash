@@ -27,13 +27,21 @@ test('Command and option', () => {
     expect(hls[1].type).toBe(hl.NodeType.option)
 })
 
+test('Command and quote', () => {
+    let hls = hl.highlight('echo "some text"')
+    expect(hls.length).toBe(2)
+    expect(hls[0].type).toBe(hl.NodeType.command)
+    expect(hls[1].type).toBe(hl.NodeType.quote)
+})
+
 test('Simple command with everything', () => {
-    let hls = hl.highlight('echo -n $TERM "hello, world!"')
-    expect(hls.length).toBe(4)
+    let hls = hl.highlight('echo -n $TERM potato "hello, world!"')
+    expect(hls.length).toBe(5)
     expect(hls[0].type).toBe(hl.NodeType.command)
     expect(hls[1].type).toBe(hl.NodeType.option)
     expect(hls[2].type).toBe(hl.NodeType.environment)
     expect(hls[3].type).toBe(hl.NodeType.parameter)
+    expect(hls[4].type).toBe(hl.NodeType.quote)
 })
 
 test('Pipe', () => {

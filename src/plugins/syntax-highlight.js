@@ -34,6 +34,18 @@ function makeHL(type, loc) {
     }
 }
 
+function getSuffixType(s, line) {
+    const isQuote = ch => ch == '"' || ch == "'"
+    let type = NodeType.parameter
+    if (s.text[0] == '$')
+        type = NodeType.environment
+    else if (s.text[0] == '-')
+        type = NodeType.option
+    else if (isQuote(line[s.loc.start.char]))
+        type = NodeType.quote
+    return type
+}
+
 function highlightNode(node, hls, line) {
     if (node.type != 'Command')
         return
@@ -41,12 +53,7 @@ function highlightNode(node, hls, line) {
     if (!node.suffix)
         return
     for (let s of node.suffix) {
-        let type = NodeType.parameter
-        if (s.text[0] == '$')
-            type = NodeType.environment
-        else if (s.text[0] == '-')
-            type = NodeType.option
-        hls.push(makeHL(type, s.loc))
+        hls.push(makeHL(getSuffixType(s, line), s.loc))
     }
 }
 
