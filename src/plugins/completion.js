@@ -82,7 +82,11 @@ function getCommandSuggestions(word) {
 function getParameterSuggestions(word) {
     if (!word.includes('*'))
         word += '*'
-    return safeGlob(word, { onlyFiles: false, markDirectories: true })
+    return safeGlob(word, {
+        onlyFiles: false,
+        markDirectories: true,
+        caseSensitiveMatch: false
+    })
 }
 
 function getEnvironmentSuggestions(word) {
