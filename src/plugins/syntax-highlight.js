@@ -1,4 +1,7 @@
-const { parseBash, traverseAST, NodeType } = require('../parser')
+const { execFileSync } = require('child_process')
+
+
+const { NodeType, builtins, parseBash, traverseAST } = require('../parser')
 
 
 function makeHL(type, loc) {
@@ -7,6 +10,29 @@ function makeHL(type, loc) {
         start: loc.start.char,
         end: loc.end.char
     }
+}
+
+function which(command) {
+	try {
+		return execFileSync('/usr/bin/which', [ command ]).toString().trim()
+	}
+	catch (e) {
+		return null
+	}
+}
+
+function getCommandType(cmd) {
+    //TODO memoize this function, clean cache when line is empty
+    if (builtins.includes(cmd))
+        return NodeType.builtin
+    let whichOut = which(cmd)
+    if (!whichOut)
+        return NodeType.commandError
+    if (whichOut.endsWith('shell built-in command'))
+        return NodeType.builtin
+    if (whichOut.includes(': aliased to '))
+        return NodeType.alias
+    return NodeType.program
 }
 
 function getSuffixType(s, line) {
@@ -23,7 +49,7 @@ function getSuffixType(s, line) {
 function highlightNode(node, hls, line) {
     if (node.type != 'Command')
         return
-    hls.push(makeHL(NodeType.command, node.name.loc))
+    hls.push(makeHL(getCommandType(node.name.text), node.name.loc))
     if (!node.suffix)
         return
     for (let s of node.suffix) {

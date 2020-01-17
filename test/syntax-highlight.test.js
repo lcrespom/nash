@@ -16,7 +16,7 @@ test('Command and file', () => {
 test('Command and env', () => {
     let hls = hl.highlight('echo $TERM')
     expect(hls.length).toBe(2)
-    expect(hls[0].type).toBe(hl.NodeType.command)
+    expect(hls[0].type).toBe(hl.NodeType.builtin)
     expect(hls[1].type).toBe(hl.NodeType.environment)
 })
 
@@ -30,14 +30,14 @@ test('Command and option', () => {
 test('Command and quote', () => {
     let hls = hl.highlight('echo "some text"')
     expect(hls.length).toBe(2)
-    expect(hls[0].type).toBe(hl.NodeType.command)
+    expect(hls[0].type).toBe(hl.NodeType.builtin)
     expect(hls[1].type).toBe(hl.NodeType.quote)
 })
 
 test('Simple command with everything', () => {
     let hls = hl.highlight('echo -n $TERM potato "hello, world!"')
     expect(hls.length).toBe(5)
-    expect(hls[0].type).toBe(hl.NodeType.command)
+    expect(hls[0].type).toBe(hl.NodeType.builtin)
     expect(hls[1].type).toBe(hl.NodeType.option)
     expect(hls[2].type).toBe(hl.NodeType.environment)
     expect(hls[3].type).toBe(hl.NodeType.parameter)
@@ -47,14 +47,22 @@ test('Simple command with everything', () => {
 test('Pipe', () => {
     let hls = hl.highlight('echo hello | wc')
     expect(hls.length).toBe(3)
-    expect(hls[0].type).toBe(hl.NodeType.command)
+    expect(hls[0].type).toBe(hl.NodeType.builtin)
     expect(hls[1].type).toBe(hl.NodeType.parameter)
     expect(hls[2].type).toBe(hl.NodeType.command)
 })
 
 test('Comment', () => {
-    let hls = hl.highlight('abc  # comment')
+    let hls = hl.highlight('ls  # comment')
     expect(hls.length).toBe(2)
     expect(hls[0].type).toBe(hl.NodeType.command)
     expect(hls[1].type).toBe(hl.NodeType.comment)
+})
+
+test('Which', () => {
+    let hls = hl.highlight('mkdir')
+    expect(hls[0].type).toBe(hl.NodeType.program)
+    hls = hl.highlight('a_program_that_does_not_exist')
+    expect(hls[0].type).toBe(hl.NodeType.commandError)
+
 })

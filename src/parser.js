@@ -2,12 +2,19 @@ const parse = require('bash-parser')
 
 const NodeType = {
     unknown: 0,
+    // Commands
     command: 1,
-    parameter: 2,
-    environment: 3,
-    option: 4,
-    quote: 5,
-    comment: 6
+    program: 1,
+    builtin: 2,
+    alias: 3,
+    commandError: 4,
+    // Parameters in different formats
+    parameter: 5,
+    environment: 6,
+    option: 7,
+    quote: 8,
+    // Comments
+    comment: 9
 }
 
 const builtins = [
