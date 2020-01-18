@@ -87,7 +87,7 @@ function highlight(line) {
 function applyColor(chunk, hl) {
     const colors = [
         'reset',
-        'green', 'green', 'green', 'red',
+        'green', 'green', 'green', 'redBright',
         'cyan', 'magenta', 'cyanBright', 'yellow',
         'blue'
     ]
