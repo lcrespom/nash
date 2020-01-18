@@ -18,7 +18,7 @@ function push(cmd) {
     index = history.length
 }
 
-function back(text = '', { updateIndex = true }) {
+function back(text = '', { updateIndex = true } = {}) {
     let idx = index
     let result = null
     while (idx > 0) {
