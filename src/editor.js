@@ -1,4 +1,3 @@
-const { removeAnsiColorCodes } = require('./utils')
 const { putPrompt, putCursor } = require('./prompt')
 
 
@@ -69,15 +68,30 @@ function getLastBinding() {
 }
 
 
+//-------------------- Line decoration --------------------
+
+let lineDecorators = []
+
+function registerLineDecorator(decorator) {
+	lineDecorators.push(decorator)
+}
+
+function decorateLine(plainLine) {
+	let decoratedLine = plainLine
+	for (let decorator of lineDecorators) {
+		decoratedLine = decorator(plainLine, decoratedLine)
+	}
+	return decoratedLine
+}
+
 //-------------------- Line & key handling --------------------
 
-function updateLine(newLine) {
-	let fullLine = newLine.left + newLine.right
-	let len = removeAnsiColorCodes(newLine.left).length
+function writeLine(newLine) {
 	putCursor(0)
+	let fullLine = decorateLine(newLine.left + newLine.right)
 	process.stdout.write(fullLine +  ' ')
 	process.stdout.clearLine(1)
-	putCursor(len)
+	putCursor(newLine.left.length)
 	line = {
 		left: newLine.left,
 		right: newLine.right
@@ -93,7 +107,7 @@ function editorKeyListener(key) {
 			left: line.left + key.ch,
 			right: line.right
 		}
-		updateLine(newLine)
+		writeLine(newLine)
 		lastBinding = null
 	}
 	else {
@@ -104,17 +118,17 @@ function editorKeyListener(key) {
 				keyListener = editorKeyListener
 				if (newLine.showPrompt !== false) {
 					putPrompt(userStatus)
-					updateLine({ left: '', right: '' })
+					writeLine({ left: '', right: '' })
 				}
 				if (newLine.left !== undefined) {
-					updateLine(newLine)
+					writeLine(newLine)
 				}
 			})
 		}
 		else {
 			if (newLine.showPrompt === true)
 				putPrompt()
-			updateLine(newLine)
+			writeLine(newLine)
 		}
 	}
 }
@@ -156,12 +170,13 @@ function handleKeypress(ch, key) {
 
 function initialize() {
 	putPrompt()
-	updateLine({ left: '', right: '' })
+	writeLine({ left: '', right: '' })
 }
 
 module.exports = {
 	handleKeypress,
 	bindKey,
 	getLastBinding,
+	registerLineDecorator,
 	initialize
 }

@@ -56,6 +56,7 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 - [x] JavaScript
 	- [x] Detect, execute, replace
 	- [x] Abort execution on error
+	- [ ] Get shell environment before executing JS
 - [x] Parser
 	- [x] Using bash-parser (https://github.com/vorpaljs/bash-parser)
 - [ ] Cool extensions

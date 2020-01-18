@@ -81,10 +81,9 @@ function putPrompt(userStatus = {}) {
 	let promptStr = prompt(getPromptInfo(userStatus))
 	put(promptStr)
 	cursor = null
-	put(HIDE_TEXT + GET_CURSOR_POS)
-	cursorX =
-		removeAnsiColorCodes(promptStr)
-		.split('\n').pop().length
+    put(HIDE_TEXT + GET_CURSOR_POS)
+    let lastLine = promptStr.split('\n').pop()
+	cursorX = removeAnsiColorCodes(lastLine).length
 	cols = process.stdout.columns
 }
 

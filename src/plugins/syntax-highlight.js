@@ -1,7 +1,9 @@
 const { execFileSync } = require('child_process')
 
-
-const { NodeType, builtins, parseBash, traverseAST } = require('../parser')
+const { registerLineDecorator } = require('../editor')
+const {
+    NodeType, builtins, parseBash, traverseAST
+} = require('../parser')
 
 
 function makeHL(type, loc) {
@@ -78,6 +80,10 @@ function highlight(line) {
     highlightComment(line, ast, hls)
     return hls
 }
+
+registerLineDecorator((plainLine, pdl) => {
+    return pdl  //TODO perform highlight
+})
 
 
 module.exports = {
