@@ -3,12 +3,12 @@ const os = require('os')
 const { removeAnsiColorCodes } = require('./utils')
 
 
-let prompt = (pinfo) => 'nash> '
+let cursorX = 0
+let cols = 80
+let cursor = null
 
-let status = {
-	cursorX: 0,
-	cols: 80,
-}
+// Default prompt function
+let prompt = (pinfo) => 'nash> '
 
 
 /**
@@ -60,7 +60,7 @@ function captureCursorPosition() {
 		if (buf.length < 6) return
 		let m = s.match(/\x1b\[([0-9]+);([0-9]+)R/)
 		if (!m || m.length < 3) return
-		status.cursor = {
+		cursor = {
 			x: parseInt(m[2]) - 1,
 			y: parseInt(m[1]) - 1
 		}
@@ -69,35 +69,34 @@ function captureCursorPosition() {
 }
 
 function getCursorPosition() {
-	if (status.cursor) {
-		return status.cursor
+	if (cursor) {
+		return cursor
 	}
 	else {
-		return { x: status.cursorX }
+		return { x: cursorX }
 	}
 }
 
 function putPrompt(userStatus = {}) {
 	let promptStr = prompt(getPromptInfo(userStatus))
 	put(promptStr)
-	status.cursor = null
+	cursor = null
 	put(HIDE_TEXT + GET_CURSOR_POS)
-	status.cursorX =
+	cursorX =
 		removeAnsiColorCodes(promptStr)
 		.split('\n').pop().length
-	status.cols = process.stdout.columns
-	status.rows = 0
+	cols = process.stdout.columns
 }
 
 function putCursor(len) {
-	if (status.cursor) {
-		let ll = status.cursor.x + len
-		let x = ll % status.cols
-		let y = status.cursor.y + Math.floor(ll / status.cols)
+	if (cursor) {
+		let ll = cursor.x + len
+		let x = ll % cols
+		let y = cursor.y + Math.floor(ll / cols)
 		process.stdout.cursorTo(x, y)
 	}
 	else {
-		process.stdout.cursorTo(status.cursorX + len)
+		process.stdout.cursorTo(cursorX + len)
 	}
 }
 
