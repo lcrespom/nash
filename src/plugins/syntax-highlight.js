@@ -81,13 +81,45 @@ function highlight(line) {
     return hls
 }
 
-registerLineDecorator((plainLine, pdl) => {
-    return pdl  //TODO perform highlight
+function applyColor(chunk, hl) {
+    //TODO implement
+    return chunk.toUpperCase()
+}
+
+function colorize(line, hls, colorFunc = applyColor) {
+    if (hls.length == 0)
+        return line
+    let pos = 0
+    let result = ''
+    for (let hl of hls) {
+        if (pos < hl.start) {
+            result += line.substring(pos, hl.start)
+            pos = hl.end + 1
+        }
+        let chunk = line.substring(hl.start, hl.end + 1)
+        result += colorFunc(chunk, hl)
+    }
+    lastHL = hls.pop()
+    result += line.substr(lastHL.end + 1)
+    return result
+}
+
+
+registerLineDecorator((plainLine, decoratedLine) => {
+    if (plainLine == '') {
+        //getCommandTypeFromCache = memoize(getCommandType)
+        return decoratedLine
+    }
+    let hls = highlight(plainLine)
+    //TODO debug & fix
+    //return colorize(plainLine, hls)
+    return decoratedLine
 })
 
 
 // Exports used only for testing
 module.exports = {
     NodeType,
-    highlight
+    highlight,
+    colorize
 }

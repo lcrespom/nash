@@ -20,7 +20,7 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 ## ToDo
 - [ ] Documentation
 	- [ ] Usage
-	- [ ] Extension API
+	- [ ] Customization / Extension API
 - [ ] Line editing
 	- [x] Simple chars
 	- [x] Basic movement: left, right, backspace, home, end
@@ -62,6 +62,12 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [x] Using bash-parser (https://github.com/vorpaljs/bash-parser)
 - [ ] Cool extensions
 	- [ ] Syntax highlight
-	- [ ] Suggestions
+	- [x] Suggestions
 	- [ ] Cool git prompt
 	- [ ] History popup
+- [ ] Maximize customization
+	- [ ] Rebind/unbind keys (using binding function name as string)
+	- [ ] List key bindings & descriptions
+	- [ ] Improve plugin API & documentation
+	- [ ] Color palette
+	- [ ] Embedded JS code context using 'with'

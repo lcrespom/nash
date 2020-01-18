@@ -39,10 +39,30 @@ function cutLastChars(str, numch) {
     return str.substr(0, str.length - numch)
 }
 
+/**
+ * Creates a cache for the results of a given function
+ * @param {Function} func the function to memoize
+ * @returns a new function that gets values from the cache when available
+ */
+function memoize(func) {
+	var cache = {}
+	return function () {
+		var key = JSON.stringify(arguments)
+		if (cache[key]) {
+			return cache[key]
+		}
+		else {
+			val = func.apply(null, arguments)
+			cache[key] = val
+			return val
+		}
+	}
+}
 
 module.exports = {
 	startsWithCaseInsensitive,
     removeAnsiColorCodes,
     commonInitialChars,
-    cutLastChars
+	cutLastChars,
+	memoize
 }

@@ -1,5 +1,8 @@
 const hl = require('../src/plugins/syntax-highlight')
 
+
+//------------------------- Highlight -------------------------
+
 test('Single command', () => {
     let hls = hl.highlight('ls')
     expect(hls.length).toBe(1)
@@ -65,4 +68,28 @@ test('Which', () => {
     hls = hl.highlight('a_program_that_does_not_exist')
     expect(hls[0].type).toBe(hl.NodeType.commandError)
 
+})
+
+
+//------------------------- Colorize -------------------------
+
+function nodeTypeName(type) {
+    for (let k of Object.keys(hl.NodeType)) {
+        if (hl.NodeType[k] == type)
+            return k
+    }
+    return '?'
+}
+function colorFunc(chunk, hlItem) {
+    return `(${nodeTypeName(hlItem.type)}/${chunk})`
+}
+
+function colorize(line) {
+    let hls = hl.highlight(line)
+    return hl.colorize(line, hls, colorFunc)
+}
+
+test('Colorize single command', () => {
+    let result = colorize('ls')
+    expect(result).toBe('(command/ls)')
 })

@@ -86,8 +86,8 @@ function decorateLine(plainLine) {
 //-------------------- Line & key handling --------------------
 
 function writeLine(newLine) {
-	putCursor(0)
 	let fullLine = decorateLine(newLine.left + newLine.right)
+	putCursor(0)
 	process.stdout.write(fullLine +  ' ')
 	process.stdout.clearLine(1)
 	putCursor(newLine.left.length)
