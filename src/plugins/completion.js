@@ -1,6 +1,6 @@
 const glob = require('fast-glob')
 
-const { cutLastChars } = require('../utils')
+const { startsWithCaseInsensitive, cutLastChars } = require('../utils')
 const { bindKey } = require('../nash-plugins')
 const { parseBash, traverseAST, NodeType, builtins } = require('../parser')
 
@@ -92,8 +92,7 @@ function getParameterSuggestions(word) {
 function getEnvironmentSuggestions(word) {
     return Object.keys(process.env)
         .map(w => '$' + w)
-        .filter(w => w.startsWith(word))
-        //TODO case-insensitive match
+        .filter(w => startsWithCaseInsensitive(w, word))
 }
 
 function getOptionSuggestions(word) {

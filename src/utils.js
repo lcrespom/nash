@@ -1,4 +1,14 @@
 /**
+ * Returns true if s1 starts with s2 in a case insensitive way.
+ * @param {string} s1 The full string to be checked
+ * @param {string} s2 The starting string
+ */
+function startsWithCaseInsensitive(s1, s2) {
+    return s1.toLocaleLowerCase()
+        .startsWith(s2.toLocaleLowerCase())
+}
+
+/**
  * Removes the ANSI color codes from a given string
  * @param {string} str 
  */
@@ -31,6 +41,7 @@ function cutLastChars(str, numch) {
 
 
 module.exports = {
+	startsWithCaseInsensitive,
     removeAnsiColorCodes,
     commonInitialChars,
     cutLastChars
