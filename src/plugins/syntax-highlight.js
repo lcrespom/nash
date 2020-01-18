@@ -86,6 +86,7 @@ registerLineDecorator((plainLine, pdl) => {
 })
 
 
+// Exports used only for testing
 module.exports = {
     NodeType,
     highlight

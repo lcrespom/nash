@@ -51,6 +51,7 @@ function nashStartup() {
 	loadPlugin('./plugins/default-prompt')
 	loadPlugin('./plugins/completion')
 	loadPlugin('./plugins/syntax-highlight')
+	loadPlugin('./plugins/suggestions')
 	loadNashRCJS()
 }
 

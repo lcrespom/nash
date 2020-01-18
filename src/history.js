@@ -18,13 +18,19 @@ function push(cmd) {
     index = history.length
 }
 
-function back(text = '') {
-    while (index > 0) {
-        index--
-        if (history[index].startsWith(text))
-            return history[index]
+function back(text = '', { updateIndex = true }) {
+    let idx = index
+    let result = null
+    while (idx > 0) {
+        idx--
+        if (history[idx].startsWith(text)) {
+            result = history[idx]
+            break
+        }
     }
-    return null
+    if (updateIndex)
+        index = idx
+    return result
 }
 
 function forward(text = '') {
