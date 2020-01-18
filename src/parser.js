@@ -42,7 +42,21 @@ function traverseAST(node, nodeCB) {
 }
 
 function parseBash(line) {
-    return parse(line, { insertLOC: true })
+    try {
+        return parse(line, { insertLOC: true })
+    }
+    catch (e) {
+        if (e.message.startsWith('Unclosed ')) {
+            let endQuote = e.message.charAt(e.message.length - 1)
+            return parse(line + endQuote, { insertLOC: true })
+        }
+        else {
+            line = line.substr(0, line.length - 1)
+            if (line.length == 0)
+                return null
+            return parseBash(line)
+        }
+    }
 }
 
 

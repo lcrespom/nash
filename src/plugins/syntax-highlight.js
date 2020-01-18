@@ -74,6 +74,8 @@ function highlightComment(line, ast, hls) {
 function highlight(line) {
     let ast = parseBash(line)
     let hls = []
+    if (!ast)
+        return hls
     traverseAST(ast, n => {
         highlightNode(n, hls, line)
     })
