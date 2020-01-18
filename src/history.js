@@ -61,6 +61,7 @@ function load() {
     fs.readFile(hpath, (err, data) => {
         if (err) return
         history = data.toString().split('\n')
+        index = history.length
     })
 }
 
