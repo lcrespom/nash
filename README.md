@@ -52,6 +52,7 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 - [x] Properly handle asynchronous key bindings
 	- [x] Shell commands: ignore any typed key
 	- [x] Interactive bindings: forward key events
+- [ ] Handle multiple independent bindings for the same key combination
 - [x] Configuration (.nash.json / .nash.js)
 - [x] JavaScript
 	- [x] Detect, execute, replace

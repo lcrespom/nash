@@ -43,7 +43,6 @@ function bindKey(knames, code, desc) {
 
 function getKeyBinding(key) {
 	let name = key.name
-	if (key.meta) name = 'meta_' + key
 	let binding = keyBindings[name]
 	return binding ? binding[0] : undefined
 }
