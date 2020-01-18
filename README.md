@@ -61,7 +61,7 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 - [x] Parser
 	- [x] Using bash-parser (https://github.com/vorpaljs/bash-parser)
 - [ ] Cool extensions
-	- [ ] Syntax highlight
+	- [x] Syntax highlight
 	- [x] Suggestions
 	- [ ] Cool git prompt
 	- [ ] History popup

@@ -1,4 +1,5 @@
 const { execFileSync } = require('child_process')
+const chalk = require('chalk')
 
 const { registerLineDecorator } = require('../editor')
 const {
@@ -84,8 +85,14 @@ function highlight(line) {
 }
 
 function applyColor(chunk, hl) {
-    //TODO implement
-    return chunk.toUpperCase()
+    const colors = [
+        'reset',
+        'green', 'green', 'green', 'red',
+        'cyan', 'magenta', 'cyanBright', 'yellow',
+        'blue'
+    ]
+    let colorName = colors[hl.type]
+    return chalk[colorName](chunk)
 }
 
 function colorize(line, hls, colorFunc = applyColor) {
@@ -114,9 +121,7 @@ registerLineDecorator((plainLine, decoratedLine) => {
         return decoratedLine
     }
     let hls = highlight(plainLine)
-    //TODO debug & fix
-    //return colorize(plainLine, hls)
-    return decoratedLine
+    return colorize(plainLine, hls)
 })
 
 
