@@ -93,3 +93,40 @@ test('Colorize single command', () => {
     let result = colorize('ls')
     expect(result).toBe('(command/ls)')
 })
+
+test('Colorize command and param', () => {
+    let result = colorize('ls file')
+    expect(result).toBe('(command/ls) (parameter/file)')
+})
+
+test('Colorize builtin and env', () => {
+    let result = colorize('echo $abc')
+    expect(result).toBe('(builtin/echo) (environment/$abc)')
+})
+
+test('Colorize builtin and quote', () => {
+    let result = colorize('echo "hello, world"')
+    expect(result).toBe('(builtin/echo) (quote/"hello, world")')
+})
+
+test('Colorize command and many params', () => {
+    let result = colorize('ls ab  $cd   "ef" \'gh\' -i')
+    expect(result).toBe('(command/ls) (parameter/ab)' +
+        '  (environment/$cd)   (quote/"ef")' +
+        " (quote/'gh') (option/-i)")
+})
+
+test('Colorize fix open quote', () => {
+    let result = colorize('echo "')
+    expect(result).toBe('(builtin/echo) (quote/")')
+})
+
+test('Colorize fix open paren', () => {
+    let result = colorize('echo (')
+    expect(result).toBe('(builtin/echo) (')
+})
+
+test('Colorize fix eof', () => {
+    let result = colorize('echo $')
+    expect(result).toBe('(builtin/echo) $')
+})

@@ -93,13 +93,14 @@ function colorize(line, hls, colorFunc = applyColor) {
         return line
     let pos = 0
     let result = ''
+    // debugger
     for (let hl of hls) {
         if (pos < hl.start) {
             result += line.substring(pos, hl.start)
-            pos = hl.end + 1
         }
         let chunk = line.substring(hl.start, hl.end + 1)
         result += colorFunc(chunk, hl)
+        pos = hl.end + 1
     }
     lastHL = hls.pop()
     result += line.substr(lastHL.end + 1)
