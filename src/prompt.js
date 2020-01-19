@@ -77,6 +77,19 @@ function getCursorPosition() {
 	}
 }
 
+function setCursorPosition(newCursor) {
+	if (cursor) {
+		if (newCursor.x !== undefined)
+			cursor.x = newCursor.x
+		if (newCursor.y !== undefined)
+			cursor.y = newCursor.y
+	}
+	else {
+		if (newCursor.x !== undefined)
+			cursorX = newCursor.x
+	}
+}
+
 function putPrompt(userStatus = {}) {
 	let promptStr = prompt(getPromptInfo(userStatus))
 	put(promptStr)
@@ -107,5 +120,6 @@ module.exports = {
     setPrompt,
     putPrompt,
     putCursor,
-    getCursorPosition
+	getCursorPosition,
+	setCursorPosition
 }

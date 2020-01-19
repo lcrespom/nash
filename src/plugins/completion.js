@@ -1,9 +1,18 @@
 const glob = require('fast-glob')
+const {
+    hideCursor, showCursor, computeTableLayout, tableMenu
+} = require('node-terminal-menu')
 
-const { startsWithCaseInsensitive, cutLastChars } = require('../utils')
 const { bindKey } = require('../nash-plugins')
-const { parseBash, traverseAST, NodeType, builtins } = require('../parser')
-
+const {
+    startsWithCaseInsensitive, cutLastChars, commonInitialChars
+} = require('../utils')
+const {
+    parseBash, traverseAST, NodeType, builtins
+} = require('../parser')
+const {
+    getCursorPosition, setCursorPosition
+} = require('../prompt')
 
 //------------------------- AST Searching -------------------------
 
@@ -118,21 +127,59 @@ function getSuggestions(word, type) {
 
 //------------------------- Key binding -------------------------
 
-function completeWord(line) {
-    if (line.left.length == 0) return line
-    let [word, type] = getWordAndType(line)
-    words = getSuggestions(word, type)
-    if (words.length == 0) {
-        return line
+function findCommonStart(word) {
+    let lastw = words[0]
+    for (let i = 1; i < words.length; i++) {
+        cic = commonInitialChars(lastw, words[i])
+        if (cic == 0)
+            return cic
+        lastw = lastw.substr(0, cic)
     }
-    if (words.length == 1) {
-        return {
-            left: cutLastChars(line.left, word.length) + words[0],
-            right: line.right
+    return lastw
+}
+
+function showAllWords(line, words) {
+    //TODO manage potential cursor position change
+    //TODO check if too many words to display in menu
+    //let cp = getCursorPosition()
+    let menuDone = () => {}
+    hideCursor()
+    process.stdout.write('\n')
+    let { rows, columns, columnWidth } = computeTableLayout(words)
+    let menuKeyHandler = tableMenu({
+        options: words,
+        columns,
+        columnWidth,
+        done: (sel) => {
+            showCursor()
+            process.stdout.clearScreenDown()
+            menuDone()
         }
+    })
+	return {
+        isAsync: true,
+        showPrompt: false,
+        left: line.left,
+        right: line.right,
+		whenDone: function(done) {
+            menuDone = done
+		},
+		keyListener: function(key) {
+            menuKeyHandler(key.ch, key)
+		}
+	}
+}
+
+function completeWords(line, word, words) {
+    let start = findCommonStart(words)
+    if (start.length == word.length) {
+        return showAllWords(line, words)
     }
-    else {
-        //TODO show options, let user navigate
+    return {
+        left: cutLastChars(line.left, word.length) + start,
+        right: line.right
+    }
+    //TODO show options, let user navigate
         /*
         This is how oh-my-zsh behaves:
         1st tab:
@@ -147,7 +194,23 @@ function completeWord(line) {
         Nash implementation can merge 2nd and 3rd tab, to keep it simple,
         and if possible regenerate table based on what user types.
         */
+}
+
+function completeWord(line) {
+    if (line.left.length == 0) return line
+    let [word, type] = getWordAndType(line)
+    words = getSuggestions(word, type)
+    if (words.length == 0) {
         return line
+    }
+    if (words.length == 1) {
+        return {
+            left: cutLastChars(line.left, word.length) + words[0],
+            right: line.right
+        }
+    }
+    else {
+        return completeWords(line, word, words)
     }
 }
 
