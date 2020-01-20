@@ -159,27 +159,25 @@ function basename(filename) {
     return result
 }
 
-function showAllWords(line, word, words) {
-    // TODO refactor to simplify code
-    let menuDone = () => {}
-    hideCursor()
+function showTableMenu(words, done) {
     process.stdout.write('\n')
     let options = words.map(basename)
     let cp = getCursorPosition()
     let { rows, columns, columnWidth } = computeTableLayout(options)
     if (cp.y + rows >= process.stdout.rows)
         setCursorPosition({x: cp.x, y: process.stdout.rows - rows - 2})
-    let menuKeyHandler = tableMenu({
-        options,
-        columns,
-        columnWidth,
-        done: (sel) => {
-            showCursor()
-            process.stdout.clearScreenDown()
-            if (sel >= 0)
-                line.left = cutLastChars(line.left, word.length) + words[sel]
-            menuDone()
-        }
+    return tableMenu({ options, columns, columnWidth, done })
+}
+
+function showAllWords(line, word, words) {
+    let menuDone = () => {}
+    hideCursor()
+    let menuKeyHandler = showTableMenu(words, sel => {
+        showCursor()
+        process.stdout.clearScreenDown()
+        if (sel >= 0)
+            line.left = cutLastChars(line.left, word.length) + words[sel]
+        menuDone()
     })
 	return {
         isAsync: true,
