@@ -1,6 +1,7 @@
 const path = require('path')
 const os = require('os')
 const glob = require('fast-glob')
+const chalk = require('chalk')
 
 const {
     hideCursor, showCursor, computeTableLayout, tableMenu
@@ -159,9 +160,15 @@ function basename(filename) {
     return result
 }
 
+function colorizePath(filename) {
+    if (filename.endsWith('/'))
+        return chalk.bold(filename)
+    return filename
+}
+
 function showTableMenu(words, done) {
     process.stdout.write('\n')
-    let options = words.map(basename)
+    let options = words.map(basename).map(colorizePath)
     let cp = getCursorPosition()
     let { rows, columns, columnWidth } = computeTableLayout(options)
     if (cp.y + rows >= process.stdout.rows)
