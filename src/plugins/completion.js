@@ -146,7 +146,7 @@ function findCommonStart(word) {
     for (let i = 1; i < words.length; i++) {
         cic = commonInitialChars(lastw, words[i])
         if (cic == 0)
-            return cic
+            return ''
         lastw = lastw.substr(0, cic)
     }
     return lastw
@@ -195,7 +195,7 @@ function showAllWords(line, word, words) {
 
 function completeWords(line, word, words) {
     let start = findCommonStart(words)
-    if (start.length == word.length) {
+    if (start.length <= word.length) {
         //TODO check if too many words to display in menu
         return showAllWords(line, word, words)
     }
