@@ -44,6 +44,9 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 		- [ ] Handle lists too long to display in menu
 		- [ ] Let the user type and update menu accordingly
 	- [ ] Customizable (e.g. git command list, etc.)
+- [x] Syntax highlight
+- [x] History suggestions
+	- [ ] Remove suggestion decoration when the user presses enter
 - [x] Configuration (~/.nash/nashrc and ~/.nash/nashrc.js)
 	- [ ] Load all plugins from nashrc.js
 - [x] JavaScript
