@@ -160,13 +160,15 @@ function basename(filename) {
 }
 
 function showAllWords(line, word, words) {
-    //TODO manage potential cursor position change
-    //let cp = getCursorPosition()
+    // TODO refactor to simplify code
     let menuDone = () => {}
     hideCursor()
     process.stdout.write('\n')
     let options = words.map(basename)
+    let cp = getCursorPosition()
     let { rows, columns, columnWidth } = computeTableLayout(options)
+    if (cp.y + rows >= process.stdout.rows)
+        setCursorPosition({x: cp.x, y: process.stdout.rows - rows - 2})
     let menuKeyHandler = tableMenu({
         options,
         columns,
@@ -203,21 +205,6 @@ function completeWords(line, word, words) {
         left: cutLastChars(line.left, word.length) + start,
         right: line.right
     }
-    //TODO show options, let user navigate
-        /*
-        This is how oh-my-zsh behaves:
-        1st tab:
-            - If too many options, ask and display if y
-            - Else if all words start with 1 or more common chars, complete
-                word with the common part
-            - Else do as if 2nd tab
-        2nd tab: display table menu with all words, but do not give focus.
-            If user types more chars, next tab goes back to 1st tab.
-        3rd tab: give focus to table menu.
-
-        Nash implementation can merge 2nd and 3rd tab, to keep it simple,
-        and if possible regenerate table based on what user types.
-        */
 }
 
 function completeWord(line) {
