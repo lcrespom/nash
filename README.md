@@ -1,12 +1,17 @@
 # Nash
 Nash is a command-line editor for `bash` or compatible shells. It handles user input to provide a better user experience, but when the user hits the `Enter` key, it simply passes the command to `bash` for processing.
 
-Nash is implemented in JavaScript and is designed to be highly extensible and customizable.
+Nash is implemented in JavaScript and focuses on:
+- Providing great UX and productivity to the command-line: file completion, history navigation, syntax highlighting, history suggestions, etc.
+- Being highly extensible and customizable.
+- Bringing shell power to JavaScript developers. `zsh` is greatly configurable, but customizing it requires
+	writing shell script code, which (for JS developers) is not as user friendly as JavaScript.
 
-It is currently under development, so some features are still missing. See the ToDo section below for details.
+Nash is currently under development, so some features are still missing, but it is quite usable already. See the ToDo section below for details.
+
 
 ## Installation
-Just clone the repo, install and use `npm start` to open a shell:
+Being still under development, the way to install it is to just clone the repo, then type `npm install`. To open a shell, type `npm start`:
 ```
 git clone https://github.com/lcrespom/nash.git
 npm install
