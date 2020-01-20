@@ -74,7 +74,7 @@ function checkPromptAndWrite(data) {
 		data = data.substr(0, data.length - NASH_MARK.length)
 		process.stdout.write(data)
 		state = TermState.readingStatus
-		theCommand = 'whoami;pwd'
+		theCommand = ' whoami;pwd'
 		userStatus = ''
 		ptyProcess.write(theCommand + '\n')		
 	}

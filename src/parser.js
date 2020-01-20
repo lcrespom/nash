@@ -18,13 +18,30 @@ const NodeType = {
 }
 
 const builtins = [
-    "break", "cd", "continue", "eval", "exec", "exit", "export",
-    "getopts", "hash", "pwd", "readonly", "return", "shift", "test",
-    "times", "trap", "umask", "unset",
-    "alias", "bind", "builtin", "caller", "command", "declare", "echo",
-    "enable", "help", "let", "local", "logout", "mapfile", "printf",
-    "read", "readarray", "source", "type", "typeset", "ulimit", "unalias"
-].sort()
+    'alias', 'alloc',
+    'bg', 'bind', 'bindkey', 'break', 'breaksw', 'builtins',
+    'case', 'cd', 'chdir', 'command', 'complete', 'continue',
+    'default', 'dirs', 'do', 'done',
+    'echo', 'echotc', 'elif', 'else', 'end', 'endif', 'endsw',
+    'esac', 'eval', 'exec', 'exit', 'export',
+    'false', 'fc', 'fg', 'filetest', 'fi', 'for', 'foreach',
+    'getopts', 'glob', 'goto',
+    'hash', 'hashstat', 'history', 'hup',
+    'if',
+    'jobid', 'jobs',
+    'kill',
+    'limit', 'local', 'log', 'login', 'logout',
+    'nice', 'nohup', 'notify',
+    'onintr',
+    'popd', 'printenv', 'pushd', 'pwd',
+    'read', 'readonly', 'rehash', 'repeat', 'return',
+    'sched', 'set', 'setenv', 'settc', 'setty', 'setvar', 'shift',
+    'source', 'stop', 'suspend', 'switch',
+    'telltc', 'test', 'then', 'time', 'times', 'trap', 'true', 'type',
+    'ulimit', 'umask', 'unalias', 'uncomplete', 'unhash', 'unlimit',
+    'unset', 'unsetenv', 'until',
+    'wait', 'where', 'which', 'while'
+]
 
 
 function traverseAST(node, nodeCB) {

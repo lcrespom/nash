@@ -12,8 +12,9 @@ function getLsOptions() {
 function createRCFile() {
 	const NASH_RC = `# nash init file
 
-# Do NOT remove the line below, it is required for nash to work properly
+# Do NOT remove the next two lines - they are required for nash to work properly
 PS1=$'\\x1E\\x1E>'
+HISTCONTROL="ignorespace"
 
 # Enable colors in ls command
 alias ls="ls ${getLsOptions()}"
