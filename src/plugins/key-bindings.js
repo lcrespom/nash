@@ -1,4 +1,6 @@
-const { bindKey, getLastBinding, getCursorPosition } = require('../nash-plugins')
+const {
+	bindKey, getKeyBinding, getLastBinding, getBoundKeys, getCursorPosition
+} = require('../nash-plugins')
 const runner = require('../runner')
 const history = require('../history')
 
@@ -141,6 +143,12 @@ function discardLine() {
 }
 
 
+function describeKeyBinding(kname, binding) {
+    return kname.padEnd(12) + '  ' +
+        binding.code.name.padEnd(20) + '  ' +
+        binding.desc
+}
+
 function describeNextKey(line) {
 	let commandDone = () => {}
 	if (line.left.length + line.right.length > 0) return line
@@ -152,10 +160,27 @@ function describeNextKey(line) {
 		},
 		keyListener: function(key) {
 			process.stdout.write(key.name ? key.name : key.ch)
+            let bnd = getKeyBinding(key.name)
+            if (bnd)
+                process.stdout.write(
+                    '\r' + describeKeyBinding(key.name, bnd))
 			process.stdout.write('\n')
 			commandDone()
 		}
 	}
+}
+
+function listKeys(line) {
+    for (let kname of getBoundKeys()) {
+        let b = getKeyBinding(kname)
+        process.stdout.write('\n' + describeKeyBinding(kname, b))
+    }
+    process.stdout.write('\n')
+    return {
+        left: line.left,
+        right: line.right,
+        showPrompt: true
+    }
 }
 
 
@@ -183,3 +208,4 @@ bindKey('ctrl-c', discardLine, 'Discards the line')
 // Interactive commands
 bindKey('ctrl-k', describeNextKey,
  	'Names typed key (to be used with the binkdKey function)')
+bindKey('f1', listKeys, 'Lists all key bindings')

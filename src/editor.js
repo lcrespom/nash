@@ -38,13 +38,15 @@ function bindKey(knames, code, desc) {
 	if (!Array.isArray(knames))
 		knames = [ knames ]
 	for (let key of knames)
-		keyBindings[key] = [code, desc]
+		keyBindings[key] = { code, desc }
 }
 
-function getKeyBinding(key) {
-	let name = key.name
-	let binding = keyBindings[name]
-	return binding ? binding[0] : undefined
+function getKeyBinding(name) {
+	return keyBindings[name]
+}
+
+function getBoundKeys() {
+	return Object.keys(keyBindings)
 }
 
 function unknownKey(key) {
@@ -55,10 +57,11 @@ function unknownKey(key) {
 }
 
 function applyBinding(key) {
-	let b = getKeyBinding(key)
-	if (!b) return unknownKey(key)
-	let newLine = b(line)
-	lastBinding = b
+	let b = getKeyBinding(key.name)
+	if (!b || !b.code)
+		return unknownKey(key)
+	let newLine = b.code(line)
+	lastBinding = b.code
 	return newLine
 }
 
@@ -178,7 +181,9 @@ function initialize() {
 module.exports = {
 	handleKeypress,
 	bindKey,
+	getKeyBinding,
 	getLastBinding,
+	getBoundKeys,
 	registerLineDecorator,
 	initialize
 }

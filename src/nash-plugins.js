@@ -1,5 +1,5 @@
 const {
-	bindKey, getLastBinding
+	bindKey, getKeyBinding, getLastBinding, getBoundKeys
 } = require('./editor')
 const { setPrompt, getCursorPosition } = require('./prompt')
 const { runCommand } = require('./runner')
@@ -11,7 +11,9 @@ function setTerminalTitle(title) {
 module.exports = {
 	setPrompt,
 	bindKey,
+	getKeyBinding,
 	getLastBinding,
+	getBoundKeys,
 	setTerminalTitle,
 	getCursorPosition,
 	runCommand
