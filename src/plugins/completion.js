@@ -1,4 +1,5 @@
 const path = require('path')
+const os = require('os')
 const glob = require('fast-glob')
 
 const {
@@ -91,14 +92,24 @@ function getCommandSuggestions(word) {
         .concat(builtins.filter(w => w.startsWith(word)))
 }
 
+function replaceHomedirWithTilde(path, homedir) {
+    if (path.startsWith(homedir)) {
+        path = '~/' + path.substr(homedir.length)
+    }
+    return path
+}
+
 function getParameterSuggestions(word) {
+    let homedir = os.homedir() + '/'
     if (!word.includes('*'))
         word += '*'
+    if (word.startsWith('~/'))
+        word = homedir + word.substr(2)
     return safeGlob(word, {
         onlyFiles: false,
         markDirectories: true,
         caseSensitiveMatch: false
-    })
+    }).map(p => replaceHomedirWithTilde(p, homedir))
 }
 
 function getEnvironmentSuggestions(word) {
@@ -154,9 +165,10 @@ function showAllWords(line, word, words) {
     let menuDone = () => {}
     hideCursor()
     process.stdout.write('\n')
-    let { rows, columns, columnWidth } = computeTableLayout(words)
+    let options = words.map(basename)
+    let { rows, columns, columnWidth } = computeTableLayout(options)
     let menuKeyHandler = tableMenu({
-        options: words.map(basename),
+        options,
         columns,
         columnWidth,
         done: (sel) => {

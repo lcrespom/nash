@@ -41,7 +41,8 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [ ] Optional agnoster-style prompt
 - [x] Completion
 	- [x] Basic (tab)
-	- [ ] Replace ~ with home when globbing
+		- [ ] Check bug when typing "D" from "~/"
+	- [x] Replace ~ with home when globbing
 	- [x] Advanced (navigate over list)
 		- [ ] Handle lists too long to display in menu
 		- [ ] Let the user type and update menu accordingly
