@@ -43,9 +43,10 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [x] Basic (tab)
 	- [x] Replace ~ with home when globbing
 	- [x] Advanced (navigate over list)
-		- [ ] Handle lists too long to display in menu
+		- [x] Handle lists too long to display in menu
 		- [ ] Let the user type and update menu accordingly
 		- [ ] Selecting a directory opens menu with directory contents
+		- [ ] Properly format and handle paths with blanks
 		- [x] Highlight menu content: (dirs in white, consider other cases)
 	- [ ] Customizable (e.g. git command list, etc.)
 - [x] Syntax highlight

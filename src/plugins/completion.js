@@ -166,19 +166,22 @@ function colorizePath(filename) {
     return filename
 }
 
-function showTableMenu(words, done) {
+function showTableMenu(words, done, interactive = true) {
     process.stdout.write('\n')
     let options = words.map(basename).map(colorizePath)
     let cp = getCursorPosition()
     let { rows, columns, columnWidth } = computeTableLayout(options)
-    if (cp.y + rows >= process.stdout.rows)
+    if (interactive && rows > process.stdout.rows - 5)
+        return null
+    if (interactive && cp.y + rows >= process.stdout.rows)
         setCursorPosition({x: cp.x, y: process.stdout.rows - rows - 2})
+    if (interactive)
+        hideCursor()
     return tableMenu({ options, columns, columnWidth, done })
 }
 
 function showAllWords(line, word, words) {
     let menuDone = () => {}
-    hideCursor()
     let menuKeyHandler = showTableMenu(words, sel => {
         showCursor()
         process.stdout.clearScreenDown()
@@ -186,6 +189,8 @@ function showAllWords(line, word, words) {
             line.left = cutLastChars(line.left, word.length) + words[sel]
         menuDone()
     })
+    if (!menuKeyHandler)
+        return null     // Too many items to show interactive menu
 	return {
         isAsync: true,
         showPrompt: false,
@@ -200,11 +205,33 @@ function showAllWords(line, word, words) {
 	}
 }
 
+function tooManyWords(line, words) {
+    process.stdout.write(`Do you wish to see all ${words.length} matches? `)
+    let yesNoDone = () => {}
+    return {
+        isAsync: true,
+        showPrompt: true,
+        left: line.left,
+        right: line.right,
+        whenDone: function(done) {
+            yesNoDone = done
+        },
+        keyListener: function(key) {
+            if (key.ch == 'y' || key.ch == 'Y')
+                showTableMenu(words, null, false)
+            process.stdout.write('\n')
+            yesNoDone()
+        }
+    }
+}
+
 function completeWords(line, word, words) {
     let start = findCommonStart(words)
     if (start.length <= word.length) {
-        //TODO check if too many words to display in menu
-        return showAllWords(line, word, words)
+        let newLine = showAllWords(line, word, words)
+        if (newLine)
+            return newLine
+        return tooManyWords(line, words)
     }
     return {
         left: cutLastChars(line.left, word.length) + start,
