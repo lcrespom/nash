@@ -22,55 +22,31 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [ ] Usage
 	- [ ] Customization / Extension API
 - [ ] Line editing
-	- [x] Simple chars
-	- [x] Basic movement: left, right, backspace, home, end
-	- [x] Enter: run command
-	- [x] Ctrl-C, Ctrl-D, etc.
 	- [ ] Catch exceptions in bindings to avoid breaking the shell
-	- [ ] Multi-line
-		- [x] Lines longer than the terminal width
-		- [x] Multi-line prompt
-		- [ ] Unfinished line (e.g. open quotes)
-		- [ ] `\`
-	- [x] History navigation
-		- [x] Basic
-		- [x] Context sensitive
-	- [ ] Completion
-		- [x] Basic (tab)
-		- [x] Advanced (navigate over list)
-			- [ ] Handle lists too long to display in list
-			- [ ] Let the user type and update list accordingly
-		- [ ] Customizable (e.g. git command list, etc.)
 	- [ ] Minimize cursor glitches by re-writing from the first different char
-	- [ ] Refactor editor binding result handler
-- [x] Tidy .nash* files
-	- [x] Create .nash/ diectory at ~ during startup if not present
-	- [x] Place all .nash* files in there: history, nashrc, nashrc.js, plugins...
-- [ ] Execute commands
-	- [x] Delegate to external shell
-	- [x] Permanent redirection via pseudo-tty
-	- [x] Improve runner: hide command sent to pty
-	- [x] Get user/cwd from bash
-	- [ ] Non-interactive runner.runCommand(...)
-- [x] Properly handle asynchronous key bindings
-	- [x] Shell commands: ignore any typed key
-	- [x] Interactive bindings: forward key events
-- [ ] Handle multiple independent bindings for the same key combination
-- [x] Configuration (.nash.json / .nash.js)
+	- [ ] Refactor messy editor.js code
+	- [ ] Handle multiple independent bindings for the same key combination
+	- [ ] Rebind/unbind keys (using binding function name as string)
+	- [ ] List key bindings & descriptions
+- [x] History navigation
+	- [x] Basic
+	- [x] Context sensitive
+	- [ ] Cool popup
+- [x] Completion
+	- [x] Basic (tab)
+	- [ ] Replace ~ with home when globbing
+	- [x] Advanced (navigate over list)
+		- [ ] Handle lists too long to display in menu
+		- [ ] Let the user type and update menu accordingly
+	- [ ] Customizable (e.g. git command list, etc.)
+- [x] Configuration (~/.nash/nashrc and ~/.nash/nashrc.js)
+	- [ ] Load all plugins from nashrc.js
 - [x] JavaScript
-	- [x] Detect, execute, replace
-	- [x] Abort execution on error
-	- [ ] Get shell environment before executing JS
-- [x] Parser
-	- [x] Using bash-parser (https://github.com/vorpaljs/bash-parser)
+	- [ ] Get shell environment variables before executing JS
+	- [ ] Embedded JS code context using 'with'
 - [ ] Cool extensions
-	- [x] Syntax highlight
-	- [x] Suggestions
 	- [ ] Cool git prompt
 	- [ ] History popup
 - [ ] Maximize customization
-	- [ ] Rebind/unbind keys (using binding function name as string)
-	- [ ] List key bindings & descriptions
 	- [ ] Improve plugin API & documentation
 	- [ ] Color palette
-	- [ ] Embedded JS code context using 'with'
