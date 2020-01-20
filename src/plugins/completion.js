@@ -1,4 +1,6 @@
+const path = require('path')
 const glob = require('fast-glob')
+
 const {
     hideCursor, showCursor, computeTableLayout, tableMenu
 } = require('node-terminal-menu')
@@ -13,6 +15,7 @@ const {
 const {
     getCursorPosition, setCursorPosition
 } = require('../prompt')
+
 
 //------------------------- AST Searching -------------------------
 
@@ -138,42 +141,51 @@ function findCommonStart(word) {
     return lastw
 }
 
-function showAllWords(line, words) {
+function basename(filename) {
+    let result = path.basename(filename)
+    if (filename.endsWith('/'))
+        result += '/'
+    return result
+}
+
+function showAllWords(line, word, words) {
     //TODO manage potential cursor position change
-    //TODO check if too many words to display in menu
     //let cp = getCursorPosition()
     let menuDone = () => {}
     hideCursor()
     process.stdout.write('\n')
     let { rows, columns, columnWidth } = computeTableLayout(words)
     let menuKeyHandler = tableMenu({
-        options: words,
+        options: words.map(basename),
         columns,
         columnWidth,
         done: (sel) => {
             showCursor()
             process.stdout.clearScreenDown()
+            if (sel >= 0)
+                line.left = cutLastChars(line.left, word.length) + words[sel]
             menuDone()
         }
     })
 	return {
         isAsync: true,
         showPrompt: false,
-        left: line.left,
-        right: line.right,
 		whenDone: function(done) {
             menuDone = done
 		},
 		keyListener: function(key) {
+            //TODO handle plain keys, add them to line, update menu
             menuKeyHandler(key.ch, key)
-		}
+        },
+        getLine: () => line
 	}
 }
 
 function completeWords(line, word, words) {
     let start = findCommonStart(words)
     if (start.length == word.length) {
-        return showAllWords(line, words)
+        //TODO check if too many words to display in menu
+        return showAllWords(line, word, words)
     }
     return {
         left: cutLastChars(line.left, word.length) + start,

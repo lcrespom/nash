@@ -37,9 +37,12 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 		- [x] Context sensitive
 	- [ ] Completion
 		- [x] Basic (tab)
-		- [ ] Advanced (navigate over list)
+		- [x] Advanced (navigate over list)
+			- [ ] Handle lists too long to display in list
+			- [ ] Let the user type and update list accordingly
 		- [ ] Customizable (e.g. git command list, etc.)
 	- [ ] Minimize cursor glitches by re-writing from the first different char
+	- [ ] Refactor editor binding result handler
 - [x] Tidy .nash* files
 	- [x] Create .nash/ diectory at ~ during startup if not present
 	- [x] Place all .nash* files in there: history, nashrc, nashrc.js, plugins...

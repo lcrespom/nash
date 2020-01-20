@@ -122,6 +122,9 @@ function editorKeyListener(key) {
 				if (newLine.left !== undefined) {
 					writeLine(newLine)
 				}
+				if (newLine.getLine) {
+					writeLine(newLine.getLine())
+				}
 			})
 		}
 		else {
