@@ -37,12 +37,15 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [x] Basic
 	- [x] Context sensitive
 	- [ ] Cool popup
+- [x] Prompt plugin
+	- [ ] Optional agnoster-style prompt
 - [x] Completion
 	- [x] Basic (tab)
 	- [ ] Replace ~ with home when globbing
 	- [x] Advanced (navigate over list)
 		- [ ] Handle lists too long to display in menu
 		- [ ] Let the user type and update menu accordingly
+		- [ ] Selecting a directory opens menu with directory contents
 	- [ ] Customizable (e.g. git command list, etc.)
 - [x] Syntax highlight
 - [x] History suggestions
@@ -55,6 +58,7 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 - [ ] Cool extensions
 	- [ ] Cool git prompt
 	- [ ] History popup
+	- [ ] Directory navigation popup (history / tree)
 - [ ] Maximize customization
 	- [ ] Improve plugin API & documentation
 	- [ ] Color palette
