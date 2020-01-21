@@ -109,8 +109,11 @@ function improveKeyName(key) {
 		key.name = 'shift-' + key.name
 	if (key.meta)
 		key.name = 'meta-' + key.name
-	if (key.ctrl)
+	if (key.ctrl) {
+		if (key.name == '`' && key.sequence == '\u0000')
+			key.name = 'space' //WTF when pressing ctrl-space
 		key.name = 'ctrl-' + key.name
+	}
 }
 
 function analyzeKey(ch, key) {
