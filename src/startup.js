@@ -88,13 +88,15 @@ function loadNashRCJS() {
 	return rcexports
 }
 
+let plugins = []
 
 function nashStartup() {
     createNashDirIfRequired()
-	let { plugins } = loadNashRCJS()
+	plugins = loadNashRCJS().plugins
 	loadPlugins(plugins)
 }
 
 module.exports = {
-    nashStartup
+	nashStartup,
+	plugins
 }
