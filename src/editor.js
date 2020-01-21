@@ -14,10 +14,11 @@ function registerLineDecorator(decorator) {
 	lineDecorators.push(decorator)
 }
 
-function decorateLine(plainLine) {
+function decorateLine(line) {
+	let plainLine = line.left + line.right
 	let decoratedLine = plainLine
 	for (let decorator of lineDecorators) {
-		decoratedLine = decorator(plainLine, decoratedLine)
+		decoratedLine = decorator(plainLine, decoratedLine, line)
 	}
 	return decoratedLine
 }
@@ -42,7 +43,7 @@ function applyBinding(key) {
 }
 
 function writeLine(newLine) {
-	let fullLine = decorateLine(newLine.left + newLine.right)
+	let fullLine = decorateLine(newLine)
 	putCursor(0)
 	process.stdout.write(fullLine +  ' ')
 	process.stdout.clearLine(1)
@@ -74,9 +75,6 @@ function editorKeyListener(key) {
 				if (newLine.showPrompt !== false) {
 					putPrompt(userStatus)
 					writeLine({ left: '', right: '' })
-				}
-				if (newLine.left !== undefined) {
-					writeLine(newLine)
 				}
 				if (newLine.getLine) {
 					writeLine(newLine.getLine())

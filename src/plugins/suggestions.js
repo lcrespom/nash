@@ -29,7 +29,7 @@ function colorize(str) {
 
 bindKey('shift-right', acceptSuggestion, 'Accept line suggestion')
 
-registerLineDecorator((plainLine, decoratedLine) => {
+registerLineDecorator((plainLine, decoratedLine, line) => {
     lastSuggestion = getSuggestion(plainLine)
     return decoratedLine + colorize(lastSuggestion)
 })

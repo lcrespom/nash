@@ -194,10 +194,10 @@ function showAllWords(line, word, words) {
 	return {
         isAsync: true,
         showPrompt: false,
-		whenDone: function(done) {
+		whenDone(done) {
             menuDone = done
 		},
-		keyListener: function(key) {
+		keyListener(key) {
             //TODO handle plain keys, add them to line, update menu
             menuKeyHandler(key.ch, key)
         },
@@ -211,17 +211,16 @@ function tooManyWords(line, words) {
     return {
         isAsync: true,
         showPrompt: true,
-        left: line.left,
-        right: line.right,
-        whenDone: function(done) {
+        whenDone(done) {
             yesNoDone = done
         },
-        keyListener: function(key) {
+        keyListener(key) {
             if (key.ch == 'y' || key.ch == 'Y')
                 showTableMenu(words, null, false)
             process.stdout.write('\n')
             yesNoDone()
-        }
+        },
+        getLine: () => line
     }
 }
 

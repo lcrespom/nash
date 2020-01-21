@@ -120,13 +120,13 @@ function downLineOrHistory(line) {
 function acceptLine(line) {
 	return {
 		isAsync: true,
-		whenDone: function(done) {
+		whenDone(done) {
 			let cmd = line.left + line.right
 			if (cmd.trim().length > 0)
 				history.push(cmd)
 			runner.runCommand(cmd, done)
 		},
-		keyListener: function(key) {
+		keyListener(key) {
 			runner.write(key.ch || key.sequence)
 		}
 	}
@@ -156,10 +156,10 @@ function describeNextKey(line) {
 	process.stdout.write('\nType a key: ')
 	return {
 		isAsync: true,
-		whenDone: function(done) {
+		whenDone(done) {
 			commandDone = done
 		},
-		keyListener: function(key) {
+		keyListener(key) {
 			process.stdout.write(key.name ? key.name : key.ch)
             let bnd = getKeyBinding(key.name)
             if (bnd)
