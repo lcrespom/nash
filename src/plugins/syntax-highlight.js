@@ -52,12 +52,14 @@ function getSuffixType(s, line) {
 function highlightNode(node, hls, line) {
     if (node.type != 'Command')
         return
-    hls.push(makeHL(getCommandType(node.name.text), node.name.loc))
-    if (!node.suffix)
-        return
-    for (let s of node.suffix) {
-        hls.push(makeHL(getSuffixType(s, line), s.loc))
-    }
+    if (node.prefix)
+        for (let p of node.prefix)
+            hls.push(makeHL(NodeType.assignment, p.loc))
+    if (node.name)
+        hls.push(makeHL(getCommandType(node.name.text), node.name.loc))
+    if (node.suffix)
+        for (let s of node.suffix)
+            hls.push(makeHL(getSuffixType(s, line), s.loc))
 }
 
 function highlightComment(line, ast, hls) {
@@ -88,6 +90,7 @@ function applyColor(chunk, hl) {
     const colors = [
         'reset',
         'green', 'green', 'green', 'redBright',
+        'magentaBright',
         'cyan', 'magenta', 'cyanBright', 'yellow',
         'blue'
     ]

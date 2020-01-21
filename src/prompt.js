@@ -6,6 +6,7 @@ const { removeAnsiColorCodes } = require('./utils')
 let cursorX = 0
 let cols = 80
 let cursor = null
+let lastUserStatus = {}
 
 // Default prompt function
 let prompt = (pinfo) => 'nash> '
@@ -36,6 +37,7 @@ function put(str) {
 }
 
 function getPromptInfo(userStatus) {
+	lastUserStatus = userStatus
 	// Working directory
 	let cwd = userStatus.cwd || process.cwd()
 	let homedir = os.homedir()
@@ -98,7 +100,7 @@ function setCursorPosition(newCursor) {
 	}
 }
 
-function putPrompt(userStatus = {}) {
+function putPrompt(userStatus = lastUserStatus) {
 	let promptStr = prompt(getPromptInfo(userStatus))
 	put(promptStr)
 	cursor = null

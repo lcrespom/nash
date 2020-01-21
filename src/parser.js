@@ -8,13 +8,15 @@ const NodeType = {
     builtin: 2,
     alias: 3,
     commandError: 4,
+    // Assignment
+    assignment: 5,
     // Parameters in different formats
-    parameter: 5,
-    environment: 6,
-    option: 7,
-    quote: 8,
+    parameter: 6,
+    environment: 7,
+    option: 8,
+    quote: 9,
     // Comments
-    comment: 9
+    comment: 10
 }
 
 const builtins = [
