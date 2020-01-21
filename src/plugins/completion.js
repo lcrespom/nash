@@ -27,7 +27,6 @@ function insideLoc(loc, pos) {
 
 function getNodeInPosition(ast, pos) {
     let node = null
-    let minDist = Number.MAX_VALUE
     traverseAST(ast, n => {
         if (insideLoc(n.loc, pos)) {
             node = n
@@ -37,10 +36,14 @@ function getNodeInPosition(ast, pos) {
 }
 
 function getLocAndType(node, pos) {
-    if (!node) return [null, NodeType.unknown]
-    if (node.type != 'Command') return [node.loc, NodeType.unknown]
-    if (insideLoc(node.name.loc, pos)) return [node.name.loc, NodeType.command]
-    if (!node.suffix) return [node.loc, NodeType.unknown]
+    if (!node)
+        return [null, NodeType.unknown]
+    if (node.type != 'Command')
+        return [node.loc, NodeType.unknown]
+    if (insideLoc(node.name.loc, pos))
+        return [node.name.loc, NodeType.command]
+    if (!node.suffix)
+        return [node.loc, NodeType.unknown]
     for (let s of node.suffix) {
         if (insideLoc(s.loc, pos)) {
             if (s.text[0] == '$')
@@ -51,7 +54,13 @@ function getLocAndType(node, pos) {
                 return [s.loc, NodeType.parameter]
         }
     }
-    return  [node.loc, NodeType.unknown]
+    return [node.loc, NodeType.unknown]
+}
+
+function isEmptyParameter(line) {
+    return line.left.trim().length > 0
+        && line.left.endsWith(' ')
+        && line.right == ''
 }
 
 function getWordAndType(line) {
@@ -60,7 +69,9 @@ function getWordAndType(line) {
         let ast = parseBash(line.left + line.right)
         let node = getNodeInPosition(ast, pos)
         let [loc, type] = getLocAndType(node, pos)
-        if (type == NodeType.unknown)
+        if (loc == null && isEmptyParameter(line))
+            return ['', NodeType.parameter]
+        else if (type == NodeType.unknown)
             return ['', type]
         else
             return [line.left.substr(loc.start.char), type]
@@ -215,9 +226,16 @@ function tooManyWords(line, words) {
             yesNoDone = done
         },
         keyListener(key) {
-            if (key.ch == 'y' || key.ch == 'Y')
+            if (key.ch == 'y' || key.ch == 'Y') {
                 showTableMenu(words, null, false)
-            process.stdout.write('\n')
+                process.stdout.write('\n')
+            }
+            else {
+                // Terminal manipulation to move back to prompt
+                process.stdout.cursorTo(0)
+                process.stdout.clearLine(1)
+                process.stdout.moveCursor(0, -1)
+            }
             yesNoDone()
         },
         getLine: () => line
