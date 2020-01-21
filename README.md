@@ -27,13 +27,13 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [ ] Usage
 	- [ ] Customization / Extension API
 - [ ] Line editing
+	- [x] Move key binding code to separate module
+	- [x] List key bindings & descriptions
 	- [ ] Catch exceptions in bindings to avoid breaking the shell
 	- [ ] Minimize cursor glitches by re-writing from the first different char
-	- [ ] Refactor messy editor.js code
-	- [x] Move key binding code to separate module
+	- [ ] Refactor editor.js code
 	- [ ] Handle multiple independent bindings for the same key combination
 	- [ ] Rebind/unbind keys (using binding function name as string)
-	- [x] List key bindings & descriptions
 - [x] History navigation
 	- [x] Basic
 	- [x] Context sensitive
@@ -51,11 +51,12 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 		- [ ] Selecting a directory opens menu with directory contents
 	- [ ] Customizable (e.g. git command list, etc.)
 - [x] Syntax highlight
+	- [ ] Highlight JavaScript (and avoid bash parser error)
 - [x] History suggestions
 	- [x] Remove suggestion decoration when the user presses enter
 	- [ ] Fix bug: if suggestion text overflows to next line, it is not cleared
 - [x] Configuration (~/.nash/nashrc and ~/.nash/nashrc.js)
-	- [ ] Load all plugins from nashrc.js
+	- [x] Load all plugins from nashrc.js
 - [x] JavaScript
 	- [ ] Get shell environment variables before executing JS
 	- [ ] Embedded JS code context using 'with'
