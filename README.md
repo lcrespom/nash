@@ -45,14 +45,15 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [x] Replace ~ with home when globbing
 	- [x] Advanced (navigate over list)
 		- [x] Handle lists too long to display in menu
+		- [x] Highlight menu content: (dirs in white, consider other cases)
+		- [x] Properly format and handle paths with blanks
 		- [ ] Let the user type and update menu accordingly
 		- [ ] Selecting a directory opens menu with directory contents
-		- [ ] Properly format and handle paths with blanks
-		- [x] Highlight menu content: (dirs in white, consider other cases)
 	- [ ] Customizable (e.g. git command list, etc.)
 - [x] Syntax highlight
 - [x] History suggestions
 	- [x] Remove suggestion decoration when the user presses enter
+	- [ ] Fix bug: if suggestion text overflows to next line, it is not cleared
 - [x] Configuration (~/.nash/nashrc and ~/.nash/nashrc.js)
 	- [ ] Load all plugins from nashrc.js
 - [x] JavaScript

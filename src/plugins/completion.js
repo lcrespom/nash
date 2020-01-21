@@ -82,7 +82,7 @@ function getWordAndType(line) {
 }
 
 
-//------------------------- Suggestions -------------------------
+//------------------------- Suggestion search -------------------------
 
 function safeGlob(paths, options) {
     try {
@@ -113,10 +113,13 @@ function replaceHomedirWithTilde(path, homedir) {
 
 function getParameterSuggestions(word) {
     let homedir = os.homedir() + '/'
+    // Accomodate word to glob
+    word = word.replace(/\\ /g, ' ')
     if (!word.includes('*'))
         word += '*'
     if (word.startsWith('~/'))
         word = homedir + word.substr(2)
+    // Perform glob
     return safeGlob(word, {
         onlyFiles: false,
         markDirectories: true,
@@ -151,7 +154,7 @@ function getSuggestions(word, type) {
 }
 
 
-//------------------------- Key binding -------------------------
+//------------------------- Utilities -------------------------
 
 function findCommonStart(word) {
     let lastw = words[0]
@@ -177,6 +180,13 @@ function colorizePath(filename) {
     return filename
 }
 
+function replaceWordWithMatch(left, cutLen, match) {
+    let qmatch = match.replace(/(\s)/g, '\\$1')
+    return cutLastChars(left, cutLen) + qmatch
+}
+
+//------------------------- Key binding -------------------------
+
 function showTableMenu(words, done, interactive = true) {
     process.stdout.write('\n')
     let options = words.map(basename).map(colorizePath)
@@ -197,7 +207,7 @@ function showAllWords(line, word, words) {
         showCursor()
         process.stdout.clearScreenDown()
         if (sel >= 0)
-            line.left = cutLastChars(line.left, word.length) + words[sel]
+            line.left = replaceWordWithMatch(line.left, word.length, words[sel])
         menuDone()
     })
     if (!menuKeyHandler)
@@ -251,7 +261,7 @@ function completeWords(line, word, words) {
         return tooManyWords(line, words)
     }
     return {
-        left: cutLastChars(line.left, word.length) + start,
+        left: replaceWordWithMatch(line.left, word.length, start),
         right: line.right
     }
 }
@@ -261,15 +271,18 @@ function completeWord(line) {
     let [word, type] = getWordAndType(line)
     words = getSuggestions(word, type)
     if (words.length == 0) {
+        // No match: do nothing
         return line
     }
     if (words.length == 1) {
+        // Exactly one match: update line
         return {
-            left: cutLastChars(line.left, word.length) + words[0],
+            left: replaceWordWithMatch(line.left, word.length, words[0]),
             right: line.right
         }
     }
     else {
+        // Multiple matches: interactive navigation
         return completeWords(line, word, words)
     }
 }
