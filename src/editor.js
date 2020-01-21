@@ -69,6 +69,8 @@ function editorKeyListener(key) {
 	else {
 		newLine = applyBinding(key)
 		if (newLine.isAsync) {
+			if (newLine.left || newLine.right)
+				writeLine(newLine)
 			keyListener = newLine.keyListener || doNothingKeyListener
 			newLine.whenDone(userStatus => {
 				keyListener = editorKeyListener

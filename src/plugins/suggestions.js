@@ -30,6 +30,8 @@ function colorize(str) {
 bindKey('shift-right', acceptSuggestion, 'Accept line suggestion')
 
 registerLineDecorator((plainLine, decoratedLine, line) => {
+    if (line && line.decorateHint == 'no suggestions')
+        return decoratedLine
     lastSuggestion = getSuggestion(plainLine)
     return decoratedLine + colorize(lastSuggestion)
 })

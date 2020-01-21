@@ -52,7 +52,7 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [ ] Customizable (e.g. git command list, etc.)
 - [x] Syntax highlight
 - [x] History suggestions
-	- [ ] Remove suggestion decoration when the user presses enter
+	- [x] Remove suggestion decoration when the user presses enter
 - [x] Configuration (~/.nash/nashrc and ~/.nash/nashrc.js)
 	- [ ] Load all plugins from nashrc.js
 - [x] JavaScript

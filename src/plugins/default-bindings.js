@@ -120,6 +120,9 @@ function downLineOrHistory(line) {
 function acceptLine(line) {
 	return {
 		isAsync: true,
+		left: line.left,
+		right: line.right,
+		decorateHint: 'no suggestions',
 		whenDone(done) {
 			let cmd = line.left + line.right
 			if (cmd.trim().length > 0)
