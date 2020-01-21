@@ -56,6 +56,48 @@ function forwardChar(line) {
 	}
 }
 
+function isLetterOrNum(ch) {
+	if (ch >= '0' && ch <= '9')
+		return true
+	return ch.toLowerCase() != ch.toUpperCase()
+}
+
+function isStartOfWord(str, pos) {
+	if (pos <= 0)
+		return true
+	return isLetterOrNum(str[pos]) && !isLetterOrNum(str[pos - 1])
+}
+
+function isEndOfWord(str, pos) {
+	if (pos >= str.length)
+		return true
+	return !isLetterOrNum(str[pos]) && isLetterOrNum(str[pos - 1])
+}
+
+function backwardWord(line) {
+	if (line.left.length == 0) return line
+	for (let pos = line.left.length - 1; pos >= 0; pos--) {
+		if (isStartOfWord(line.left, pos)) {
+			return {
+				left: line.left.substr(0, pos),
+				right: line.left.substr(pos) + line.right
+			}
+		}
+	}	
+}
+
+function forwardWord(line) {
+	if (line.right.length == 0) return line
+	for (let pos = 1; pos <= line.right.length; pos++) {
+		if (isEndOfWord(line.right, pos)) {
+			return {
+				left: line.left + line.right.substr(0, pos),
+				right: line.right.substr(pos)
+			}
+		}
+	}
+}
+
 function beginningOfLine(line) {
 	return {
 		left: '',
@@ -147,6 +189,8 @@ function discardLine() {
 }
 
 
+//--------------- Interactive commands ---------------
+
 function describeKeyBinding(kname, binding) {
     return kname.padEnd(12) + '  ' +
         binding.code.name.padEnd(20) + '  ' +
@@ -196,6 +240,8 @@ bindKey('left', backwardChar, 'Move cursor left')
 bindKey('right', forwardChar, 'Move cursor right')
 bindKey(['home', 'ctrl-a'], beginningOfLine,
 	'Move cursor to beginning of line')
+bindKey('ctrl-b', backwardWord, 'Move cursor one word to the left')
+bindKey('ctrl-f', forwardWord, 'Move cursor one word to the right')
 bindKey(['end', 'ctrl-e'], endOfLine, 'Move cursor to end of line')
 bindKey(['escape', 'ctrl-u'], killWholeLine, 'Clears the current line')
 bindKey('ctrl-l', clearScreen, 'Clears the screen')
