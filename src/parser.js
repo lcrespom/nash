@@ -67,8 +67,9 @@ function parseBash(line) {
     catch (e) {
         if (e.message.startsWith('Unclosed ')) {
             let endQuote = e.message.charAt(e.message.length - 1)
-            if (`"'`.includes(endQuote))
-                return parse(line + endQuote, { insertLOC: true })
+            if (endQuote == '(')
+                endQuote = 'x)'
+            return parse(line + endQuote, { insertLOC: true })
         }
         line = line.substr(0, line.length - 1)
         if (line.length == 0)
