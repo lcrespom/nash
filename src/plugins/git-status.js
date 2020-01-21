@@ -13,10 +13,20 @@ function runCommand(cmd) {
 }
 
 function parseBranch(line) {
-    let m = line.match(/## (.+)$/)
-    if (!m || !m[1])
+    if (!line.startsWith('## '))
         return null
-    return m[1].split('...')[0]
+    return line.substr(2).split('...')[0]
+}
+
+function parseRemoteBranch(branch, line) {
+    let result = { ahead: 0, behind: 0 }
+    if (!branch)
+        return result
+    let m = line.match(/\[(ahead|behind) (\d+)\]$/)
+    if (!m)
+        return result
+    result[m[1]] = parseInt(m[2], 10)
+    return result
 }
 
 function updateCounter(ctrs, code) {
@@ -42,6 +52,7 @@ function isConflict(line) {
 
 function parseGitStatus(lines) {
     let branch = parseBranch(lines[0])
+    let { ahead, behind } = parseRemoteBranch(branch, lines[0] )
     let index = { modified: 0, updated: 0, added: 0, renamed: 0 }
     let tree = { ...index, untracked: 0 }
     let conflicts = 0
@@ -58,7 +69,7 @@ function parseGitStatus(lines) {
     totalCounters(index)
     totalCounters(tree)
     let dirty = conflicts + index.total + tree.total > 0 
-    return { branch, index, tree, conflicts, dirty }
+    return { branch, index, tree, conflicts, dirty, ahead, behind }
 }
 
 function gitStatus() {
