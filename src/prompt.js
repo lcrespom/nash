@@ -13,9 +13,9 @@ let prompt = (pinfo) => 'nash> '
 
 /**
  * Sets the function that will be invoked for building the prompt string
- * @param {function(object): string} promptFunction - The function that will be invoked
- * 	whenever the prompt needs to be displayed. This function should return
- * 	a string, which will be presented to the user when typing a command.
+ * @param {function(object): string} promptFunction - The function that will be
+ *  invoked whenever the prompt needs to be displayed. This function should
+ *  return a string, which will be presented to the user when typing a command.
  *
  * The prompt function receives a single object parameter with relevant
  * information about the environment, which can be optionally used by the
@@ -35,11 +35,14 @@ function put(str) {
 }
 
 function getPromptInfo(userStatus) {
+	// Working directory
 	let cwd = userStatus.cwd || process.cwd()
 	let homedir = os.homedir()
 	if (cwd.startsWith(homedir))
 		cwd = '~' + cwd.substr(homedir.length)
+	// Username
 	let username = userStatus.username || os.userInfo().username
+	// Host name (full and local)
 	let fqdn = os.hostname()
 	let hostname = fqdn.split('.')[0]
 	return {

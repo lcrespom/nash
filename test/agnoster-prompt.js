@@ -1,6 +1,6 @@
 const chalk = module.parent.require('chalk')
 
-const { setPrompt } = module.parent.require('./prompt')
+const { setPrompt, setTerminalTitle } = module.parent.require('./prompt')
 
 
 const SEGMENT_SEPARATOR = '\ue0b0'
@@ -17,3 +17,4 @@ function prompt({ cwd, username, hostname }) {
 
 
 setPrompt(prompt)
+setTerminalTitle('Nash')

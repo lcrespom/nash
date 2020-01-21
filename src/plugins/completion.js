@@ -236,16 +236,9 @@ function tooManyWords(line, words) {
             yesNoDone = done
         },
         keyListener(key) {
-            if (key.ch == 'y' || key.ch == 'Y') {
+            if (key.ch == 'y' || key.ch == 'Y')
                 showTableMenu(words, null, false)
-                process.stdout.write('\n')
-            }
-            else {
-                // Terminal manipulation to move back to prompt
-                process.stdout.cursorTo(0)
-                process.stdout.clearLine(1)
-                process.stdout.moveCursor(0, -1)
-            }
+            process.stdout.write('\n')
             yesNoDone()
         },
         getLine: () => line
