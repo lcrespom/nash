@@ -62,6 +62,13 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [ ] Embedded JS code context using 'with'
 - [ ] Cool extensions
 	- [ ] Cool git prompt
+		- always: (git-symbol) + branch name
+		- ✔: repository clean (no other mark below)
+		- ↑: ahead
+		- ↓: behind
+		- ●: unstaged changes
+		- ✚: staged changes
+		- ✖: conflicts
 	- [ ] History popup
 	- [ ] Directory navigation popup (history / tree)
 - [ ] Maximize customization
