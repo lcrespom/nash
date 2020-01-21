@@ -1,6 +1,7 @@
 const {
-	bindKey, getKeyBinding, getLastBinding, getBoundKeys, getCursorPosition
-} = require('../nash-plugins')
+	bindKey, getKeyBinding, getLastBinding, getBoundKeys
+} = require('../key-bindings')
+const { getCursorPosition } = require('../prompt')
 const runner = require('../runner')
 const history = require('../history')
 

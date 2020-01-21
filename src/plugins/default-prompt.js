@@ -1,6 +1,6 @@
 const chalk = require('chalk')
 
-const { setPrompt, setTerminalTitle } = require('../nash-plugins')
+const { setPrompt, setTerminalTitle } = require('../prompt')
 
 
 function prompt({ cwd, username, hostname }) {

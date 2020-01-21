@@ -7,7 +7,7 @@ const {
     hideCursor, showCursor, computeTableLayout, tableMenu
 } = require('node-terminal-menu')
 
-const { bindKey } = require('../nash-plugins')
+const { bindKey } = require('../key-bindings')
 const {
     startsWithCaseInsensitive, cutLastChars, commonInitialChars
 } = require('../utils')

@@ -1,6 +1,6 @@
 /**
  * This is an example of a "plugin" file, where the user customizes nash
- * using the API provided by `nash-plugins`.
+ * using the API provided by `nash`.
  * 
  * It will be automatically executed by nash upon startup, if placed in
  * `~/.nash/nashrc.js`.
@@ -13,7 +13,7 @@
 
 const chalk = module.parent.require('chalk')
 
-const { setPrompt } = module.parent.require('./nash-plugins')
+const { setPrompt } = module.parent.require('./prompt')
 
 
 const SEGMENT_SEPARATOR = '\ue0b0'

@@ -112,6 +112,10 @@ function putCursor(len) {
 	}
 }
 
+function setTerminalTitle(title) {
+	process.stdout.write(`\x1b]0;${title}\x07`)
+}
+
 
 captureCursorPosition()
 
@@ -121,5 +125,6 @@ module.exports = {
     putPrompt,
     putCursor,
 	getCursorPosition,
-	setCursorPosition
+	setCursorPosition,
+	setTerminalTitle
 }
