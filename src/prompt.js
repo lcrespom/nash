@@ -25,6 +25,7 @@ let prompt = (pinfo) => 'nash> '
  *  - username: the current user name
  *  - hostname: the host name
  *  - fqdn: the fully qualified domain name of the host
+ *  - retCode: the return code of the most recent command
  */
 function setPrompt(promptFunction) {
 	prompt = promptFunction
@@ -45,11 +46,15 @@ function getPromptInfo(userStatus) {
 	// Host name (full and local)
 	let fqdn = os.hostname()
 	let hostname = fqdn.split('.')[0]
+	// Return code
+	let retCode = userStatus.retCode || 0
+	// All together
 	return {
 		cwd,
 		username,
 		hostname,
-		fqdn
+		fqdn,
+		retCode
 	}
 }
 

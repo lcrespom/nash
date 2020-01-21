@@ -74,7 +74,7 @@ function checkPromptAndWrite(data) {
 		data = data.substr(0, data.length - NASH_MARK.length)
 		process.stdout.write(data)
 		state = TermState.readingStatus
-		theCommand = ' whoami;pwd'
+		theCommand = ' __rc=$?;whoami;pwd;echo $__rc;$(exit $__rc)'
 		userStatus = ''
 		ptyProcess.write(theCommand + '\n')		
 	}
@@ -89,7 +89,8 @@ function parseUserStatus() {
 		.filter(l => l.length > 0)
 	return {
 		username: lines[0],
-		cwd: lines[1]
+		cwd: lines[1],
+		retCode: lines[2]
 	}
 }
 
