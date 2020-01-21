@@ -1,73 +1,9 @@
 const { putPrompt, putCursor } = require('./prompt')
+const { getKeyBinding, setLastBinding } = require('./key-bindings')
 
 
 let line = { left: '', right: '' }
 let keyListener = editorKeyListener
-let lastBinding = null
-
-
-//-------------------- Key bindings --------------------
-
-let keyBindings = {}
-
-/**
- * Binds a given key or key combination to a function, which will be invoked
- * 	by the editor when the key is pressed.
- *
- * @param {String | String[]} knames - The key name. If an array is given,
- * 	the binding is applied to multiple keys.
- * @param {Function} code - The function to invoke when the key is pressed.
- * @param {String} desc - A description of what the binding does.
- *
- * When the end user types the bound key and the function provided in the
- * `code` parameter is invoked, it receives an object parameter with the
- * current editor line, split in the `left` and `right` properties with the
- * cursor in the middle.
- * The binding function can either be synchronous or asynchronous.
- *
- * If synchronous, it must return an object with a `left` and `right` string
- * properties, which will be used to update the editor line.
- *
- * If asynchronous, it must return an object with the following properties:
- * - isAsync: set to true to indicate that the function is asynchronous
- * - whenDone: a function that the editor will invoke passing a callback
- *   function, which should be invoked when the asynchronous function
- *   has finished.
- */
-function bindKey(knames, code, desc) {
-	if (!Array.isArray(knames))
-		knames = [ knames ]
-	for (let key of knames)
-		keyBindings[key] = { code, desc }
-}
-
-function getKeyBinding(name) {
-	return keyBindings[name]
-}
-
-function getBoundKeys() {
-	return Object.keys(keyBindings)
-}
-
-function unknownKey(key) {
-	return {
-		left: line.left,
-		right: line.right
-	}
-}
-
-function applyBinding(key) {
-	let b = getKeyBinding(key.name)
-	if (!b || !b.code)
-		return unknownKey(key)
-	let newLine = b.code(line)
-	lastBinding = b.code
-	return newLine
-}
-
-function getLastBinding() {
-	return lastBinding
-}
 
 
 //-------------------- Line decoration --------------------
@@ -86,7 +22,24 @@ function decorateLine(plainLine) {
 	return decoratedLine
 }
 
+
 //-------------------- Line & key handling --------------------
+
+function unknownKey(key) {
+	return {
+		left: line.left,
+		right: line.right
+	}
+}
+
+function applyBinding(key) {
+	let b = getKeyBinding(key.name)
+	if (!b || !b.code)
+		return unknownKey(key)
+	let newLine = b.code(line)
+	setLastBinding(b.code)
+	return newLine
+}
 
 function writeLine(newLine) {
 	let fullLine = decorateLine(newLine.left + newLine.right)
@@ -110,7 +63,7 @@ function editorKeyListener(key) {
 			right: line.right
 		}
 		writeLine(newLine)
-		lastBinding = null
+		setLastBinding(null)
 	}
 	else {
 		newLine = applyBinding(key)
@@ -175,15 +128,14 @@ function handleKeypress(ch, key) {
 
 function initialize() {
 	putPrompt()
-	writeLine({ left: '', right: '' })
+	setTimeout(() => {
+		// Avoid glitch where the cursor is misplaced upon startup
+		writeLine({ left: '', right: '' })
+	}, 50)
 }
 
 module.exports = {
 	handleKeypress,
-	bindKey,
-	getKeyBinding,
-	getLastBinding,
-	getBoundKeys,
 	registerLineDecorator,
 	initialize
 }

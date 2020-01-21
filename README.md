@@ -30,7 +30,7 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [ ] Catch exceptions in bindings to avoid breaking the shell
 	- [ ] Minimize cursor glitches by re-writing from the first different char
 	- [ ] Refactor messy editor.js code
-	- [ ] Move key binding code to separate module
+	- [x] Move key binding code to separate module
 	- [ ] Handle multiple independent bindings for the same key combination
 	- [ ] Rebind/unbind keys (using binding function name as string)
 	- [x] List key bindings & descriptions

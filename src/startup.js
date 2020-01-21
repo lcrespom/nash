@@ -48,7 +48,7 @@ function loadNashRCJS() {
 
 function nashStartup() {
     createNashDirIfRequired()
-	loadPlugin('./plugins/key-bindings')
+	loadPlugin('./plugins/default-bindings')
 	loadPlugin('./plugins/default-prompt')
 	loadPlugin('./plugins/completion')
 	loadPlugin('./plugins/syntax-highlight')

@@ -1,6 +1,7 @@
 const chalk = require('chalk')
 
-const { registerLineDecorator, bindKey } = require('../editor')
+const { registerLineDecorator } = require('../editor')
+const { bindKey } = require('../key-bindings')
 const history = require('../history')
 
 let lastSuggestion = ''

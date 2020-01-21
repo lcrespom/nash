@@ -1,6 +1,6 @@
 const {
 	bindKey, getKeyBinding, getLastBinding, getBoundKeys
-} = require('./editor')
+} = require('./key-bindings')
 const { setPrompt, getCursorPosition } = require('./prompt')
 const { runCommand } = require('./runner')
 
