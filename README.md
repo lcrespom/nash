@@ -7,7 +7,7 @@ Nash is implemented in JavaScript and focuses on:
 - Bringing shell power to JavaScript developers. `zsh` is greatly configurable, but customizing it requires
 	writing shell script code, which (for JS developers) is not as user friendly as JavaScript.
 
-Nash is currently under development, so some features are still missing, but it is quite usable already. See the ToDo section below for details.
+Nash is currently under development, but it is already usable, powerful... and colorful. See the ToDo section below for details.
 
 
 ## Installation
@@ -61,14 +61,9 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [ ] Get shell environment variables before executing JS
 	- [ ] Embedded JS code context using 'with'
 - [ ] Cool extensions
-	- [ ] Cool git prompt
-		- always: (git-symbol) + branch name
-		- ✔: repository clean (no other mark below)
-		- ↑: ahead
-		- ↓: behind
-		- ●: unstaged changes
-		- ✚: staged changes
-		- ✖: conflicts
+	- [x] Cool git prompt
+		- [x] Fancy git status stripe in agnoster-prompt.js
+		- [ ] Git status stripe in default prompt
 	- [ ] History popup
 	- [ ] Directory navigation popup (history / tree)
 - [ ] Maximize customization

@@ -15,7 +15,7 @@ function runCommand(cmd) {
 function parseBranch(line) {
     if (!line.startsWith('## '))
         return null
-    return line.substr(2).split('...')[0]
+    return line.substr(3).split('...')[0]
 }
 
 function parseRemoteBranch(branch, line) {
@@ -80,6 +80,19 @@ function gitStatus() {
     return parseGitStatus(lines)
 }
 
+function gitStatusFlags(status) {
+    if (!status) return ''
+    let flags = ''
+    if (status.ahead) flags += '↑'
+    if (status.behind) flags += '↓'
+    if (status.tree.total) flags += '●'
+    if (status.index.total) flags += '✚'
+    if (status.conflicts) flags += '✖'
+    if (flags == '') flags = '✔'
+    return flags
+} 
+
 module.exports = {
-    gitStatus
+    gitStatus,
+    gitStatusFlags
 }
