@@ -6,13 +6,13 @@ const hl = require('../src/plugins/syntax-highlight')
 test('Single command', () => {
     let hls = hl.highlight('ls')
     expect(hls.length).toBe(1)
-    expect(hls[0].type).toBe(hl.NodeType.command)
+    expect(hls[0].type).toBe(hl.NodeType.program)
 })
 
 test('Command and file', () => {
     let hls = hl.highlight('ls nash.js')
     expect(hls.length).toBe(2)
-    expect(hls[0].type).toBe(hl.NodeType.command)
+    expect(hls[0].type).toBe(hl.NodeType.program)
     expect(hls[1].type).toBe(hl.NodeType.parameter)
 })
 
@@ -26,7 +26,7 @@ test('Command and env', () => {
 test('Command and option', () => {
     let hls = hl.highlight('ls -lah')
     expect(hls.length).toBe(2)
-    expect(hls[0].type).toBe(hl.NodeType.command)
+    expect(hls[0].type).toBe(hl.NodeType.program)
     expect(hls[1].type).toBe(hl.NodeType.option)
 })
 
@@ -52,13 +52,13 @@ test('Pipe', () => {
     expect(hls.length).toBe(3)
     expect(hls[0].type).toBe(hl.NodeType.builtin)
     expect(hls[1].type).toBe(hl.NodeType.parameter)
-    expect(hls[2].type).toBe(hl.NodeType.command)
+    expect(hls[2].type).toBe(hl.NodeType.program)
 })
 
 test('Comment', () => {
     let hls = hl.highlight('ls  # comment')
     expect(hls.length).toBe(2)
-    expect(hls[0].type).toBe(hl.NodeType.command)
+    expect(hls[0].type).toBe(hl.NodeType.program)
     expect(hls[1].type).toBe(hl.NodeType.comment)
 })
 
@@ -91,12 +91,12 @@ function colorize(line) {
 
 test('Colorize single command', () => {
     let result = colorize('ls')
-    expect(result).toBe('(command/ls)')
+    expect(result).toBe('(program/ls)')
 })
 
 test('Colorize command and param', () => {
     let result = colorize('ls file')
-    expect(result).toBe('(command/ls) (parameter/file)')
+    expect(result).toBe('(program/ls) (parameter/file)')
 })
 
 test('Colorize builtin and env', () => {
@@ -111,7 +111,7 @@ test('Colorize builtin and quote', () => {
 
 test('Colorize command and many params', () => {
     let result = colorize('ls ab  $cd   "ef" \'gh\' -i')
-    expect(result).toBe('(command/ls) (parameter/ab)' +
+    expect(result).toBe('(program/ls) (parameter/ab)' +
         '  (environment/$cd)   (quote/"ef")' +
         " (quote/'gh') (option/-i)")
 })

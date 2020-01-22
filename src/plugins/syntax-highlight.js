@@ -5,6 +5,7 @@ const { registerLineDecorator } = require('../editor')
 const {
     NodeType, builtins, parseBash, traverseAST
 } = require('../parser')
+const { setOption } = require('../startup')
 
 
 function makeHL(type, loc) {
@@ -86,24 +87,11 @@ function highlight(line) {
     return hls
 }
 
-function applyColor(chunk, hl) {
-    const colors = [
-        'reset',
-        'green', 'green', 'green', 'redBright',
-        'magentaBright',
-        'cyan', 'magenta', 'cyanBright', 'yellow',
-        'blue'
-    ]
-    let colorName = colors[hl.type]
-    return chalk[colorName](chunk)
-}
-
 function colorize(line, hls, colorFunc = applyColor) {
     if (hls.length == 0)
         return line
     let pos = 0
     let result = ''
-    // debugger
     for (let hl of hls) {
         if (pos < hl.start) {
             result += line.substring(pos, hl.start)
@@ -126,6 +114,33 @@ registerLineDecorator((plainLine, decoratedLine) => {
     let hls = highlight(plainLine)
     return colorize(plainLine, hls)
 })
+
+
+function applyColor(chunk, hl) {
+    const colors = [
+        'reset',
+        'green', 'green', 'green', 'green', 'redBright',
+        'magentaBright',
+        'cyan', 'magenta', 'cyanBright', 'yellow',
+        'blue'
+    ]
+    let colorName = colors[hl.type]
+    return chalk[colorName](chunk)
+}
+
+// setOption('colors.syntaxHighlight', {
+//     unknown: 'reset',
+//     command: 'green',
+//     builtin: 'green',
+//     alias: 'green',
+//     commandError: 'redBright',
+//     assignment: 'magentaBright',
+//     parameter: 'cyan',
+//     environment: 'magenta',
+//     option: 'cyanBright',
+//     quote: 'yellow',
+//     comment: 'blue'
+// })
 
 
 // Exports used only for testing

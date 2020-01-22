@@ -95,6 +95,16 @@ function setProp(obj, name, value) {
 	obj[pname] = value
 }
 
+/**
+ * Returns an object where property names become values and vice-versa.
+ * For example:
+ *   reverseObject({ foo: 'bar', x: 3 }) returns { bar: 'foo', '3': x }
+ * @param {object} obj The target object
+ * @returns the reversed object
+ */
+function reverseObject(obj) {
+	Object.keys(obj).reduce((a, k) => (a[obj[k]] = k, a), {})
+}
 
 
 module.exports = {
@@ -104,5 +114,6 @@ module.exports = {
 	cutLastChars,
 	memoize,
 	getProp,
-	setProp
+	setProp,
+	reverseObject
 }

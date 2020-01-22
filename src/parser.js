@@ -1,23 +1,27 @@
 const parse = require('bash-parser')
 
+const { reverseObject } = require('./utils')
+
 const NodeType = {
     unknown: 0,
     // Commands
-    command: 1,
-    program: 1,
-    builtin: 2,
-    alias: 3,
-    commandError: 4,
+    command: 1, // Generic command (any of the following)
+    program: 2,
+    builtin: 3,
+    alias: 4,
+    commandError: 5,
     // Assignment
-    assignment: 5,
+    assignment: 6,
     // Parameters in different formats
-    parameter: 6,
-    environment: 7,
-    option: 8,
-    quote: 9,
+    parameter: 7,
+    environment: 8,
+    option: 9,
+    quote: 10,
     // Comments
-    comment: 10
+    comment: 11
 }
+
+const NodeTypeNames = reverseObject(NodeType)
 
 const builtins = [
     'alias', 'alloc',
@@ -81,6 +85,7 @@ function parseBash(line) {
 
 module.exports = {
     NodeType,
+    NodeTypeNames,
     builtins,
     traverseAST,
     parseBash
