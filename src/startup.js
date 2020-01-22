@@ -1,6 +1,8 @@
 const fs = require('fs')
 const os = require('os')
 
+const { getProp, setProp } = require('./utils')
+
 
 //------------------------------ RC files ------------------------------
 
@@ -88,16 +90,30 @@ function loadNashRCJS() {
 	return rcexports
 }
 
+
 let userConfig = {}
+
+function getOption(name) {
+	return getProp(userConfig.options, name)
+}
+
+function setOption(name, obj) {
+	setProp(userConfig.options, name, obj)
+}
+
 
 function nashStartup() {
 	createNashDirIfRequired()
 	userConfig = loadNashRCJS()
+	if (userConfig.options === undefined)
+		userConfig.options = {}
 	let plugins = userConfig.plugins
 	loadPlugins(plugins)
 }
 
 module.exports = {
 	nashStartup,
-	userConfig
+	userConfig,
+	getOption,
+	setOption
 }

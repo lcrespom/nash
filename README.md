@@ -67,9 +67,9 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 		- [ ] Test and implement support for ahead and behind combined
 	- [ ] History popup
 	- [ ] Directory navigation popup (history / tree)
-	- [ ] Mouse support for all menus
+	- [ ] Mouse support for all menus (keypress module supports it)
 - [ ] Maximize customization
-	- [ ] Global settings object / API
+	- [x] Global settings object / API
 	- [ ] Improve plugin API & documentation
 	- [ ] Color palette
 - [ ] Compatibility / Portability

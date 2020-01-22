@@ -47,7 +47,7 @@ function totalCounters(ctrs) {
 
 function isConflict(line) {
     let xy = line.substr(0, 2)
-    return 'DD AU UD UA DU AA UU'.includes(xy)
+    return 'DD-AU-UD-UA-DU-AA-UU'.includes(xy)
 }
 
 function parseGitStatus(lines) {

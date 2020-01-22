@@ -59,10 +59,50 @@ function memoize(func) {
 	}
 }
 
+
+/**
+ * Extracts a nested property from an object
+ * @param {object} obj the object to extract the property from
+ * @param {string} name the property name, which may contain '.' to
+ * 	express multiple levels of property nesting, just like the standard
+ *  JS object notation.
+ * @returns the property value, or undefined if the property is not present.
+ */
+function getProp(obj, name) {
+	let names = name.split('.')
+	for (let n of names) {
+		obj = obj[n]
+		if (obj === undefined) return obj
+	}
+	return obj
+}
+
+/**
+ * Sets the value to a nested property of an object.
+ * @param {object} obj the object to update
+ * @param {string} name the property name, which may contain '.' to
+ * 	express multiple levels of property nesting, just like the standard
+ *  JS object notation. If a property at any level does not exist, it is
+ *  created.
+ */
+function setProp(obj, name, value) {
+	let names = name.split('.')
+	let pname = names.pop()
+	for (let n of names) {
+		if (obj[n] === undefined) obj[n] = {}
+		obj = obj[n]
+	}
+	obj[pname] = value
+}
+
+
+
 module.exports = {
 	startsWithCaseInsensitive,
     removeAnsiColorCodes,
     commonInitialChars,
 	cutLastChars,
-	memoize
+	memoize,
+	getProp,
+	setProp
 }
