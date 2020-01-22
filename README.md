@@ -64,6 +64,7 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [x] Cool git prompt
 		- [x] Fancy git status stripe in agnoster-prompt.js
 		- [ ] Git status stripe in default prompt
+		- [ ] Test and implement support for ahead and behind combined
 	- [ ] History popup
 	- [ ] Directory navigation popup (history / tree)
 - [ ] Maximize customization
