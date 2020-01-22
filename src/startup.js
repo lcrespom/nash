@@ -91,7 +91,9 @@ function loadNashRCJS() {
 }
 
 
-let userConfig = {}
+let userConfig = {
+	options: {}
+}
 
 function getOption(name) {
 	return getProp(userConfig.options, name)

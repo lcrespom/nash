@@ -103,7 +103,7 @@ function setProp(obj, name, value) {
  * @returns the reversed object
  */
 function reverseObject(obj) {
-	Object.keys(obj).reduce((a, k) => (a[obj[k]] = k, a), {})
+	return Object.keys(obj).reduce((a, k) => (a[obj[k]] = k, a), {})
 }
 
 

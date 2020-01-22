@@ -3,7 +3,7 @@ const chalk = require('chalk')
 
 const { registerLineDecorator } = require('../editor')
 const {
-    NodeType, builtins, parseBash, traverseAST
+    NodeType, NodeTypeNames, builtins, parseBash, traverseAST
 } = require('../parser')
 const { setOption } = require('../startup')
 
@@ -128,19 +128,19 @@ function applyColor(chunk, hl) {
     return chalk[colorName](chunk)
 }
 
-// setOption('colors.syntaxHighlight', {
-//     unknown: 'reset',
-//     command: 'green',
-//     builtin: 'green',
-//     alias: 'green',
-//     commandError: 'redBright',
-//     assignment: 'magentaBright',
-//     parameter: 'cyan',
-//     environment: 'magenta',
-//     option: 'cyanBright',
-//     quote: 'yellow',
-//     comment: 'blue'
-// })
+setOption('colors.syntaxHighlight', {
+    unknown: 'reset',
+    program: 'green',
+    builtin: 'green',
+    alias: 'green',
+    commandError: 'redBright',
+    assignment: 'magentaBright',
+    parameter: 'cyan',
+    environment: 'magenta',
+    option: 'cyanBright',
+    quote: 'yellow',
+    comment: 'blue'
+})
 
 
 // Exports used only for testing
