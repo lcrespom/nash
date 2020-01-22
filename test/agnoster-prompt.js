@@ -18,11 +18,12 @@ function gitSection() {
 	let gstatus = gitStatus()
 	if (!gstatus)
 		return chalk.blue(SEGMENT_SEPARATOR)
+	let flags = gitStatusFlags(gstatus)
+	// if (flags == '') flags = '✔'
 	let fgcolor = gstatus.dirty ? 'yellow' : 'green'
 	let bgcolor = gstatus.dirty ? 'bgYellow' : 'bgGreen'
 	let sep1 = chalk.blue[bgcolor](SEGMENT_SEPARATOR)
-	let status = ' \ue0a0 ' + gstatus.branch + ' ' +
-		gitStatusFlags(gstatus) + ' '
+	let status = ' \ue0a0 ' + gstatus.branch + ' ' + flags + ' '
 	let sep2 = chalk[fgcolor](SEGMENT_SEPARATOR)
 	return sep1 + chalk.black[bgcolor](status) + sep2
 }

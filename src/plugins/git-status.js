@@ -88,7 +88,6 @@ function gitStatusFlags(status) {
     if (status.tree.total) flags += '●'
     if (status.index.total) flags += '✚'
     if (status.conflicts) flags += '✖'
-    if (flags == '') flags = '✔'
     return flags
 } 
 
