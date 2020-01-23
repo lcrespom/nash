@@ -33,6 +33,7 @@ function getCommandType(cmd) {
     let whichOut = which(cmd)
     if (!whichOut)
         return NodeType.commandError
+    // This `which` output does not work in all bash environments ¯\_(ツ)_/¯
     if (whichOut.endsWith('shell built-in command'))
         return NodeType.builtin
     if (whichOut.includes(': aliased to '))
