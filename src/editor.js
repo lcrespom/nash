@@ -1,4 +1,4 @@
-const { putPrompt, putCursor } = require('./prompt')
+const { putPrompt, putCursor, hideCursor, showCursor } = require('./prompt')
 const { getKeyBinding, setLastBinding } = require('./key-bindings')
 
 
@@ -44,10 +44,13 @@ function applyBinding(key) {
 
 function writeLine(newLine) {
 	let fullLine = decorateLine(newLine)
+	hideCursor()	// Hide cursor to avoid glitches
+	process.stdout.write('\x1b[?25l')
 	putCursor(0)
 	process.stdout.write(fullLine +  ' ')
 	process.stdout.clearLine(1)
 	putCursor(newLine.left.length)
+	showCursor()
 	line = {
 		left: newLine.left,
 		right: newLine.right

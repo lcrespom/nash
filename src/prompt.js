@@ -60,9 +60,19 @@ function getPromptInfo(userStatus) {
 	}
 }
 
-const HIDE_TEXT = '\x1b[30m\x1b[?25l'
-const SHOW_TEXT = '\x1b[0m\x1b[?25h'
+const HIDE_CURSOR = '\x1b[?25l'
+const SHOW_CURSOR = '\x1b[?25h'
+const HIDE_TEXT = '\x1b[30m' + HIDE_CURSOR
+const SHOW_TEXT = '\x1b[0m' + SHOW_CURSOR
 const GET_CURSOR_POS = '\x1b[6n'
+
+function hideCursor() {
+	put(HIDE_CURSOR)
+}
+
+function showCursor() {
+	put(SHOW_CURSOR)
+}
 
 function captureCursorPosition() {
 	process.stdin.on('data', buf => {
@@ -132,7 +142,9 @@ captureCursorPosition()
 
 module.exports = {
     setPrompt,
-    putPrompt,
+	putPrompt,
+	hideCursor,
+	showCursor,
     putCursor,
 	getCursorPosition,
 	setCursorPosition,

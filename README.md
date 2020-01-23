@@ -29,9 +29,9 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 - [ ] Line editing
 	- [x] Move key binding code to separate module
 	- [x] List key bindings & descriptions
+	- [x] Minimize cursor glitches by hiding cursor while rewriting line
 	- [ ] Catch exceptions in bindings to avoid breaking the shell
-	- [ ] Minimize cursor glitches by re-writing from the first different char
-	- [ ] Refactor editor.js code
+	- [ ] Refactor editor.js async handling code
 	- [ ] Handle multiple independent bindings for the same key combination
 	- [ ] Rebind/unbind keys (using binding function name as string)
 - [x] History navigation
