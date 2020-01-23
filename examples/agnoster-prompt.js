@@ -1,3 +1,11 @@
+/**
+ * NOTICE: this prompt plugin requires that the terminal is configured
+ *   with a font that supports the special characters used to display it.
+ * 
+ * 	 A good source of such fonts is the
+ * 	 [Powerline](https://github.com/powerline/fonts) GitHub page.
+ */
+
 const requireNash = module.parent.require.bind(module.parent)
 
 const chalk = requireNash('chalk')

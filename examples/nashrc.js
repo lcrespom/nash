@@ -1,9 +1,13 @@
 /*
 This file is automcatically loaded during startup. It can be used to execute
 any arbitrary JS code.
-The exported plugin array is used to load configurable features. The are
+
+The exported `plugins` array is used to load configurable features. The are
 all optional, other than `default-bindings`. Custom plugins can also be
 loaded by using relative paths, e.g. './my-plugin'.
+
+The exported `options` object is used to personalize settings such as
+colors.
 */
 
 let monokaiHL = {
@@ -26,6 +30,9 @@ module.exports = {
 		// Default keyboard commands - required
 		'default-bindings',
 		// Default propmt customization
+		//   Replace 'default-prompt' with './agnoster-prompt' for a cooler
+		//   prompt (but check agnoster-prompt code before, as it has some
+		//   special requirements).
 		'default-prompt',
 		// Tab-completion of command-line
 		'completion',

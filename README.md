@@ -26,8 +26,8 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 - [ ] Documentation
 	- [ ] Usage
 	- [ ] Customization / Extension API
-	- [ ] Examples directory with documented customizations (**next**)
-	- [ ] Copy examples to .nashrc upon first startup
+	- [x] Examples directory with documented customizations
+	- [x] Copy examples to `~/.nash` upon first startup
 - [ ] Line editing
 	- [x] Move key binding code to separate module
 	- [x] List key bindings & descriptions
@@ -42,7 +42,7 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [ ] Cool popup
 - [x] Prompt plugin
 	- [x] Optional agnoster-style prompt
-	- [ ] Document agnoster prompt & place in examples dir (**next**)
+	- [x] Document agnoster prompt & place in examples dir
 - [x] Completion
 	- [x] Basic (tab)
 	- [x] Replace ~ with home when globbing

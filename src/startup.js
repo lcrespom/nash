@@ -27,28 +27,11 @@ alias ls="ls ${getLsOptions()}"
 	fs.writeFileSync(rcname, NASH_RC)
 }
 
-function createRCJS() {
-	const NASH_RC_JS = `/*
-This file is automcatically loaded during startup. It can be used to execute
-any arbitrary JS code.
-The exported plugin array is used to load configurable features. The are
-all optional, other than 'default-bindings'. Custom plugins can also be
-loaded by using relative paths, e.g. './my-plugin'.
-*/
-
-module.exports = {
-    plugins: [
-        'default-bindings',
-        'default-prompt',
-        'completion',
-        'syntax-highlight',
-        'suggestions'
-    ]
-}
-`
-	let rcjsname = os.homedir() + '/.nash/nashrc.js'
-	if (fs.existsSync(rcjsname)) return
-	fs.writeFileSync(rcjsname, NASH_RC_JS)
+function copy2home(source, target) {
+	let targetPath = os.homedir() + '/.nash/' + target
+	if (fs.existsSync(targetPath)) return
+	let content = fs.readFileSync(require.resolve(source))
+	fs.writeFileSync(targetPath, content)
 }
 
 
@@ -56,10 +39,11 @@ module.exports = {
 
 function createNashDirIfRequired() {
     let nashDir = os.homedir() + '/.nash'
-    if (fs.existsSync(nashDir)) return
-    fs.mkdirSync(nashDir)
+    if (!fs.existsSync(nashDir))
+	    fs.mkdirSync(nashDir)
 	createRC()
-	createRCJS()
+	copy2home('../examples/nashrc.js', 'nashrc.js')
+	copy2home('../examples/agnoster-prompt.js', 'agnoster-prompt.js')
 }
 
 function loadPlugin(pname) {
