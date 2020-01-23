@@ -71,7 +71,6 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [ ] Mouse support for all menus (keypress module supports it)
 - [ ] Maximize customization
 	- [x] Global settings object / API
-	- [ ] Improve plugin API & documentation
 	- [ ] Color palette
 		- [x] Used by syntax-highlight
 		- [ ] Used by suggestions
@@ -79,3 +78,6 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 - [ ] Compatibility / Portability
 	- [ ] GitBash support
 	- [ ] More linux testing
+	- [x] Slow/remote terminal
+- [ ] Performance
+	- [ ] Benchmark together: parsing + syntax highlight - find bottlenecks, memoize if required

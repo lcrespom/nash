@@ -1,5 +1,4 @@
 const { execFileSync } = require('child_process')
-const chalk = require('chalk')
 
 const { registerLineDecorator } = require('../editor')
 const {
@@ -7,6 +6,7 @@ const {
 } = require('../parser')
 const { getOption, setDefaultOptions } = require('../startup')
 const { ucfirst } = require('../utils')
+const colors = require('../colors')
 
 
 function makeHL(type, loc) {
@@ -107,43 +107,11 @@ function colorize(line, hls, colorFunc = applyColor) {
 }
 
 
-registerLineDecorator((plainLine, decoratedLine) => {
-    if (plainLine == '') {
-        //getCommandTypeFromCache = memoize(getCommandType)
-        return decoratedLine
-    }
-    let hls = highlight(plainLine)
-    return colorize(plainLine, hls)
-})
-
-
-function kolor(cname, str) {
-    //TODO benchmark (together with parsing etc) & memoize if required
-    let colors = cname.trim().split(' ')
-    let colorfunc = chalk
-    for (let color of colors) {
-        if (color.startsWith('/')) {
-            color = color.substr(1)
-            if (color.startsWith('#'))
-                colorfunc = colorfunc.bgHex(color)
-            else
-                colorfunc = colorfunc['bg' + ucfirst(color)]
-        }
-        else {
-            if (color.startsWith('#'))
-                colorfunc = colorfunc.hex(color)
-            else
-                colorfunc = colorfunc[color]
-        }
-    }
-    return colorfunc(str)
-}
-
 let hlColors = null
 
 function applyColor(chunk, hl) {
     let colorName = hlColors[NodeTypeNames[hl.type]]
-    return kolor(colorName, chunk)
+    return colors.colorize(colorName, chunk)
 }
 
 function setDefaults() {
@@ -164,6 +132,15 @@ function setDefaults() {
     hlColors = getOption('colors.syntaxHighlight')
 }
 
+
+registerLineDecorator((plainLine, decoratedLine) => {
+    if (plainLine == '') {
+        //getCommandTypeFromCache = memoize(getCommandType)
+        return decoratedLine
+    }
+    let hls = highlight(plainLine)
+    return colorize(plainLine, hls)
+})
 
 setDefaults()
 
