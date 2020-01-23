@@ -5,7 +5,8 @@ const { registerLineDecorator } = require('../editor')
 const {
     NodeType, NodeTypeNames, builtins, parseBash, traverseAST
 } = require('../parser')
-const { setOption } = require('../startup')
+const { getOption, setOption } = require('../startup')
+const { ucfirst } = require('../utils')
 
 
 function makeHL(type, loc) {
@@ -116,16 +117,25 @@ registerLineDecorator((plainLine, decoratedLine) => {
 })
 
 
+function kolor(cname, str) {
+    //TODO parse bg/fg, #hex, benchmark & memoize if required
+    //TODO modifiers: underline, etc.
+    //TODO bg only if "(color)"
+    let [fg, bg] = cname.trim().split(' ')
+    let fgFunc = fg.startsWith('#') ? chalk.hex(fg) : chalk[fg]
+    let bgFunc = null
+    if (bg)
+        bgFunc = bg.startsWith('#') ? chalk.bgHex(bg) : chalk['bg' + ucfirst(bg)]
+    let colorized = fgFunc(str)
+    if (bgFunc) colorized = bgFunc(colorized)
+    return colorized
+}
+
 function applyColor(chunk, hl) {
-    const colors = [
-        'reset',
-        'green', 'green', 'green', 'green', 'redBright',
-        'magentaBright',
-        'cyan', 'magenta', 'cyanBright', 'yellow',
-        'blue'
-    ]
-    let colorName = colors[hl.type]
-    return chalk[colorName](chunk)
+    //TODO load option on startup, test change from nashrc.js
+    let hlColors = getOption('colors.syntaxHighlight')
+    let colorName = hlColors[NodeTypeNames[hl.type]]
+    return kolor(colorName, chunk)
 }
 
 setOption('colors.syntaxHighlight', {

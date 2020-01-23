@@ -1,4 +1,14 @@
 /**
+ * Returns the input string with its first character in uppercase
+ * @param {string} str The input string
+ * @returns the converted string
+ */
+function ucfirst(str) {
+	if (str == '') return str
+	return str.charAt(0).toUpperCase() + str.substr(1)
+}
+
+/**
  * Returns true if s1 starts with s2 in a case insensitive way.
  * @param {string} s1 The full string to be checked
  * @param {string} s2 The starting string
@@ -108,6 +118,7 @@ function reverseObject(obj) {
 
 
 module.exports = {
+	ucfirst,
 	startsWithCaseInsensitive,
     removeAnsiColorCodes,
     commonInitialChars,
