@@ -5,7 +5,7 @@ const { registerLineDecorator } = require('../editor')
 const {
     NodeType, NodeTypeNames, builtins, parseBash, traverseAST
 } = require('../parser')
-const { getOption, setOption } = require('../startup')
+const { getOption, setDefaultOptions } = require('../startup')
 const { ucfirst } = require('../utils')
 
 
@@ -118,39 +118,54 @@ registerLineDecorator((plainLine, decoratedLine) => {
 
 
 function kolor(cname, str) {
-    //TODO parse bg/fg, #hex, benchmark & memoize if required
-    //TODO modifiers: underline, etc.
-    //TODO bg only if "(color)"
-    let [fg, bg] = cname.trim().split(' ')
-    let fgFunc = fg.startsWith('#') ? chalk.hex(fg) : chalk[fg]
-    let bgFunc = null
-    if (bg)
-        bgFunc = bg.startsWith('#') ? chalk.bgHex(bg) : chalk['bg' + ucfirst(bg)]
-    let colorized = fgFunc(str)
-    if (bgFunc) colorized = bgFunc(colorized)
-    return colorized
+    //TODO benchmark (together with parsing etc) & memoize if required
+    let colors = cname.trim().split(' ')
+    let colorfunc = chalk
+    for (let color of colors) {
+        if (color.startsWith('/')) {
+            color = color.substr(1)
+            if (color.startsWith('#'))
+                colorfunc = colorfunc.bgHex(color)
+            else
+                colorfunc = colorfunc['bg' + ucfirst(color)]
+        }
+        else {
+            if (color.startsWith('#'))
+                colorfunc = colorfunc.hex(color)
+            else
+                colorfunc = colorfunc[color]
+        }
+    }
+    return colorfunc(str)
 }
 
+let hlColors = null
+
 function applyColor(chunk, hl) {
-    //TODO load option on startup, test change from nashrc.js
-    let hlColors = getOption('colors.syntaxHighlight')
     let colorName = hlColors[NodeTypeNames[hl.type]]
     return kolor(colorName, chunk)
 }
 
-setOption('colors.syntaxHighlight', {
-    unknown: 'reset',
-    program: 'green',
-    builtin: 'green',
-    alias: 'green',
-    commandError: 'redBright',
-    assignment: 'magentaBright',
-    parameter: 'cyan',
-    environment: 'magenta',
-    option: 'cyanBright',
-    quote: 'yellow',
-    comment: 'blue'
-})
+function setDefaults() {
+    let defaultColors = {
+        unknown: 'reset',
+        program: 'green',
+        builtin: 'green',
+        alias: 'green',
+        commandError: 'redBright',
+        assignment: 'magentaBright',
+        parameter: 'cyan',
+        environment: 'magenta',
+        option: 'cyanBright',
+        quote: 'yellow',
+        comment: 'blue'
+    }
+    setDefaultOptions('colors.syntaxHighlight', defaultColors)
+    hlColors = getOption('colors.syntaxHighlight')
+}
+
+
+setDefaults()
 
 
 // Exports used only for testing

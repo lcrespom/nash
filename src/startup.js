@@ -103,6 +103,10 @@ function setOption(name, obj) {
 	setProp(userConfig.options, name, obj)
 }
 
+function setDefaultOptions(name, defaultOptions) {
+    let userOptions = getOption(name)
+    setOption(name, { ...defaultOptions, ...userOptions })
+}
 
 function nashStartup() {
 	createNashDirIfRequired()
@@ -117,5 +121,6 @@ module.exports = {
 	nashStartup,
 	userConfig,
 	getOption,
-	setOption
+	setOption,
+	setDefaultOptions
 }

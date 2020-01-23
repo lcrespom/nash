@@ -73,6 +73,9 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [x] Global settings object / API
 	- [ ] Improve plugin API & documentation
 	- [ ] Color palette
+		- [x] Used by syntax-highlight
+		- [ ] Used by suggestions
+		- [ ] Used by default-prompt
 - [ ] Compatibility / Portability
 	- [ ] GitBash support
 	- [ ] More linux testing
