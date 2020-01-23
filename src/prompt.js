@@ -74,8 +74,11 @@ function showCursor() {
 	put(SHOW_CURSOR)
 }
 
+let cursorCB = null
+
 function captureCursorPosition() {
 	process.stdin.on('data', buf => {
+		if (!cursorCB) return
 		let s = buf.toString()
 		if (buf.length < 6) return
 		let m = s.match(/\x1b\[([0-9]+);([0-9]+)R/)
@@ -85,6 +88,8 @@ function captureCursorPosition() {
 			y: parseInt(m[1]) - 1
 		}
 		put(SHOW_TEXT)
+		cursorCB(cursor)
+		cursorCB = null
 	})
 }
 
@@ -118,6 +123,7 @@ function putPrompt(userStatus = lastUserStatus) {
     let lastLine = promptStr.split('\n').pop()
 	cursorX = removeAnsiColorCodes(lastLine).length
 	cols = process.stdout.columns
+	return new Promise(resolve => cursorCB = resolve)
 }
 
 function putCursor(len) {

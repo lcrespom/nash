@@ -30,8 +30,9 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [x] Move key binding code to separate module
 	- [x] List key bindings & descriptions
 	- [x] Minimize cursor glitches by hiding cursor while rewriting line
+	- [ ] Slow/remote terminals fail to capture cursor position: make putPrompt asynchronous
 	- [ ] Catch exceptions in bindings to avoid breaking the shell
-	- [ ] Refactor editor.js async handling code
+	- [ ] Refactor editor.js async handling code => use more promises
 	- [ ] Handle multiple independent bindings for the same key combination
 	- [ ] Rebind/unbind keys (using binding function name as string)
 - [x] History navigation

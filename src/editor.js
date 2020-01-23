@@ -79,7 +79,7 @@ function editorKeyListener(key) {
 				keyListener = editorKeyListener
 				if (newLine.showPrompt !== false) {
 					putPrompt(userStatus)
-					writeLine({ left: '', right: '' })
+						.then(_ =>	writeLine({ left: '', right: '' }))
 				}
 				if (newLine.getLine) {
 					writeLine(newLine.getLine())
@@ -88,8 +88,9 @@ function editorKeyListener(key) {
 		}
 		else {
 			if (newLine.showPrompt === true)
-				putPrompt()
-			writeLine(newLine)
+				putPrompt().then(_ => writeLine(newLine))
+			else
+				writeLine(newLine)
 		}
 	}
 }
@@ -139,11 +140,7 @@ function getWelcomeMessage() {
 
 function initialize() {
 	process.stdout.write(getWelcomeMessage())
-	putPrompt()
-	setTimeout(() => {
-		// Avoid glitch where the cursor is misplaced upon startup
-		writeLine({ left: '', right: '' })
-	}, 50)
+	putPrompt().then(_ => writeLine({ left: '', right: '' }))
 }
 
 module.exports = {
