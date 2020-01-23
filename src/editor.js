@@ -80,10 +80,14 @@ function editorKeyListener(key) {
 			newLine.whenDone(userStatus => {
 				keyListener = editorKeyListener
 				if (newLine.showPrompt !== false) {
-					putPrompt(userStatus)
-						.then(_ =>	writeLine({ left: '', right: '' }))
+					putPrompt(userStatus).then(_ =>
+						writeLine(newLine.getLine
+							? newLine.getLine()
+							: { left: '', right: '' }
+						)
+					)
 				}
-				if (newLine.getLine) {
+				else if (newLine.getLine) {
 					writeLine(newLine.getLine())
 				}
 			})

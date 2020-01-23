@@ -7,6 +7,7 @@ const { gitStatus, gitStatusFlags } = requireNash('./plugins/git-status')
 
 
 const SEGMENT_SEPARATOR = '\ue0b0'
+const GIT_SYMBOL = '\ue0a0'
 
 function err(retCode) {
 	if (retCode == 0)
@@ -23,7 +24,7 @@ function gitSection() {
 	let fgcolor = gstatus.dirty ? 'yellow' : 'green'
 	let bgcolor = gstatus.dirty ? 'bgYellow' : 'bgGreen'
 	let sep1 = chalk.blue[bgcolor](SEGMENT_SEPARATOR)
-	let status = ' \ue0a0 ' + gstatus.branch + ' ' + flags + ' '
+	let status = ' ' + GIT_SYMBOL + ' ' + gstatus.branch + ' ' + flags + ' '
 	let sep2 = chalk[fgcolor](SEGMENT_SEPARATOR)
 	return sep1 + chalk.black[bgcolor](status) + sep2
 }

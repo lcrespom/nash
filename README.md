@@ -26,6 +26,8 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 - [ ] Documentation
 	- [ ] Usage
 	- [ ] Customization / Extension API
+	- [ ] Examples directory with documented customizations (**next**)
+	- [ ] Copy examples to .nashrc upon first startup
 - [ ] Line editing
 	- [x] Move key binding code to separate module
 	- [x] List key bindings & descriptions
@@ -33,14 +35,14 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [x] Properly handle slow/remote terminals
 	- [ ] Catch exceptions in bindings to avoid breaking the shell
 	- [ ] Refactor editor.js async handling code => use more promises
-	- [ ] Handle multiple independent bindings for the same key combination
-	- [ ] Rebind/unbind keys (using binding function name as string)
+	- [ ] Handle multiple independent bindings for the same key combination (**next**)
 - [x] History navigation
 	- [x] Basic
 	- [x] Context sensitive
 	- [ ] Cool popup
 - [x] Prompt plugin
-	- [ ] Optional agnoster-style prompt
+	- [x] Optional agnoster-style prompt
+	- [ ] Document agnoster prompt & place in examples dir (**next**)
 - [x] Completion
 	- [x] Basic (tab)
 	- [x] Replace ~ with home when globbing
@@ -50,9 +52,9 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 		- [x] Properly format and handle paths with blanks
 		- [ ] Let the user type and update menu accordingly
 		- [ ] Selecting a directory (using space) opens menu with directory contents
-	- [ ] Customizable (e.g. git command list, etc.)
+	- [ ] Customizable (e.g. git command list, etc.) (**next**)
 - [x] Syntax highlight
-	- [ ] Highlight JavaScript (and avoid bash parser error)
+	- [ ] Highlight JavaScript (and avoid bash parser error) (**next**)
 - [x] History suggestions
 	- [x] Remove suggestion decoration when the user presses enter
 	- [ ] Fix bug: if suggestion text overflows to next line, it is not cleared
@@ -64,20 +66,20 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 - [ ] Cool extensions
 	- [x] Cool git prompt
 		- [x] Fancy git status stripe in agnoster-prompt.js
-		- [ ] Git status stripe in default prompt
-		- [ ] Test and implement support for ahead and behind combined
+		- [ ] Git status stripe in default prompt (**next**)
 	- [ ] History popup
 	- [ ] Directory navigation popup (history / tree)
 	- [ ] Mouse support for all menus (keypress module supports it)
 - [ ] Maximize customization
 	- [x] Global settings object / API
+	- [ ] Rebind/unbind keys (using binding function name as string) (**next**)
 	- [ ] Color palette
 		- [x] Used by syntax-highlight
-		- [ ] Used by suggestions
-		- [ ] Used by default-prompt
+		- [ ] Used by suggestions (**next**)
+		- [ ] Used by default-prompt (**next**)
 - [ ] Compatibility / Portability
 	- [ ] GitBash support
-	- [ ] More linux testing
+	- [x] More linux testing
 	- [x] Slow/remote terminal
 - [ ] Performance
 	- [ ] Benchmark together: parsing + syntax highlight - find bottlenecks, memoize if required
