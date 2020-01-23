@@ -75,13 +75,18 @@ function showCursor() {
 }
 
 let cursorCB = null
+let captureBuf = ''
+
+function promptOwnsInput() {
+	return !!cursorCB
+}
 
 function captureCursorPosition() {
 	process.stdin.on('data', buf => {
 		if (!cursorCB) return
-		let s = buf.toString()
-		if (buf.length < 6) return
-		let m = s.match(/\x1b\[([0-9]+);([0-9]+)R/)
+		captureBuf += buf.toString()
+		if (captureBuf.length < 6) return
+		let m = captureBuf.match(/\x1b\[([0-9]+);([0-9]+)R/)
 		if (!m || m.length < 3) return
 		cursor = {
 			x: parseInt(m[2]) - 1,
@@ -90,6 +95,7 @@ function captureCursorPosition() {
 		put(SHOW_TEXT)
 		cursorCB(cursor)
 		cursorCB = null
+		captureBuf = ''
 	})
 }
 
@@ -151,7 +157,8 @@ module.exports = {
 	putPrompt,
 	hideCursor,
 	showCursor,
-    putCursor,
+	putCursor,
+	promptOwnsInput,
 	getCursorPosition,
 	setCursorPosition,
 	setTerminalTitle

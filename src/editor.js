@@ -1,4 +1,6 @@
-const { putPrompt, putCursor, hideCursor, showCursor } = require('./prompt')
+const {
+	putPrompt, putCursor, hideCursor, showCursor, promptOwnsInput
+} = require('./prompt')
 const { getKeyBinding, setLastBinding } = require('./key-bindings')
 
 
@@ -129,6 +131,7 @@ function analyzeKey(ch, key) {
 }
 
 function handleKeypress(ch, key) {
+	if (promptOwnsInput()) return
 	key = analyzeKey(ch, key)
 	keyListener(key)
 }

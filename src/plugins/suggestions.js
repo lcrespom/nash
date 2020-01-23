@@ -27,7 +27,8 @@ function colorize(str) {
 }
 
 
-bindKey('ctrl-space', acceptSuggestion, 'Accept line suggestion')
+bindKey(['ctrl-space', 'shift-right'], acceptSuggestion,
+    'Accept line suggestion')
 
 registerLineDecorator((plainLine, decoratedLine, line) => {
     if (line && line.decorateHint == 'no suggestions')
