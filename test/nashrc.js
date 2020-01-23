@@ -6,6 +6,21 @@ all optional, other than `default-bindings`. Custom plugins can also be
 loaded by using relative paths, e.g. './my-plugin'.
 */
 
+let monokaiHL = {
+	program: '#a6e22e',  // Green monokai
+	builtin: 'underline #a6e22e',
+	alias: 'underline #a6e22e',
+	commandError: '#f92672',  // Fuchsia monokai
+	assignment: 'magentaBright',
+	parameter: '#66d9ef',  // Cyan monokai
+	environment: '#f0f070', // bright yellow
+	//environment: '#e6db74', // VSCode monokai yellow (too much downsampling)
+	option: '#ae81ff', // Purple monkai
+	quote: '#fd971f',  // Orange monokai
+	comment: '#666666' // Dark grey
+}
+
+
 module.exports = {
 	plugins: [
 		// Default keyboard commands - required
@@ -18,5 +33,9 @@ module.exports = {
 		'syntax-highlight',
 		// Suggestion of previous command
 		'suggestions'
-	]
+	],
+	options: {
+		// Uncoment line below to enable cool monokai syntax highlight
+		// colors: { syntaxHighlight: monokaiHL }
+	}
 }
