@@ -68,10 +68,11 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 		- [x] Highlight menu content: (dirs in white, consider other cases)
 		- [x] Properly format and handle paths with blanks
 		- [ ] Contemplate rest of word at right of the cursor
-		- [ ] Let the user type and update menu accordingly
+		- [ ] Let the user type and update menu accordingly (implement inside widget)
 		- [ ] Selecting a directory (using space) opens menu with directory contents
 	- [x] Customizable (e.g. git command list, etc.)
 		- [ ] Optional subcommand description - if available, show under menu
+		- [ ] Other programs?
 - [x] Syntax highlight
 - [x] History suggestions
 	- [x] Remove suggestion decoration when the user presses enter
