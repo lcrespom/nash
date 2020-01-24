@@ -56,19 +56,19 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [x] Customizable (e.g. git command list, etc.)
 		- [ ] Optional subcommand description - if available, show under menu
 - [x] Syntax highlight
-	- [ ] Highlight JavaScript (and avoid bash parser error) (**next**)
 - [x] History suggestions
 	- [x] Remove suggestion decoration when the user presses enter
 	- [ ] Fix bug: if suggestion text overflows to next line, it is not cleared
 - [x] Configuration (~/.nash/nashrc and ~/.nash/nashrc.js)
 	- [x] Load all plugins from nashrc.js
 - [x] JavaScript
+	- [ ] Highlight JavaScript (and avoid bash parser error)
 	- [ ] Get shell environment variables before executing JS
 	- [ ] Embedded JS code context using 'with'
 - [ ] Cool extensions
 	- [x] Cool git prompt
 		- [x] Fancy git status stripe in agnoster-prompt.js
-		- [ ] Git status stripe in default prompt (**next**)
+		- [x] Git status stripe in default prompt
 	- [ ] History popup
 	- [ ] Directory navigation popup (history / tree)
 	- [ ] Mouse support for all menus (keypress module supports it)
