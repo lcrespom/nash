@@ -1,5 +1,7 @@
 const chalk = require('chalk')
 
+const { ucfirst } = require('./utils')
+
 
 function colorize(cname, str) {
     let colors = cname.trim().split(' ')

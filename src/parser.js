@@ -12,13 +12,15 @@ const NodeType = {
     commandError: 5,
     // Assignment
     assignment: 6,
+    // Redirect
+    redirect: 7,
     // Parameters in different formats
-    parameter: 7,
-    environment: 8,
-    option: 9,
-    quote: 10,
+    parameter: 8,
+    environment: 9,
+    option: 10,
+    quote: 11,
     // Comments
-    comment: 11
+    comment: 12
 }
 
 const NodeTypeNames = reverseObject(NodeType)

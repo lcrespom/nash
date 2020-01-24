@@ -114,6 +114,7 @@ function replaceHomedirWithTilde(path, homedir) {
 }
 
 function getSubcommandCompletions(word, line) {
+    // Notice: does not support commands after ";", "|", "&&", etc.
     let command = cutLastChars(line.left, word.length).trim()
     let subCommands = customCommands[command]
     if (!subCommands)

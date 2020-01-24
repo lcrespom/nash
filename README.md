@@ -50,9 +50,10 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 		- [x] Handle lists too long to display in menu
 		- [x] Highlight menu content: (dirs in white, consider other cases)
 		- [x] Properly format and handle paths with blanks
+		- [ ] Contemplate rest of word at right of the cursor
 		- [ ] Let the user type and update menu accordingly
 		- [ ] Selecting a directory (using space) opens menu with directory contents
-	- [ ] Customizable (e.g. git command list, etc.) (**next**)
+	- [x] Customizable (e.g. git command list, etc.)
 		- [ ] Optional subcommand description - if available, show under menu
 - [x] Syntax highlight
 	- [ ] Highlight JavaScript (and avoid bash parser error) (**next**)

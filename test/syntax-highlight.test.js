@@ -67,7 +67,11 @@ test('Which', () => {
     expect(hls[0].type).toBe(hl.NodeType.program)
     hls = hl.highlight('a_program_that_does_not_exist')
     expect(hls[0].type).toBe(hl.NodeType.commandError)
+})
 
+test('Redirect', () => {
+    let hls = hl.highlight('echo hello >hi.txt')
+    expect(hls[2].type).toBe(hl.NodeType.redirect)
 })
 
 

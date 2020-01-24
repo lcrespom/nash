@@ -5,7 +5,6 @@ const {
     NodeType, NodeTypeNames, builtins, parseBash, traverseAST
 } = require('../parser')
 const { getOption, setDefaultOptions } = require('../startup')
-const { ucfirst } = require('../utils')
 const colors = require('../colors')
 
 
@@ -43,8 +42,7 @@ function getCommandType(cmd) {
 
 function getSuffixType(s, line) {
     if (s.type == 'Redirect')
-        //TODO contemplate a new NodeType: redirect
-        return NodeType.parameter
+        return NodeType.redirect
     if (s.text[0] == '$')
         return NodeType.environment
     if (s.text[0] == '-')
@@ -126,6 +124,7 @@ function setDefaults() {
         alias: 'green',
         commandError: 'redBright',
         assignment: 'magentaBright',
+        redirect: 'whiteBright',
         parameter: 'cyan',
         environment: 'magenta',
         option: 'cyanBright',
