@@ -10,8 +10,9 @@ function gitSection() {
 	let gstatus = gitStatus()
 	if (!gstatus) return ''
 	let flags = gitStatusFlags(gstatus)
+	if (flags) flags = ' ' + flags
 	let fgcolor = gstatus.dirty ? 'yellow' : 'green'
-	let status = ' (' + GIT_SYMBOL + ' ' + gstatus.branch + ' ' + flags + ') '
+	let status = ' (' + GIT_SYMBOL + ' ' + gstatus.branch + flags + ') '
 	return chalk[fgcolor](status)
 }
 
