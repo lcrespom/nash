@@ -34,7 +34,7 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [x] Minimize cursor glitches by hiding cursor while rewriting line
 	- [x] Properly handle slow/remote terminals
 	- [ ] Catch exceptions in bindings to avoid breaking the shell
-	- [ ] Refactor editor.js async handling code => use more promises
+	- [ ] Refactor prompt.js and editor.js async handling code => use more promises
 	- [ ] Handle multiple independent bindings for the same key combination (**next**)
 - [x] History navigation
 	- [x] Basic
@@ -74,11 +74,11 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [ ] Mouse support for all menus (keypress module supports it)
 - [ ] Maximize customization
 	- [x] Global settings object / API
-	- [ ] Rebind/unbind keys (using binding function name as string) (**next**)
 	- [x] Color palette
 		- [x] Used by syntax-highlight
 		- [x] Used by default-prompt
-		- [ ] Used by suggestions (**next**)
+		- [x] Used by suggestions
+	- [ ] Rebind/unbind keys (using binding function name as string) (**next**)
 - [ ] Compatibility / Portability
 	- [ ] GitBash support
 	- [x] More linux testing

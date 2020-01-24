@@ -4,6 +4,7 @@ const { ucfirst } = require('./utils')
 
 
 function colorize(cname, str) {
+    if (str == '') return str
     let colors = cname.trim().split(' ')
     let colorfunc = chalk
     for (let color of colors) {

@@ -1,8 +1,9 @@
-const chalk = require('chalk')
-
 const { registerLineDecorator } = require('../editor')
 const { bindKey } = require('../key-bindings')
 const history = require('../history')
+const { getOption, setDefaultOptions } = require('../startup')
+const { colorize } = require('../colors')
+
 
 let lastSuggestion = ''
 
@@ -21,11 +22,6 @@ function acceptSuggestion(line) {
     }
 }
 
-function colorize(str) {
-    if (str == '') return str
-    return chalk.hex('#606060')(str)
-}
-
 
 bindKey(['ctrl-space', 'shift-right'], acceptSuggestion,
     'Accept line suggestion')
@@ -34,5 +30,8 @@ registerLineDecorator((plainLine, decoratedLine, line) => {
     if (line && line.decorateHint == 'no suggestions')
         return decoratedLine
     lastSuggestion = getSuggestion(plainLine)
-    return decoratedLine + colorize(lastSuggestion)
+    return decoratedLine + colorize(colors.scol, lastSuggestion)
 })
+
+setDefaultOptions('colors.suggestion', { scol: '#606060'})
+let colors = getOption('colors.suggestion')
