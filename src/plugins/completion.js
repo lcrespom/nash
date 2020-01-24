@@ -82,7 +82,7 @@ function getWordAndType(line) {
 }
 
 
-//------------------------- Suggestion search -------------------------
+//------------------------- Completion search -------------------------
 
 function safeGlob(paths, options) {
     try {
@@ -93,9 +93,9 @@ function safeGlob(paths, options) {
     }
 }
 
-function getCommandSuggestions(word) {
+function getCommandCompletions(word) {
     if (word.includes('/'))
-        return getParameterSuggestions(word)
+        return getParameterCompletions(word)
     let paths = process.env.PATH
         .split(':')
         .map(p => p + '/' + word + '*')
@@ -111,9 +111,18 @@ function replaceHomedirWithTilde(path, homedir) {
     return path
 }
 
-function getParameterSuggestions(word) {
-    let homedir = os.homedir() + '/'
+function getSubcommandCompletions(word, line) {
+    //TODO get subcommand completions from user options
+    return []
+}
+
+function getParameterCompletions(word, line) {
+    // Special case: configured subcommand
+    let subCommands = getSubcommandCompletions()
+    if (subCommands.length > 0)
+        return subCommands
     // Accomodate word to glob
+    let homedir = os.homedir() + '/'
     word = word.replace(/\\ /g, ' ')
     if (!word.includes('*'))
         word += '*'
@@ -127,29 +136,29 @@ function getParameterSuggestions(word) {
     }).map(p => replaceHomedirWithTilde(p, homedir))
 }
 
-function getEnvironmentSuggestions(word) {
+function getEnvironmentCompletions(word) {
     return Object.keys(process.env)
         .map(w => '$' + w)
         .filter(w => startsWithCaseInsensitive(w, word))
 }
 
-function getOptionSuggestions(word) {
+function getOptionCompletions(word) {
     //TODO eventually provide extension points for completion
     return []
 }
 
-function getSuggestions(word, type) {
+function getCompletions(word, type, line) {
     switch (type) {
         case NodeType.unknown:
             return []
         case NodeType.command:
-            return getCommandSuggestions(word)
+            return getCommandCompletions(word)
         case NodeType.parameter:
-            return getParameterSuggestions(word)
+            return getParameterCompletions(word, line)
         case NodeType.environment:
-            return getEnvironmentSuggestions(word)
+            return getEnvironmentCompletions(word)
         case NodeType.option:
-            return getOptionSuggestions(word)
+            return getOptionCompletions(word)
     }
 }
 
@@ -262,7 +271,7 @@ function completeWords(line, word, words) {
 function completeWord(line) {
     if (line.left.length == 0) return line
     let [word, type] = getWordAndType(line)
-    words = getSuggestions(word, type)
+    words = getCompletions(word, type, line)
     if (words.length == 0) {
         // No match: do nothing
         return line

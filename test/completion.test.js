@@ -62,3 +62,18 @@ test('Option', () => {
     expect(type).toBe(NodeType.option)
     expect(word).toBe('-lah')
 })
+
+test('Right after command', () => {
+    let line = { left: 'git ', right: '' }
+    let [word, type] = getWordAndType(line)
+    expect(type).toBe(NodeType.parameter)
+    expect(word).toBe('')
+})
+
+test('Right after command', () => {
+    let line = { left: 'git co', right: '' }
+    let [word, type] = getWordAndType(line)
+    expect(type).toBe(NodeType.parameter)
+    expect(word).toBe('co')
+})
+
