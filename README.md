@@ -4,14 +4,31 @@ Nash is a command-line editor for `bash` or compatible shells. It handles user i
 Nash is implemented in JavaScript and focuses on:
 - Providing great UX and productivity to the command-line: file completion, history navigation, syntax highlighting, history suggestions, etc.
 - Being highly extensible and customizable.
-- Bringing shell power to JavaScript developers. `zsh` is greatly configurable, but customizing it requires
-	writing shell script code, which (for JS developers) is not as user friendly as JavaScript.
+- Bringing shell power to JavaScript developers. `zsh` and `fish` are greatly configurable, but
+    customizing them requires writing shell script code, which (for JS developers) is not as user
+	friendly as JavaScript.
 
-Nash is currently under development, but it is already usable, powerful... and colorful. See the ToDo section below for details.
+![alt text](nash.png)
+
+Press F1 to get a list of all keyboard shoutcuts and their asocciated actions.
+
+## Main features
+- Totally configurable prompt.
+- Powerful history navigation.
+- Interactive tab-completion: pressing tab completes a file name, but if multiple matching files are
+	available, an interactive menu is displayed, letting the user navigate and select the file name.
+- Syntax highlight, clearly coloring the different parts of a command, and warning of potential errors.
+- Line suggestions: when typing a command, if the text matches a previous command, the remaining text
+	is displayed in grey, letting the user immediately complete the command.
+- Configurable color palette. Colors can be configured by name (e.g. red, gren, etc.) or by RGB hex as
+	in CSS (e.g. #a6e22e).
+- Configuration and extensions are implemented as plain JavaScript code, centered around the `nashrc.js`
+	file, which is loaded during startup. For example, color settings can be configured via JSON.
+- Extensible plugin system, with powerful default implementations.
 
 
 ## Installation
-Being still under development, the way to install it is to just clone the repo, then type `npm install`. To open a shell, type `npm start`:
+Being still under development, the way to install it is to just clone the repo, then type `npm install`. To open a shell, type `npm start`.
 ```
 git clone https://github.com/lcrespom/nash.git
 npm install
@@ -24,17 +41,13 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 
 ## ToDo
 - [ ] Documentation
-	- [ ] Screenshots
-	- [ ] Features
-	- [ ] Usage
-	- [ ] Customization / Extension API
+	- [x] Screenshots
+	- [x] Features
 	- [x] Examples directory with documented customizations
 	- [x] Copy examples to `~/.nash` upon first startup
+	- [ ] Usage
+	- [ ] Customization / Extension API
 - [ ] Line editing
-	- [x] Move key binding code to separate module
-	- [x] List key bindings & descriptions
-	- [x] Minimize cursor glitches by hiding cursor while rewriting line
-	- [x] Properly handle slow/remote terminals
 	- [ ] Catch exceptions in bindings to avoid breaking the shell
 	- [ ] Refactor prompt.js and editor.js async handling code => use more promises
 	- [ ] Handle multiple independent bindings for the same key combination (**next**)
@@ -77,9 +90,6 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 - [ ] Maximize customization
 	- [x] Global settings object / API
 	- [x] Color palette
-		- [x] Used by syntax-highlight
-		- [x] Used by default-prompt
-		- [x] Used by suggestions
 	- [ ] Rebind/unbind keys (using binding function name as string) (**next**)
 - [ ] Compatibility / Portability
 	- [ ] GitBash support
