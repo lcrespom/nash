@@ -44,6 +44,7 @@ function createNashDirIfRequired() {
 	createRC()
 	copy2home('../examples/nashrc.js', 'nashrc.js')
 	copy2home('../examples/agnoster-prompt.js', 'agnoster-prompt.js')
+	copy2home('../examples/command-completion.js', 'command-completion.js')
 }
 
 function loadPlugin(pname) {

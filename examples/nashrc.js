@@ -9,6 +9,8 @@ loaded by using relative paths, e.g. './my-plugin'.
 The exported `options` object is used to personalize settings such as
 colors.
 */
+const completionCommands = require('./command-completion')
+
 
 let monokaiHL = {
 	program: '#a6e22e',  // Green monokai
@@ -44,5 +46,7 @@ module.exports = {
 	options: {
 		// Uncoment line below to enable cool monokai syntax highlight
 		// colors: { syntaxHighlight: monokaiHL }
+		// Command completions for common programs
+		completion: { commands: completionCommands }
 	}
 }
