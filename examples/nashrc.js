@@ -33,8 +33,8 @@ module.exports = {
 		'default-bindings',
 		// Default propmt customization
 		//   Replace 'default-prompt' with './agnoster-prompt' for a cooler
-		//   prompt (but check agnoster-prompt code before, as it has some
-		//   special requirements).
+		//   prompt (but check agnoster-prompt source code before, as it has
+		//   some special requirements).
 		'default-prompt',
 		// Tab-completion of command-line
 		'completion',
@@ -45,7 +45,7 @@ module.exports = {
 	],
 	options: {
 		// Uncoment line below to enable cool monokai syntax highlight
-		// colors: { syntaxHighlight: monokaiHL }
+		// colors: { syntaxHighlight: monokaiHL },
 		// Command completions for common programs
 		completion: { commands: completionCommands }
 	}
