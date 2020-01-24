@@ -75,10 +75,10 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 - [ ] Maximize customization
 	- [x] Global settings object / API
 	- [ ] Rebind/unbind keys (using binding function name as string) (**next**)
-	- [ ] Color palette
+	- [x] Color palette
 		- [x] Used by syntax-highlight
+		- [x] Used by default-prompt
 		- [ ] Used by suggestions (**next**)
-		- [ ] Used by default-prompt (**next**)
 - [ ] Compatibility / Portability
 	- [ ] GitBash support
 	- [x] More linux testing
