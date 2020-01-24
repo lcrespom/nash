@@ -17,7 +17,7 @@ function gitSection() {
 }
 
 function prompt({ cwd, username, hostname }) {
-	let userAtHost = chalk.green(username + '@' + hostname)
+	let userAtHost = chalk.magentaBright(username + '@' + hostname)
 	let path = chalk.cyan(cwd)
 	let git = gitSection() || '> '
 	return userAtHost + ' ' + path + git
