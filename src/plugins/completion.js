@@ -75,6 +75,7 @@ function getWordAndType(line) {
         else if (type == NodeType.unknown)
             return ['', type]
         else
+            //TODO get the full word by also accounting for line.right
             return [line.left.substr(loc.start.char), type]
     }
     catch (err) {
@@ -169,17 +170,6 @@ function getCompletions(word, type, line) {
 
 //------------------------- Utilities -------------------------
 
-function findCommonStart(word) {
-    let lastw = words[0]
-    for (let i = 1; i < words.length; i++) {
-        cic = commonInitialChars(lastw, words[i])
-        if (cic == 0)
-            return ''
-        lastw = lastw.substr(0, cic)
-    }
-    return lastw
-}
-
 function basename(filename) {
     let result = path.basename(filename)
     if (filename.endsWith('/'))
@@ -194,7 +184,11 @@ function colorizePath(filename) {
 }
 
 function replaceWordWithMatch(left, cutLen, match) {
+    // Quote blanks in file names
     let qmatch = match.replace(/(\s)/g, '\\$1')
+    // Add a space unless it's a directory
+    if (!qmatch.endsWith('/'))
+        qmatch += ' '
     return cutLastChars(left, cutLen) + qmatch
 }
 
@@ -259,17 +253,10 @@ function tooManyWords(line, words) {
 }
 
 function completeWords(line, word, words) {
-    let start = findCommonStart(words)
-    if (start.length <= word.length) {
-        let newLine = showAllWords(line, word, words)
-        if (newLine)
-            return newLine
-        return tooManyWords(line, words)
-    }
-    return {
-        left: replaceWordWithMatch(line.left, word.length, start),
-        right: line.right
-    }
+    let newLine = showAllWords(line, word, words)
+    if (newLine)
+        return newLine
+    return tooManyWords(line, words)
 }
 
 function completeWord(line) {

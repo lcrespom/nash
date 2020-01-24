@@ -42,6 +42,9 @@ function getCommandType(cmd) {
 }
 
 function getSuffixType(s, line) {
+    if (s.type == 'Redirect')
+        //TODO contemplate a new NodeType: redirect
+        return NodeType.parameter
     if (s.text[0] == '$')
         return NodeType.environment
     if (s.text[0] == '-')
