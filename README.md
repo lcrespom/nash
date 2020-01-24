@@ -2,7 +2,7 @@
 Nash is a command-line editor for `bash` or compatible shells. It handles user input to provide a better user experience, but when the user hits the `Enter` key, it simply passes the command to `bash` for processing.
 
 Nash is implemented in JavaScript and focuses on:
-- Providing great UX and productivity to the command-line: file completion, history navigation, syntax highlighting, history suggestions, etc.
+- Providing great UX and productivity to the command-line.
 - Being highly extensible and customizable.
 - Bringing shell power to JavaScript developers. `zsh` and `fish` are greatly configurable, but
     customizing them requires writing shell script code, which (for JS developers) is not as user
@@ -10,20 +10,22 @@ Nash is implemented in JavaScript and focuses on:
 
 ![alt text](nash.png)
 
-Press F1 to get a list of all keyboard shoutcuts and their asocciated actions.
+Pressing F1 at any time displays a list of all keyboard shoutcuts and their corresponding actions.
 
 ## Main features
 - Totally configurable prompt.
-- Powerful history navigation.
+- Powerful history navigation: the `up` and `down` keys navigate the history, showing only the entries
+	that start with the current line.
 - Interactive tab-completion: pressing tab completes a file name, but if multiple matching files are
 	available, an interactive menu is displayed, letting the user navigate and select the file name.
 - Syntax highlight, clearly coloring the different parts of a command, and warning of potential errors.
-- Line suggestions: when typing a command, if the text matches a previous command, the remaining text
+- History suggestions: when typing a command, if the text matches a previous command, the remaining text
 	is displayed in grey, letting the user immediately complete the command.
 - Configurable color palette. Colors can be configured by name (e.g. red, gren, etc.) or by RGB hex as
 	in CSS (e.g. #a6e22e).
-- Configuration and extensions are implemented as plain JavaScript code, centered around the `nashrc.js`
-	file, which is loaded during startup. For example, color settings can be configured via JSON.
+- Configuration and extensions are implemented as plain JavaScript code, centered around the
+	`~/.nash/nashrc.js` file, which is loaded during startup. For example, color settings can be
+	configured via JSON.
 - Extensible plugin system, with powerful default implementations.
 
 
