@@ -24,6 +24,8 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 
 ## ToDo
 - [ ] Documentation
+	- [ ] Screenshots
+	- [ ] Features
 	- [ ] Usage
 	- [ ] Customization / Extension API
 	- [x] Examples directory with documented customizations

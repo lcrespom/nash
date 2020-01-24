@@ -97,6 +97,7 @@ function safeGlob(paths, options) {
 
 function getCommandCompletions(word) {
     if (word.includes('/'))
+        // Should filter by executable attribute
         return getParameterCompletions(word)
     let paths = process.env.PATH
         .split(':')
@@ -122,6 +123,18 @@ function getSubcommandCompletions(word, line) {
     return  subCommands.filter(sc => startsWithCaseInsensitive(sc, word))
 }
 
+function getMatchingDirsAndFiles(word, homedir) {
+    let dirsAndFiles = safeGlob(word, {
+        onlyFiles: false,
+        markDirectories: true,
+        caseSensitiveMatch: false
+    }).map(p => replaceHomedirWithTilde(p, homedir))
+    // Put directories first, then files
+    let dirs = dirsAndFiles.filter(p => p.endsWith('/'))
+    let files = dirsAndFiles.filter(p => !p.endsWith('/'))
+    return dirs.concat(files)
+}
+
 function getParameterCompletions(word, line) {
     // Special case: configured subcommand
     let subCommands = getSubcommandCompletions(word, line)
@@ -135,11 +148,7 @@ function getParameterCompletions(word, line) {
     if (word.startsWith('~/'))
         word = homedir + word.substr(2)
     // Perform glob
-    return safeGlob(word, {
-        onlyFiles: false,
-        markDirectories: true,
-        caseSensitiveMatch: false
-    }).map(p => replaceHomedirWithTilde(p, homedir))
+    return getMatchingDirsAndFiles(word, homedir)
 }
 
 function getEnvironmentCompletions(word) {
