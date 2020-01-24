@@ -32,8 +32,22 @@ function bindKey(knames, code, desc) {
 		keyBindings[key] = { code, desc }
 }
 
-function getKeyBinding(name) {
-	return keyBindings[name]
+function unbindKey(kname) {
+	keyBindings[kname] = undefined
+}
+
+function getKeyBinding(kname) {
+	return keyBindings[kname]
+}
+
+function getKeyBindingByFunction(fname) {
+	let keys = getBoundKeys()
+	for (let key of keys) {
+		let b = getKeyBinding(key)
+		if (b && b.code.name == fname)
+			return b
+	}
+	return null
 }
 
 function getBoundKeys() {
@@ -50,8 +64,10 @@ function setLastBinding(binding) {
 
 
 module.exports = {
-    bindKey,
+	bindKey,
+	unbindKey,
 	getKeyBinding,
+	getKeyBindingByFunction,
     getLastBinding,
     setLastBinding,
 	getBoundKeys

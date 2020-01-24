@@ -122,12 +122,17 @@ function clearScreen(line) {
 }
 
 function killWholeLine(line) {
+	//TODO keep it in buffer, recover it with ctrl+y
 	let cursor = getCursorPosition()
 	if (cursor) {
 		process.stdout.cursorTo(cursor.x, cursor.y)
 	}
 	process.stdout.clearScreenDown()
 	return { left: '', right: '' }
+}
+
+function recoverKilledLine(line) {
+	//TODO recover line from killWholeLine, add it at cursor position
 }
 
 
