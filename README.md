@@ -53,6 +53,7 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 		- [ ] Let the user type and update menu accordingly
 		- [ ] Selecting a directory (using space) opens menu with directory contents
 	- [ ] Customizable (e.g. git command list, etc.) (**next**)
+		- [ ] Optional subcommand description - if available, show under menu
 - [x] Syntax highlight
 	- [ ] Highlight JavaScript (and avoid bash parser error) (**next**)
 - [x] History suggestions

@@ -17,6 +17,7 @@ const {
 const {
     getCursorPosition, setCursorPosition
 } = require('../prompt')
+const { getOption } = require('../startup')
 
 
 //------------------------- AST Searching -------------------------
@@ -112,13 +113,16 @@ function replaceHomedirWithTilde(path, homedir) {
 }
 
 function getSubcommandCompletions(word, line) {
-    //TODO get subcommand completions from user options
-    return []
+    let command = cutLastChars(line.left, word.length).trim()
+    let subCommands = customCommands[command]
+    if (!subCommands)
+        return []
+    return  subCommands.filter(sc => startsWithCaseInsensitive(sc, word))
 }
 
 function getParameterCompletions(word, line) {
     // Special case: configured subcommand
-    let subCommands = getSubcommandCompletions()
+    let subCommands = getSubcommandCompletions(word, line)
     if (subCommands.length > 0)
         return subCommands
     // Accomodate word to glob
@@ -143,7 +147,7 @@ function getEnvironmentCompletions(word) {
 }
 
 function getOptionCompletions(word) {
-    //TODO eventually provide extension points for completion
+    //TODO provide general extension points for completion
     return []
 }
 
@@ -291,6 +295,7 @@ function completeWord(line) {
 
 
 bindKey('tab', completeWord, 'Complete word under cursor')
+let customCommands = getOption('completion.commands')
 
 module.exports = {
     completeWord,
