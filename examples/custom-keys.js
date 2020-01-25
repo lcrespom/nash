@@ -2,8 +2,8 @@ const requireNash = module.parent.require.bind(module.parent)
 
 const { bindKey, getKeyBindingByFunction } = requireNash('./key-bindings')
 
-function deleteWordToLeft(line) {
 
+function deleteWordToLeft(line) {
     return {
         left: line.left.replace(/\w+\s*$/, ''),
         right: line.right

@@ -24,9 +24,9 @@ Pressing F1 at any time displays a list of all keyboard shoutcuts and their corr
 - Configurable color palette. Colors can be configured by name (e.g. red, gren, etc.) or by RGB hex as
 	in CSS (e.g. #a6e22e).
 - Configuration and extensions are implemented as plain JavaScript code, centered around the
-	`~/.nash/nashrc.js` file, which is loaded during startup. For example, color settings can be
-	configured via JSON.
-- Extensible plugin system, with powerful default implementations.
+	`~/.nash/nashrc.js` file, which is loaded during startup. For instance, color settings can be
+	configured via JSON. Example configuration and extensions are provided in the `~/.nash` directory.
+- Extensible plugin system with powerful default implementations.
 
 
 ## Installation
