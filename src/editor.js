@@ -41,7 +41,7 @@ function applyBindings(key) {
 		return unknownKey(key)
 	let newLine = line
 	for (let b of bindings) {
-		newLine = b.code(newLine)
+		newLine = b.code(newLine, key)
 		setLastBinding(b.code)
 		if (newLine.isAsync || newLine.showPrompt)
 			break

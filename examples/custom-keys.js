@@ -5,7 +5,7 @@ const { bindKey, getKeyBindingByFunction } = requireNash('./key-bindings')
 
 function deleteWordToLeft(line) {
     return {
-        left: line.left.replace(/\w+\s*$/, ''),
+        left: line.left.replace(/\w+[^\w]*$/, ''),
         right: line.right
     }
 }

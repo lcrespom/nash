@@ -14,8 +14,12 @@ function getSuggestion(line) {
     return h.substr(line.length)
 }
 
-function acceptSuggestion(line) {
-    if (lastSuggestion == '' || line.right) return line
+function acceptSuggestion(line, key) {
+    // If 'rigth' key pressed accept only at end of line
+    if (key.name == 'right' && line.right) return line
+    // If no suggestion available, do nothing
+    if (lastSuggestion == '') return line
+    // Apply suggestion
     return {
         left: line.left + line.right + lastSuggestion,
         right: ''

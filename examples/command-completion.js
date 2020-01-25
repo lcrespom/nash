@@ -84,6 +84,7 @@ function cd(command, word) {
     return dirs.filter(dir => dir.startsWith(word))
 }
 
+
 module.exports = {
     cd,
     git,

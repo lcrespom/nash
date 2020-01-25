@@ -80,7 +80,7 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 - [x] Syntax highlight
 - [x] History suggestions
 	- [x] Remove suggestion decoration when the user presses enter
-	- [ ] Ctrl-space accepts suggestion anywhere in the line (**next**)
+	- [x] Ctrl-space accepts suggestion anywhere in the line
 	- [ ] Fix bug: if suggestion text overflows to next line, it is not cleared
 - [x] Configuration (~/.nash/nashrc and ~/.nash/nashrc.js)
 	- [x] Load all plugins from nashrc.js
