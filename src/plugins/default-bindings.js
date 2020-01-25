@@ -197,7 +197,7 @@ function discardLine() {
 //--------------- Interactive commands ---------------
 
 function describeKeyBinding(kname, binding) {
-    return kname.padEnd(12) + '  ' +
+    return kname.padEnd(15) + '  ' +
         binding.code.name.padEnd(20) + '  ' +
         binding.desc
 }

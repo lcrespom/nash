@@ -50,6 +50,8 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [ ] Usage
 	- [ ] Customization / Extension API
 - [ ] Line editing
+	- [ ] Add more bash shortcuts in default-bindings
+		(see https://ss64.com/bash/syntax-keyboard.html)
 	- [ ] Catch exceptions in bindings to avoid breaking the shell
 	- [ ] Refactor prompt.js and editor.js async handling code => use more promises
 	- [ ] Handle multiple independent bindings for the same key combination (**next**)
@@ -93,7 +95,7 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 - [ ] Maximize customization
 	- [x] Global settings object / API
 	- [x] Color palette
-	- [ ] Rebind/unbind keys (using binding function name as string) (**next**)
+	- [x] Rebind/unbind keys
 - [ ] Compatibility / Portability
 	- [ ] GitBash support
 	- [x] More linux testing

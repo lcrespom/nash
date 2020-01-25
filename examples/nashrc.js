@@ -41,10 +41,12 @@ module.exports = {
 		// Syntax highlighting
 		'syntax-highlight',
 		// Suggestion of previous command
-		'suggestions'
+		'suggestions',
+		// Custom keyboard bindings
+		'./custom-keys'
 	],
 	options: {
-		// Uncoment line below to enable cool monokai syntax highlight
+		// Uncoment line below to make syntax highlight use the Monokai palette
 		// colors: { syntaxHighlight: monokaiHL },
 		// Command completions for common programs
 		completion: { commands: completionCommands }
