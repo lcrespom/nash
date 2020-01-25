@@ -25,7 +25,9 @@ Pressing F1 at any time displays a list of all keyboard shoutcuts and their corr
 	in CSS (e.g. #a6e22e).
 - Configuration and extensions are implemented as plain JavaScript code, centered around the
 	`~/.nash/nashrc.js` file, which is loaded during startup. For instance, color settings can be
-	configured via JSON. Example configuration and extensions are provided in the `~/.nash` directory.
+	configured via JSON.
+- Example configuration and extensions are provided in the `~/.nash` directory, which is populated when
+	`nash` is started for the first time.
 - Extensible plugin system with powerful default implementations.
 
 
