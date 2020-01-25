@@ -3,12 +3,14 @@ List of subcommands for common programs such as git, docker, etc.
 These lists are used by the command completion plugin, which activates
 when the user types "tab".
 */
+const fs = require('fs')
+const path = require('path')
+
 
 let git = ('add am archive bisect branch bundle checkout cherry citool clean ' +
     'clone commit describe diff fetch format gc gitk grep gui init log ' +
     'merge mv notes pull push range rebase reset revert rm shortlog show ' +
     'stash status submodule tag worktree').split(' ')
-
 
 let docker = ('builder config container context image network node plugin ' +
     'secret service stack swarm system trust volume' +
@@ -24,7 +26,6 @@ let dockerContainer = ('attach commit cp create diff exec export inspect ' +
 let dockerImage = ('build history import inspect load ls prune ' +
     'pull push rm save tag ').split(' ')
 
-
 let kubectl = ('create expose run set explain get edit delete rollout scale ' +
     'autoscale certificate cluster top cordon uncordon drain taint describe ' +
     'logs attach exec port proxy cp auth diff apply patch replace wait ' +
@@ -39,8 +40,42 @@ let npm = ('access adduser audit bin bugs c cache ci cit clean-install ' +
     'repo restart root run run-script s se search set shrinkwrap star ' +
     'stars start stop t team test token tst un uninstall unpublish unstar ' +
     'up update v version view whoami').split(' ')
- 
+
+
+// Subcommand function for `cd`
+function cd(command, word) {
+    // Compute base directory (absolute or relative)
+    let baseDir
+    if (word.startsWith('/'))
+        baseDir = ''
+    else
+        baseDir = process.cwd() +'/'
+    // Search word is full directory
+    if (word.endsWith('/')) {
+        baseDir += word
+    }
+    // Search word is partial directory name
+    else if (word.includes('/')) {
+        baseDir += path.dirname(word) + '/'
+    }
+    // Get all directories
+    let dirs = fs.readdirSync(baseDir, { withFileTypes: true })
+        .filter(dirent => dirent.isDirectory())
+        .map(dirent => dirent.name +  '/')
+    // Except hidden ones, unless explicitly requested
+    if (!path.basename(word).startsWith('.'))
+        dirs = dirs.filter(name => !name.startsWith('.'))
+    // Now prefix names in result
+    if (word.endsWith('/'))
+        dirs = dirs.map(d => word + d)
+    else if (word.includes('/'))
+        dirs = dirs.map(d => path.dirname(word) + '/' + d)
+    // Finally, filter out the files that don't start with the search word
+    return dirs.filter(dir => dir.startsWith(word))
+}
+
 module.exports = {
+    cd,
     git,
     docker,
     'docker container': dockerContainer,

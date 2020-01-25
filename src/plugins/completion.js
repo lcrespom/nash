@@ -119,8 +119,11 @@ function getSubcommandCompletions(word, line) {
     let command = cutLastChars(line.left, word.length).trim()
     let subCommands = customCommands[command]
     if (!subCommands)
-        return []
-    return  subCommands.filter(sc => startsWithCaseInsensitive(sc, word))
+        return null
+    if (subCommands instanceof Function)
+        return subCommands(command, word, line)
+    else
+        return subCommands.filter(sc => startsWithCaseInsensitive(sc, word))
 }
 
 function getMatchingDirsAndFiles(word, homedir) {
@@ -138,7 +141,7 @@ function getMatchingDirsAndFiles(word, homedir) {
 function getParameterCompletions(word, line) {
     // Special case: configured subcommand
     let subCommands = getSubcommandCompletions(word, line)
-    if (subCommands.length > 0)
+    if (subCommands)
         return subCommands
     // Accomodate word to glob
     let homedir = os.homedir() + '/'
@@ -297,5 +300,6 @@ let customCommands = getOption('completion.commands')
 module.exports = {
     completeWord,
     getWordAndType,
-    NodeType
+    NodeType,
+    safeGlob
 }

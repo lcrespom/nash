@@ -84,6 +84,7 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [ ] Fix bug: if suggestion text overflows to next line, it is not cleared
 - [x] Configuration (~/.nash/nashrc and ~/.nash/nashrc.js)
 	- [x] Load all plugins from nashrc.js
+	- [ ] start()/stop() function in all plugins to control lifecycle (**next**)
 - [x] JavaScript
 	- [ ] Highlight JavaScript (and avoid bash parser error)
 	- [ ] Get shell environment variables before executing JS
