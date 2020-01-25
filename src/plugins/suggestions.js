@@ -15,7 +15,7 @@ function getSuggestion(line) {
 }
 
 function acceptSuggestion(line) {
-    if (lastSuggestion == '') return line
+    if (lastSuggestion == '' || line.right) return line
     return {
         left: line.left + line.right + lastSuggestion,
         right: ''
@@ -23,7 +23,7 @@ function acceptSuggestion(line) {
 }
 
 
-bindKey(['ctrl-space', 'shift-right'], acceptSuggestion,
+bindKey(['ctrl-space', 'right'], acceptSuggestion,
     'Accept line suggestion')
 
 registerLineDecorator((plainLine, decoratedLine, line) => {

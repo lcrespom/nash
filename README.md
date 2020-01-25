@@ -50,11 +50,12 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 	- [ ] Usage
 	- [ ] Customization / Extension API
 - [ ] Line editing
+	- [x] Handle multiple independent bindings for the same key combination
 	- [ ] Add more bash shortcuts in default-bindings
 		(see https://ss64.com/bash/syntax-keyboard.html)
+		- [ ] Ctrl-y recovers deleted line (**next**)
 	- [ ] Catch exceptions in bindings to avoid breaking the shell
 	- [ ] Refactor prompt.js and editor.js async handling code => use more promises
-	- [ ] Handle multiple independent bindings for the same key combination (**next**)
 - [x] History navigation
 	- [x] Basic
 	- [x] Context sensitive
@@ -78,6 +79,7 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 - [x] Syntax highlight
 - [x] History suggestions
 	- [x] Remove suggestion decoration when the user presses enter
+	- [ ] Ctrl-space accepts suggestion anywhere in the line (**next**)
 	- [ ] Fix bug: if suggestion text overflows to next line, it is not cleared
 - [x] Configuration (~/.nash/nashrc and ~/.nash/nashrc.js)
 	- [x] Load all plugins from nashrc.js

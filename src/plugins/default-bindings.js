@@ -1,5 +1,5 @@
 const {
-	bindKey, getKeyBinding, getLastBinding, getBoundKeys
+	bindKey, getKeyBindings, getLastBinding, getBoundKeys
 } = require('../key-bindings')
 const { getCursorPosition } = require('../prompt')
 const runner = require('../runner')
@@ -213,11 +213,15 @@ function describeNextKey(line) {
 		},
 		keyListener(key) {
 			process.stdout.write(key.name ? key.name : key.ch)
-            let bnd = getKeyBinding(key.name)
-            if (bnd)
-                process.stdout.write(
-                    '\r' + describeKeyBinding(key.name, bnd))
-			process.stdout.write('\n')
+            let bnds = getKeyBindings(key.name)
+            if (bnds) {
+				for (let bnd of bnds)
+					process.stdout.write(
+    	                '\r' + describeKeyBinding(key.name, bnd) + '\n')
+			}
+			else {
+				process.stdout.write('\n')
+			}
 			commandDone()
 		}
 	}
@@ -225,8 +229,9 @@ function describeNextKey(line) {
 
 function listKeys(line) {
     for (let kname of getBoundKeys()) {
-        let b = getKeyBinding(kname)
-        process.stdout.write('\n' + describeKeyBinding(kname, b))
+		let bnds = getKeyBindings(kname)
+		for (let b of bnds)
+	        process.stdout.write('\n' + describeKeyBinding(kname, b))
     }
     process.stdout.write('\n')
     return {

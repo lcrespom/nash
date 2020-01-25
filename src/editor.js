@@ -1,7 +1,7 @@
 const {
 	putPrompt, putCursor, hideCursor, showCursor, promptOwnsInput
 } = require('./prompt')
-const { getKeyBinding, setLastBinding } = require('./key-bindings')
+const { getKeyBindings, setLastBinding } = require('./key-bindings')
 
 
 let line = { left: '', right: '' }
@@ -35,12 +35,17 @@ function unknownKey(key) {
 	}
 }
 
-function applyBinding(key) {
-	let b = getKeyBinding(key.name)
-	if (!b || !b.code)
+function applyBindings(key) {
+	let bindings = getKeyBindings(key.name)
+	if (!bindings || bindings.length == 0)
 		return unknownKey(key)
-	let newLine = b.code(line)
-	setLastBinding(b.code)
+	let newLine = line
+	for (let b of bindings) {
+		newLine = b.code(newLine)
+		setLastBinding(b.code)
+		if (newLine.isAsync || newLine.showPrompt)
+			break
+	}
 	return newLine
 }
 
@@ -72,7 +77,7 @@ function editorKeyListener(key) {
 		setLastBinding(null)
 	}
 	else {
-		newLine = applyBinding(key)
+		newLine = applyBindings(key)
 		if (newLine.isAsync) {
 			if (newLine.left || newLine.right)
 				writeLine(newLine)

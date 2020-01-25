@@ -28,24 +28,29 @@ let lastBinding = null
 function bindKey(knames, code, desc) {
 	if (!Array.isArray(knames))
 		knames = [ knames ]
-	for (let key of knames)
-		keyBindings[key] = { code, desc }
+	for (let key of knames) {
+		if (!keyBindings[key])
+			keyBindings[key] = []
+		keyBindings[key].push({ code, desc })
+	}
 }
 
-function unbindKey(kname) {
-	keyBindings[kname] = undefined
+function unbindKey(kname, fname) {
+	if (!keyBindings[kname]) return
+	keyBindings[kname].filter(b => b.code.name != fname)
 }
 
-function getKeyBinding(kname) {
+function getKeyBindings(kname) {
 	return keyBindings[kname]
 }
 
 function getKeyBindingByFunction(fname) {
 	let keys = getBoundKeys()
 	for (let key of keys) {
-		let b = getKeyBinding(key)
-		if (b && b.code.name == fname)
-			return b
+		let bindings = getKeyBindings(key)
+		if (!bindings) continue
+		let b = bindings.find(b => b.code.name == fname)
+		if (b) return b
 	}
 	return null
 }
@@ -66,7 +71,7 @@ function setLastBinding(binding) {
 module.exports = {
 	bindKey,
 	unbindKey,
-	getKeyBinding,
+	getKeyBindings,
 	getKeyBindingByFunction,
     getLastBinding,
     setLastBinding,
