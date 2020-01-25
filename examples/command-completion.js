@@ -42,27 +42,37 @@ let npm = ('access adduser audit bin bugs c cache ci cit clean-install ' +
     'up update v version view whoami').split(' ')
 
 
-// Subcommand function for `cd`
-function cd(command, word) {
+//-------------------- Subcommand function for `cd` --------------------
+function getBaseDir(word) {
     // Compute base directory (absolute or relative)
+    // TODO support for `~` => home dir
     let baseDir
     if (word.startsWith('/'))
         baseDir = ''
     else
         baseDir = process.cwd() +'/'
     // Search word is full directory
-    if (word.endsWith('/')) {
+    if (word.endsWith('/'))
         baseDir += word
-    }
     // Search word is partial directory name
-    else if (word.includes('/')) {
+    else if (word.includes('/'))
         baseDir += path.dirname(word) + '/'
-    }
+    return baseDir
+}
+
+function cd(command, word) {
+    let baseDir = getBaseDir(word)
     // Get all directories
-    let dirs = fs.readdirSync(baseDir, { withFileTypes: true })
+    let dirs
+    try {
+        dirs = fs.readdirSync(baseDir, { withFileTypes: true })
         .filter(dirent => dirent.isDirectory())
         .map(dirent => dirent.name +  '/')
-    // Except hidden ones, unless explicitly requested
+    }
+    catch (err) {
+        return null // Command failed, rely on default completion
+    }
+    // Discard hidden directories, unless explicitly requested
     if (!path.basename(word).startsWith('.'))
         dirs = dirs.filter(name => !name.startsWith('.'))
     // Now prefix names in result
