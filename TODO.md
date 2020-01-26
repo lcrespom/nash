@@ -37,7 +37,7 @@
 ## Prompt plugin
 - [x] Optional agnoster-style prompt
 - [x] Document agnoster prompt & place in examples dir
-- [ ] Config option to limit length of path section
+- [ ] Config option to limit length of path section (**next**)
 
 ## Completion
 - [x] Basic (tab)
@@ -79,7 +79,7 @@
 - [x] Cool git prompt
     - [x] Fancy git status stripe in agnoster-prompt.js
     - [x] Git status stripe in default prompt
-- [ ] History popup
+- [ ] History menu
 - [ ] Directory navigation
     - [x] 'cd ' + tab
     - [x] tab on empty line
