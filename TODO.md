@@ -9,6 +9,7 @@
     - [ ] Describe all key bindings
     - [ ] Tab completion
     - [ ] History
+    - [ ] Directory navigation (when ready) 
     - [ ] Check that all plugins are properly documented
     - [ ] Inline JavaScript
 - [ ] Customization / Extension API
@@ -29,7 +30,9 @@
 ## History navigation
 - [x] Basic
 - [x] Context sensitive
-- [ ] Cool popup
+- [ ] Menu (pageup)
+    - [ ] Basic
+    - [ ] Interactive
 
 ## Prompt plugin
 - [x] Optional agnoster-style prompt
@@ -53,7 +56,7 @@
     - [ ] Optional subcommand description - if available, show under menu
 
 ## Syntax highlight
-    - [ ] Highlight JavaScript
+- [ ] Highlight JavaScript
 
 ## History suggestions
 - [x] Remove suggestion decoration when the user presses enter
@@ -77,23 +80,23 @@
     - [x] Fancy git status stripe in agnoster-prompt.js
     - [x] Git status stripe in default prompt
 - [ ] History popup
-- [ ] Directory navigation popup (history / tree)
+- [ ] Directory navigation
     - [x] 'cd ' + tab
     - [x] tab on empty line
-    - [ ] Shift-up => cd ..
-    - [ ] Shift-down => dir history back
-    - [ ] Pg down => dir history menu
+    - [ ] shift-up => cd ..
+    - [ ] shift-down => dir history back
+    - [ ] pagedown => dir history menu
 - [ ] Mouse support for all menus (keypress module supports it)
 
 ## Maximize customization
-	- [x] Global settings object / API
-	- [x] Color palette
-	- [x] Rebind/unbind keys
+- [x] Global settings object / API
+- [x] Color palette
+- [x] Rebind/unbind keys
 
 ## Compatibility / Portability
-	- [ ] GitBash support
-	- [x] More linux testing
-	- [x] Slow/remote terminal
+- [ ] GitBash support
+- [x] More linux testing
+- [x] Slow/remote terminal
 
 ## Performance
-	- [ ] Benchmark together: parsing + syntax highlight - find bottlenecks, memoize if required
+- [ ] Benchmark together: parsing + syntax highlight - find bottlenecks, memoize if required
