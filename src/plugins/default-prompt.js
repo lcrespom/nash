@@ -4,6 +4,8 @@ const { getOption, setDefaultOptions } = require('../startup')
 const { colorize } = require('../colors')
 
 
+let colors
+let promptConfig
 const GIT_SYMBOL = '\ue0a0'
 
 function gitSection() {
@@ -16,10 +18,46 @@ function gitSection() {
 	return colorize(gitColor, status)
 }
 
+function cutDirName(dirName, maxLength, ellipsis) {
+	let suffixLen = ellipsis ? ellipsis.length : 0
+	if (dirName.length <= maxLength + suffixLen)
+		return dirName
+	dirName = dirName.substr(0, maxLength)
+	if (ellipsis)
+		dirName += ellipsis
+	return dirName
+}
+
+function makePath(cwd) {
+	let dirs = cwd.split('/')
+	let leafDir = dirs[dirs.length - 1]
+	let maxLen = promptConfig.parentDirMaxLen
+	let ellipsis = promptConfig.parentDirEllipsis
+	if (maxLen) {
+		dirs = dirs.map(
+			d => d == leafDir ? d : cutDirName(d, maxLen, ellipsis)
+		)
+	}
+	let maxDirs = promptConfig.maxDirs
+	let prefix = promptConfig.maxDirEllipsis
+	if (maxDirs && maxDirs < dirs.length) {
+		dirs = dirs.slice(dirs.length - maxDirs, dirs.length)
+		if (prefix)
+			dirs = [prefix, ...dirs]
+	}
+	return dirs.join('/')
+}
+
 function prompt({ cwd, username, hostname }) {
-	let userAtHost = colorize(colors.userAtHost, username + '@' + hostname)
-	let path = colorize(colors.path, cwd)
-	let git = gitSection() || '> '
+	let userAtHost = ''
+	if (promptConfig.showUserAtHost)
+		userAtHost = colorize(colors.userAtHost, username + '@' + hostname)
+	let path = ''
+	if (promptConfig.showDir)
+		path = colorize(colors.path, makePath(cwd))
+	let git = ''
+	if (promptConfig.showGit)
+		git = gitSection() || '> '
 	return userAtHost + ' ' + path + git
 }
 
@@ -31,10 +69,20 @@ function setDefaults() {
         gitClean: 'green',
     }
     setDefaultOptions('colors.prompt', defaultColors)
-    return getOption('colors.prompt')
+	colors = getOption('colors.prompt')
+	setDefaultOptions('prompt', {
+		showUserAtHost: true,
+		showDir: true,
+		showGit: true,
+		parentDirMaxLen: 1,
+		//parentDirEllipsis: '\u2026',
+		//maxDirs: 4,
+		//maxDirEllipsis: '...'
+	})
+	promptConfig = getOption('prompt')
 }
 
-let colors = setDefaults()
+setDefaults()
 
 setPrompt(prompt)
 setTerminalTitle('Nash')

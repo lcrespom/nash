@@ -35,9 +35,10 @@
     - [ ] Interactive
 
 ## Prompt plugin
+- [x] Config options to personalize what to show on prompt
 - [x] Optional agnoster-style prompt
+    - [ ] Use config options from default prompt plugin
 - [x] Document agnoster prompt & place in examples dir
-- [ ] Config option to limit length of path section (**next**)
 
 ## Completion
 - [x] Basic (tab)
@@ -104,6 +105,7 @@
     - [ ] Then disable highlight from table menus, as `ls` already does
 - [ ] Get hostname from runner status
 - [ ] Don't do chdir from runner
+- [ ] Get all environment data from bash, e.g. don't use process.cwd
 
 ## Performance
 - [ ] Benchmark together: parsing + syntax highlight - find bottlenecks, memoize if required
