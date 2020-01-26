@@ -11,6 +11,9 @@ function highlightCommand(cmd) {
     return colorize(cmd, hls)
 }
 
+function inverse(str) {
+    return '\x1b[7m' + str + '\x1b[0m'
+}
 
 function openVerticalMenu(options, done) {
     process.stdout.write('\n')
@@ -19,7 +22,15 @@ function openVerticalMenu(options, done) {
     if (cp.y + rows >= process.stdout.rows)
         setCursorPosition({x: cp.x, y: process.stdout.rows - rows - 2})
     return verticalMenu({
-        options, height: rows, selection: options.length - 1, done
+        options,
+        height: rows,
+        selection: options.length - 1,
+        decorate(o, sel) {
+            if (sel) return inverse(o)
+            return o
+            //return highlightCommand(o) TODO memoize!
+        },
+        done
     })
 }
 

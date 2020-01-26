@@ -42,6 +42,8 @@ module.exports = {
 		'syntax-highlight',
 		// Suggestion of previous command
 		'suggestions',
+		// History menu (activated with page-up)
+		'history-menu',
 		// Custom keyboard bindings
 		'./custom-keys'
 	],
