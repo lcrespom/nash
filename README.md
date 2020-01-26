@@ -13,7 +13,7 @@ Nash is implemented in JavaScript and focuses on:
 Pressing F1 at any time displays a list of all keyboard shoutcuts and their corresponding actions.
 
 ## Main features
-- Totally configurable prompt.
+- Flexible prompt, configurable by settings and by JavaScript code.
 - Powerful history navigation: the `up` and `down` keys navigate the history, showing only the entries
 	that start with the current line.
 - Interactive tab-completion: pressing tab completes a file name, but if multiple matching files are

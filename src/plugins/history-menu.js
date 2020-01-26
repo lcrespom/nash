@@ -3,6 +3,13 @@ const { hideCursor, showCursor, verticalMenu } = require('node-terminal-menu')
 const { bindKey } = require('../key-bindings')
 const { getCursorPosition, setCursorPosition } = require('../prompt')
 const history = require('../history')
+const { highlight, colorize } = require('./syntax-highlight')
+
+
+function highlightCommand(cmd) {
+    let hls = highlight(cmd)
+    return colorize(cmd, hls)
+}
 
 
 function openVerticalMenu(options, done) {
@@ -46,8 +53,9 @@ function historyMenu(line) {
         return line
     if (options.length == 1)
         return { left: options[1], right: '' }
-    //TODO syntax highlight all lines (or last N lines)
     options = options.reverse()
+    //TODO highlight the last N to avoid performance impact
+    //options = options.map(highlightCommand)
     //TODO menu pgup, pgdown
     return showHistoryMenu(line, options)
 }
