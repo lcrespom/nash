@@ -42,6 +42,17 @@ function forward(text = '') {
     return null
 }
 
+function matchBackwards(text) {
+    let idx = index
+    let result = []
+    while (idx > 0) {
+        idx--
+        if (history[idx].startsWith(text))
+            result.push(history[idx])
+    }
+    return result
+}
+
 function toEnd() {
     index = history.length
 }
@@ -75,6 +86,7 @@ module.exports = {
     push,
     back,
     forward,
+    matchBackwards,
     toEnd,
     all,
     load,

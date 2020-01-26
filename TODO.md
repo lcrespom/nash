@@ -29,6 +29,8 @@
 
 ## History navigation
 - [x] Basic
+    - [ ] Merge histories in parallel terminal sessions
+        => append one line at a time
 - [x] Context sensitive
 - [ ] Menu (pageup)
     - [ ] Basic (**next**)

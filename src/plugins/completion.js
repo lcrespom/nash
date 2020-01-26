@@ -14,9 +14,7 @@ const {
 const {
     parseBash, traverseAST, NodeType, builtins
 } = require('../parser')
-const {
-    getCursorPosition, setCursorPosition
-} = require('../prompt')
+const { getCursorPosition, setCursorPosition } = require('../prompt')
 const { getOption } = require('../startup')
 
 
