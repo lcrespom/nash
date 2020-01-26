@@ -121,6 +121,8 @@ function clearScreen(line) {
 	}
 }
 
+let clipboard = ''
+
 function killWholeLine(line) {
 	//TODO keep it in buffer, recover it with ctrl+y
 	let cursor = getCursorPosition()
@@ -128,11 +130,16 @@ function killWholeLine(line) {
 		process.stdout.cursorTo(cursor.x, cursor.y)
 	}
 	process.stdout.clearScreenDown()
+	clipboard = line.left + line.right
 	return { left: '', right: '' }
 }
 
-function recoverKilledLine(line) {
-	//TODO recover line from killWholeLine, add it at cursor position
+function recoverDeletion(line) {
+	// Recover line from killWholeLine, add it at cursor position
+	return {
+		left: line.left + clipboard,
+		right: line.right
+	}
 }
 
 
@@ -254,6 +261,7 @@ bindKey('ctrl-b', backwardWord, 'Move cursor one word to the left')
 bindKey('ctrl-f', forwardWord, 'Move cursor one word to the right')
 bindKey(['end', 'ctrl-e'], endOfLine, 'Move cursor to end of line')
 bindKey(['escape', 'ctrl-u'], killWholeLine, 'Clears the current line')
+bindKey('ctrl-y', recoverDeletion, 'Recover cleared line')
 bindKey('ctrl-l', clearScreen, 'Clears the screen')
 
 // History navigation
