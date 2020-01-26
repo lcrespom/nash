@@ -1,5 +1,6 @@
 const { hideCursor, showCursor, verticalMenu } = require('node-terminal-menu')
 
+const { memoize } = require('../utils')
 const { bindKey } = require('../key-bindings')
 const { getCursorPosition, setCursorPosition } = require('../prompt')
 const history = require('../history')
@@ -10,6 +11,8 @@ function highlightCommand(cmd) {
     let hls = highlight(cmd)
     return colorize(cmd, hls)
 }
+
+const highlightCommandMemo = memoize(highlightCommand)
 
 function inverse(str) {
     return '\x1b[7m' + str + '\x1b[0m'
@@ -27,8 +30,7 @@ function openVerticalMenu(options, done) {
         selection: options.length - 1,
         decorate(o, sel) {
             if (sel) return inverse(o)
-            return o
-            //return highlightCommand(o) TODO memoize!
+            return highlightCommandMemo(o)
         },
         done
     })

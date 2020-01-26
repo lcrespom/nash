@@ -30,10 +30,10 @@
 ## History navigation
 - [x] Basic
     - [ ] Merge histories in parallel terminal sessions
-        => append one line at a time
+        => append one line at a time (**next**)
 - [x] Context sensitive
-- [ ] Menu (pageup)
-    - [ ] Basic (**next**)
+- [x] Menu (pageup)
+    - [x] Basic
     - [ ] Interactive
 
 ## Prompt plugin
@@ -71,7 +71,7 @@
 
 ## Configuration
 - [x] Load all plugins from nashrc.js
-- [ ] start()/stop() function in all plugins to control lifecycle
+- [ ] start()/stop() function in all plugins to control lifecycle (**next**)
 
 ## Inline JavaScript
 - [ ] Highlight JavaScript (and avoid bash parser error)
@@ -82,8 +82,8 @@
 - [x] Cool git prompt
     - [x] Fancy git status stripe in agnoster-prompt.js
     - [x] Git status stripe in default prompt
-- [ ] History menu
-- [ ] Directory navigation
+- [x] History menu
+- [ ] Directory navigation (**next**)
     - [x] 'cd ' + tab
     - [x] tab on empty line
     - [ ] shift-up => cd ..

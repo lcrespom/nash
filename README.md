@@ -15,9 +15,10 @@ Pressing F1 at any time displays a list of all keyboard shoutcuts and their corr
 ## Main features
 - Flexible prompt, configurable by settings and by JavaScript code.
 - Powerful history navigation: the `up` and `down` keys navigate the history, showing only the entries
-	that start with the current line.
+	that start with the current line. The `page up` key displays a menu with all history lines that
+	start with the current line.
 - Interactive tab-completion: pressing tab completes a file name, but if multiple matching files are
-	available, an interactive menu is displayed, letting the user navigate and select the file name.
+	available, a menu is displayed, letting the user navigate and select the file name.
 - Syntax highlight, clearly coloring the different parts of a command, and warning of potential errors.
 - History suggestions: when typing a command, if the text matches a previous command, the remaining text
 	is displayed in grey, letting the user immediately complete the command.
