@@ -31,7 +31,7 @@
 - [x] Basic
 - [x] Context sensitive
 - [ ] Menu (pageup)
-    - [ ] Basic
+    - [ ] Basic (**next**)
     - [ ] Interactive
 
 ## Prompt plugin
@@ -66,7 +66,7 @@
     - [ ] When at last line of terminal, if suggestion overflows, cursor
         position is not recovered.
 
-## Configuration (~/.nash/nashrc and ~/.nash/nashrc.js)
+## Configuration
 - [x] Load all plugins from nashrc.js
 - [ ] start()/stop() function in all plugins to control lifecycle
 
