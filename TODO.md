@@ -98,5 +98,12 @@
 - [x] More linux testing
 - [x] Slow/remote terminal
 
+## Support remote bash
+- [ ] Just type `PS1=$'\x1E\x1E>'` on a remote shell to activate nash line editor
+- [ ] Avoid reading local files and rely on piping `ls -1ap` (e.g. tab-completion)
+    - [ ] Then disable highlight from table menus, as `ls` already does
+- [ ] Get hostname from runner status
+- [ ] Don't do chdir from runner
+
 ## Performance
 - [ ] Benchmark together: parsing + syntax highlight - find bottlenecks, memoize if required
