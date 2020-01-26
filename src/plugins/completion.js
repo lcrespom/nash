@@ -273,7 +273,8 @@ function completeWords(line, word, words) {
 }
 
 function completeWord(line) {
-    if (line.left.length == 0) return line
+    if (line.left.length == 0)
+        return completeWord({ left: 'cd ', right: '' })
     let [word, type] = getWordAndType(line)
     words = getCompletions(word, type, line)
     if (words.length == 0) {
