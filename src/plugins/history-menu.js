@@ -1,6 +1,6 @@
 const { hideCursor, showCursor, verticalMenu } = require('node-terminal-menu')
 
-const { substrWithColors, memoize } = require('../utils')
+const { substrWithColors, memoize, removeRepeatedItems } = require('../utils')
 const { bindKey } = require('../key-bindings')
 const { getCursorPosition, setCursorPosition } = require('../prompt')
 const { history, dirHistory } = require('../history')
@@ -82,8 +82,13 @@ function historyMenu(line) {
 function dirHistoryMenu(line) {
     let includes = (i, t) => i.includes(t)
     let options = dirHistory.matchBackwards(line.left, includes)
-    let decorateDir = (o, sel) => sel ? inverse(o + '/') : white(o + '/')
+    options = removeRepeatedItems(options)
+    let decorateDir = (o, sel) => {
+        if (!o.endsWith('/')) o += '/'
+        return sel ? inverse(o) : white(o)
+    }
     line = optionsMenu(line, options, decorateDir)
+    // All this craziness below just to prepend 'cd ' to the result
     if (line.isAsync) {
         let gl = line.getLine
         line.getLine = () => {
@@ -91,6 +96,10 @@ function dirHistoryMenu(line) {
             if (l.left + l.right == '') return l
             return { left: 'cd ' + l.left, right: l.right }
         }
+    }
+    else {
+        if (line.left + line.right != '')
+            line.left = 'cd ' + line.left
     }
     return line
 }

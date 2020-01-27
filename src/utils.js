@@ -121,6 +121,15 @@ function memoize(func) {
 
 
 /**
+ * Removes repeated items from an array
+ * @param {Array} arr the input array
+ */
+function removeRepeatedItems(arr) {
+	return Array.from(new Set(arr))
+}
+
+
+/**
  * Extracts a nested property from an object
  * @param {object} obj the object to extract the property from
  * @param {string} name the property name, which may contain '.' to
@@ -176,6 +185,7 @@ module.exports = {
 	cutLastChars,
 	fromHomedir,
 	memoize,
+	removeRepeatedItems,
 	getProp,
 	setProp,
 	reverseObject
