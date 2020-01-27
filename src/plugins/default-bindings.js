@@ -191,7 +191,7 @@ function acceptLine(line) {
 
 function goodbye(line) {
 	if (line.left.length + line.right.length > 0) return line
-	history.save()
+	history.close()
 	line.left = 'exit'
 	return acceptLine(line)
 }

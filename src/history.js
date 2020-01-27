@@ -2,13 +2,17 @@ const os = require('os')
 const fs = require('fs')
 
 
+const doNothing = () => {}
+
+
 class History {
 
-    constructor(filename) {
+    constructor(filename, maxSize = 1000) {
         this.history = []
         this.index = 0
-        this.maxSize = 1000
+        this.maxSize = maxSize
         this.historyPath = os.homedir() + '/.nash/' + filename
+        this.fd = null
     }
 
     clear() {
@@ -18,8 +22,11 @@ class History {
     
     push(cmd) {
         this.history.push(cmd)
-        if (this.history.length > this.maxSize) this.history.splice(0, 1)
+        if (this.history.length > this.maxSize)
+            this.history.splice(0, 1)
         this.index = this.history.length
+        if (this.fd)
+            fs.appendFile(this.fd, cmd + '\n', doNothing)
     }
     
     back(text = '', { updateIndex = true } = {}) {
@@ -64,18 +71,32 @@ class History {
     all() {
         return this.history
     }
-    
-    load() {
-        if (!fs.existsSync(this.historyPath)) return
-        fs.readFile(this.historyPath, (err, data) => {
+
+    _openForAppend() {
+        fs.open(this.historyPath, 'a', (err, fd) => {
             if (err) return
-            this.history = data.toString().split('\n')
-            this.index = this.history.length
+            this.fd = fd
         })
     }
     
-    save() {
-        fs.writeFile(this.historyPath, this.history.join('\n'), () => {})
+    load() {
+        if (!fs.existsSync(this.historyPath)) {
+            this._openForAppend()
+            return
+        }
+        fs.readFile(this.historyPath, (err, data) => {
+            if (err) return
+            this.history = data.toString().trim().split('\n')
+            if (this.history.length > this.maxSize)
+                this.history = this.history.slice(-this.maxSize)
+            this.index = this.history.length
+            this._openForAppend()
+        })
+    }
+    
+    close() {
+        if (this.fd)
+            fs.close(this.fd, doNothing)
     }
 }
 

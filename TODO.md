@@ -29,12 +29,10 @@
 
 ## History navigation
 - [x] Basic
-    - [ ] Merge histories in parallel terminal sessions
-        => append one line at a time (**next**)
+    - [x] Merge histories in parallel terminal sessions (append one line at a time)
 - [x] Context sensitive
 - [x] Menu (pageup)
-    - [x] Basic
-        - [x] Cut lines longer than process.stdout.columns
+    - [x] Cut lines longer than process.stdout.columns
     - [ ] Interactive
 
 ## Prompt plugin
