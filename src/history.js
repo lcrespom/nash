@@ -53,12 +53,14 @@ class History {
         return null
     }
 
-    matchBackwards(text) {
+    matchBackwards(text, matcher) {
+        let startsWith = (i, t) => i.startsWith(t)
+        matcher = matcher || startsWith
         let idx = this.index
         let result = []
         while (idx > 0) {
             idx--
-            if (this.history[idx].startsWith(text))
+            if (matcher(this.history[idx], text))
                 result.push(this.history[idx])
         }
         return result

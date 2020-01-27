@@ -80,7 +80,8 @@ function historyMenu(line) {
 
 
 function dirHistoryMenu(line) {
-    let options = dirHistory.matchBackwards(line.left)
+    let includes = (i, t) => i.includes(t)
+    let options = dirHistory.matchBackwards(line.left, includes)
     let decorateDir = (o, sel) => sel ? inverse(o + '/') : white(o + '/')
     line = optionsMenu(line, options, decorateDir)
     if (line.isAsync) {
