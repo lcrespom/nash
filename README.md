@@ -14,7 +14,7 @@ Pressing F1 at any time displays a list of all keyboard shoutcuts and their corr
 
 ## Main features
 - Flexible prompt, configurable by settings and by JavaScript code.
-- Powerful history navigation: the `up` and `down` keys navigate the history, showing only the entries
+- Powerful command history navigation: the `up` and `down` keys navigate the history, showing only the entries
 	that start with the current line. The `page up` key displays a menu with all history lines that
 	start with the current line.
 - Interactive tab-completion: pressing tab completes a file name, but if multiple matching files are
@@ -26,8 +26,7 @@ Pressing F1 at any time displays a list of all keyboard shoutcuts and their corr
 	in CSS (e.g. #a6e22e).
 - Configuration and extensions are implemented as plain JavaScript code, centered around the
 	`~/.nash/nashrc.js` file, which is loaded during startup. For instance, color settings can be
-	configured via JSON. Example configuration and extensions are provided in the `~/.nash` directory, which is populated when
-	`nash` is started for the first time.
+	configured via JSON. Example configuration and extensions are provided in the `~/.nash` directory, which is populated when `nash` is started for the first time.
 - Extensible plugin system with powerful default implementations.
 
 Check the [ToDo](TODO.md) for a list of features under development.

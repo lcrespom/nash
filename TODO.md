@@ -34,6 +34,7 @@
 - [x] Context sensitive
 - [x] Menu (pageup)
     - [x] Basic
+        - [x] Cut lines longer than process.stdout.columns
     - [ ] Interactive
 
 ## Prompt plugin

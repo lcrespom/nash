@@ -27,6 +27,43 @@ function removeAnsiColorCodes(str) {
 }
 
 /**
+ * Cuts a substring from a string that potentially contains ANSI
+ * color commands, preserving the visible length.
+ * @param {string} str the input string
+ * @param {number} from the starting position
+ * @param {number} len the number of characters to include
+ */
+function substrWithColors(str, from, len) {
+	if (len <= 0) return ''
+	let result = ''
+	let pos = 0
+	let l = 0
+	let ansi = false
+	for (let i = 0; i < str.length; i++) {
+		if (ansi) {
+			result += str.charAt(i)
+			if (str.charCodeAt(i) >= 0x40)
+				ansi = false
+		}
+		else {
+			if (str.substr(i, 2) == '\x1b[') {
+				ansi = true
+				result += '\x1b['
+				i++
+			}
+			else {
+				if (pos >= from && l < len) {
+					result += str.charAt(i)
+					l++
+				}
+				pos++
+			}
+		}
+	}
+	return result
+}
+
+/**
  * Counts the number of common characters at the start of two strings
  * @param {string} str1 
  * @param {string} str2 
@@ -120,7 +157,8 @@ function reverseObject(obj) {
 module.exports = {
 	ucfirst,
 	startsWithCaseInsensitive,
-    removeAnsiColorCodes,
+	removeAnsiColorCodes,
+	substrWithColors,
     commonInitialChars,
 	cutLastChars,
 	memoize,

@@ -1,6 +1,6 @@
 const { hideCursor, showCursor, verticalMenu } = require('node-terminal-menu')
 
-const { memoize } = require('../utils')
+const { substrWithColors, memoize } = require('../utils')
 const { bindKey } = require('../key-bindings')
 const { getCursorPosition, setCursorPosition } = require('../prompt')
 const history = require('../history')
@@ -9,7 +9,8 @@ const { highlight, colorize } = require('./syntax-highlight')
 
 function highlightCommand(cmd) {
     let hls = highlight(cmd)
-    return colorize(cmd, hls)
+    let colCmd = colorize(cmd, hls)
+    return substrWithColors(colCmd, 0, process.stdout.columns - 2)
 }
 
 const highlightCommandMemo = memoize(highlightCommand)

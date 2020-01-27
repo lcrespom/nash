@@ -1,4 +1,44 @@
-let { getProp, setProp } = require('../src/utils')
+const chalk = require('chalk')
+const {
+    removeAnsiColorCodes, substrWithColors,
+    getProp, setProp
+} = require('../src/utils')
+
+//------------------------- substrWithColors -------------------------
+
+test('Cut no colors', () => {
+    let s = substrWithColors('abcdefghijkl', 4, 2)
+    expect(s).toBe('ef')
+    s = substrWithColors('abcdefghijkl', 4, 50)
+    expect(s).toBe('efghijkl')
+    s = substrWithColors('abcdefghijkl', 50, 50)
+    expect(s).toBe('')
+    s = substrWithColors('abcdefghijkl', 4, 0)
+    expect(s).toBe('')
+})
+
+test('Cut with colors', () => {
+    let sc = chalk.white('abc') + chalk.green('def')
+        + chalk.red.underline('ghi') + chalk.hex('#defeca')('jkl')
+    let s = substrWithColors(sc, 4, 2)
+    let exp = '\x1b[37m\x1b[39m' + chalk.green('ef')
+    expect(s.startsWith(exp)).toBe(true)
+    s = substrWithColors(sc, 4, 7)
+    exp = '\x1b[37m\x1b[39m' + chalk.green('ef') +
+        chalk.red.underline('ghi') + chalk.hex('#defeca')('jk')
+    expect(s).toBe(exp)
+    s = substrWithColors(sc, 4, 50)
+    exp = '\x1b[37m\x1b[39m' + chalk.green('ef') +
+        chalk.red.underline('ghi') + chalk.hex('#defeca')('jkl')
+    expect(s).toBe(exp)
+    s = substrWithColors(sc, 50, 50)
+    expect(removeAnsiColorCodes(s)).toBe('')
+    s = substrWithColors(sc, 4, 0)
+    expect(s).toBe('')
+})
+
+
+//------------------------- Get/set property -------------------------
 
 test('Get OK', () => {
     let obj = { a: { b: 1, c: 2 }}
