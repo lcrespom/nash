@@ -3,7 +3,7 @@ const { hideCursor, showCursor, verticalMenu } = require('node-terminal-menu')
 const { substrWithColors, memoize } = require('../utils')
 const { bindKey } = require('../key-bindings')
 const { getCursorPosition, setCursorPosition } = require('../prompt')
-const history = require('../history')
+const { history } = require('../history')
 const { highlight, colorize } = require('./syntax-highlight')
 
 
@@ -66,10 +66,8 @@ function historyMenu(line) {
     if (options.length == 0)
         return line
     if (options.length == 1)
-        return { left: options[1], right: '' }
+        return { left: options[0], right: '' }
     options = options.reverse()
-    //TODO highlight the last N to avoid performance impact
-    //options = options.map(highlightCommand)
     //TODO menu pgup, pgdown
     return showHistoryMenu(line, options)
 }

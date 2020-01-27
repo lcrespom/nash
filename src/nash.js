@@ -2,7 +2,7 @@
 const keypress = require('keypress')
 
 const editor = require('./editor')
-const history = require('./history')
+const { history } = require('./history')
 const runner = require('./runner')
 const startup = require('./startup')
 

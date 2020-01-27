@@ -1,6 +1,6 @@
 const { registerLineDecorator } = require('../editor')
 const { bindKey } = require('../key-bindings')
-const history = require('../history')
+const { history } = require('../history')
 const { getOption, setDefaultOptions } = require('../startup')
 const { colorize } = require('../colors')
 

@@ -1,4 +1,4 @@
-const history = require('../src/history')
+const { history } = require('../src/history')
 
 test('Simple', () => {
 	history.clear()

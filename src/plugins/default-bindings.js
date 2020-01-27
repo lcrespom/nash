@@ -3,7 +3,7 @@ const {
 } = require('../key-bindings')
 const { getCursorPosition } = require('../prompt')
 const runner = require('../runner')
-const history = require('../history')
+const { history } = require('../history')
 
 
 //--------------- Line movement and deletion ---------------
