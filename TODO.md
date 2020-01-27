@@ -9,7 +9,7 @@
     - [ ] Describe all key bindings
     - [ ] Tab completion
     - [ ] History
-    - [ ] Directory navigation (when ready) 
+    - [ ] Directory navigation (**next** => in main features section)
     - [ ] Check that all plugins are properly documented
     - [ ] Inline JavaScript
 - [ ] Customization / Extension API
@@ -82,7 +82,7 @@
     - [x] Fancy git status stripe in agnoster-prompt.js
     - [x] Git status stripe in default prompt
 - [x] History menu
-- [ ] Directory navigation
+- [x] Directory navigation
     - [x] 'cd ' + tab
     - [x] tab on empty line
     - [x] pagedown => dir history menu
