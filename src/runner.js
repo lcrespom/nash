@@ -1,5 +1,6 @@
 const pty = require('node-pty')
 
+const { nashShutdown } = require('./startup')
 const { commonInitialChars } = require('./utils')
 
 const NASH_MARK = '\x1E\x1E>'
@@ -150,7 +151,8 @@ function startShell() {
     })
     ptyProcess.onData(dataFromShell)
     ptyProcess.onExit(evt => {
-        ptyProcess.kill(evt.signal)
+		ptyProcess.kill(evt.signal)
+		nashShutdown()
         process.exit(0)
     })
 }

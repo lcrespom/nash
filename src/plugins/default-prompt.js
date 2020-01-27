@@ -82,7 +82,12 @@ function setDefaults() {
 	promptConfig = getOption('prompt')
 }
 
-setDefaults()
 
-setPrompt(prompt)
-setTerminalTitle('Nash')
+function start() {
+	setDefaults()
+	setPrompt(prompt)
+	setTerminalTitle('Nash')
+}
+
+
+module.exports = { start }

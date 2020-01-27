@@ -135,22 +135,23 @@ function setDefaults() {
     hlColors = getOption('colors.syntaxHighlight')
 }
 
-
-registerLineDecorator((plainLine, decoratedLine) => {
-    if (plainLine == '') {
-        //getCommandTypeFromCache = memoize(getCommandType)
-        return decoratedLine
-    }
-    let hls = highlight(plainLine)
-    return colorize(plainLine, hls)
-})
-
-setDefaults()
+function start() {
+    registerLineDecorator((plainLine, decoratedLine) => {
+        if (plainLine == '') {
+            //getCommandTypeFromCache = memoize(getCommandType)
+            return decoratedLine
+        }
+        let hls = highlight(plainLine)
+        return colorize(plainLine, hls)
+    })
+    setDefaults()
+}
 
 
 // Exports used only for testing
 module.exports = {
     NodeType,
     highlight,
-    colorize
+    colorize,
+    start
 }

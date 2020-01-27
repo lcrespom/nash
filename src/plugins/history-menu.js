@@ -74,4 +74,10 @@ function historyMenu(line) {
     return showHistoryMenu(line, options)
 }
 
-bindKey('pageup', historyMenu, 'Show menu with matching history lines')
+
+function start() {
+    bindKey('pageup', historyMenu, 'Show menu with matching history lines')
+}
+
+
+module.exports = { start }

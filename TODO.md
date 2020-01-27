@@ -72,7 +72,7 @@
 
 ## Configuration
 - [x] Load all plugins from nashrc.js
-- [ ] start()/stop() function in all plugins to control lifecycle (**next**)
+- [x] start()/stop() function in all plugins to control lifecycle
 
 ## Inline JavaScript
 - [ ] Highlight JavaScript (and avoid bash parser error)

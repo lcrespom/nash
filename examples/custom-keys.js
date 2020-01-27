@@ -10,10 +10,16 @@ function deleteWordToLeft(line) {
     }
 }
 
-// Register 'alt-backspace' key handler
-bindKey('meta-backspace', deleteWordToLeft,
-    'Deletes the word before the cursor')
 
-// Get the key handler identified by 'listKeys' and re-assign it to 'alt-h'
-let help = getKeyBindingByFunction('listKeys')
-bindKey('meta-h', help.code, help.desc)
+function start() {
+    // Register 'alt-backspace' key handler
+    bindKey('meta-backspace', deleteWordToLeft,
+        'Deletes the word before the cursor')
+
+    // Get the key handler identified by 'listKeys' and re-assign it to 'alt-h'
+    let help = getKeyBindingByFunction('listKeys')
+    bindKey('meta-h', help.code, help.desc)
+}
+
+
+module.exports = { start }

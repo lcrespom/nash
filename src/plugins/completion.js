@@ -293,12 +293,18 @@ function completeWord(line) {
 }
 
 
-bindKey('tab', completeWord, 'Complete word under cursor')
-let customCommands = getOption('completion.commands')
+let customCommands
+
+function start() {
+    bindKey('tab', completeWord, 'Complete word under cursor')
+    customCommands = getOption('completion.commands')
+}
+
 
 module.exports = {
     completeWord,
     getWordAndType,
     NodeType,
-    safeGlob
+    safeGlob,
+    start
 }

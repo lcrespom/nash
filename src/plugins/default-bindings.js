@@ -249,31 +249,36 @@ function listKeys(line) {
 }
 
 
-// Line movement and deletion
-bindKey('backspace', backwardDeleteChar,
-	'Delete character left of cursor')
-bindKey('delete', deleteChar, 'Delete char at cursor')
-bindKey('left', backwardChar, 'Move cursor left')
-bindKey('right', forwardChar, 'Move cursor right')
-bindKey(['home', 'ctrl-a'], beginningOfLine,
-	'Move cursor to beginning of line')
-bindKey('ctrl-b', backwardWord, 'Move cursor one word to the left')
-bindKey('ctrl-f', forwardWord, 'Move cursor one word to the right')
-bindKey(['end', 'ctrl-e'], endOfLine, 'Move cursor to end of line')
-bindKey(['escape', 'ctrl-u'], killWholeLine, 'Clears the current line')
-bindKey('ctrl-y', recoverDeletion, 'Recover cleared line')
-bindKey('ctrl-l', clearScreen, 'Clears the screen')
+function start() {
+	// Line movement and deletion
+	bindKey('backspace', backwardDeleteChar,
+		'Delete character left of cursor')
+	bindKey('delete', deleteChar, 'Delete char at cursor')
+	bindKey('left', backwardChar, 'Move cursor left')
+	bindKey('right', forwardChar, 'Move cursor right')
+	bindKey(['home', 'ctrl-a'], beginningOfLine,
+		'Move cursor to beginning of line')
+	bindKey('ctrl-b', backwardWord, 'Move cursor one word to the left')
+	bindKey('ctrl-f', forwardWord, 'Move cursor one word to the right')
+	bindKey(['end', 'ctrl-e'], endOfLine, 'Move cursor to end of line')
+	bindKey(['escape', 'ctrl-u'], killWholeLine, 'Clears the current line')
+	bindKey('ctrl-y', recoverDeletion, 'Recover cleared line')
+	bindKey('ctrl-l', clearScreen, 'Clears the screen')
 
-// History navigation
-bindKey('up', upLineOrHistory, 'Move backwards through history')
-bindKey('down', downLineOrHistory, 'Move forward through history')
+	// History navigation
+	bindKey('up', upLineOrHistory, 'Move backwards through history')
+	bindKey('down', downLineOrHistory, 'Move forward through history')
 
-// Keys that break the editing process
-bindKey('return', acceptLine, 'Run command in line')
-bindKey('ctrl-d', goodbye, 'Close terminal (only if line is empty)')
-bindKey('ctrl-c', discardLine, 'Discards the line')
+	// Keys that break the editing process
+	bindKey('return', acceptLine, 'Run command in line')
+	bindKey('ctrl-d', goodbye, 'Close terminal (only if line is empty)')
+	bindKey('ctrl-c', discardLine, 'Discards the line')
 
-// Interactive commands
-bindKey('ctrl-k', describeNextKey,
- 	'Names typed key (to be used with the binkdKey function)')
-bindKey('f1', listKeys, 'Lists all key bindings')
+	// Interactive commands
+	bindKey('ctrl-k', describeNextKey,
+		'Names typed key (to be used with the binkdKey function)')
+	bindKey('f1', listKeys, 'Lists all key bindings')
+}
+
+
+module.exports = { start }

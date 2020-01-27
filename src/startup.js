@@ -34,32 +34,45 @@ function copy2home(source, target) {
 	fs.writeFileSync(targetPath, content)
 }
 
+function copyExamples(examples) {
+	for (let example of examples)
+		copy2home('../examples/' + example, example)
+}
+
+
+//------------------------------ Options ------------------------------
+
+let userConfig = {
+	options: {}
+}
+
+function getOption(name) {
+	return getProp(userConfig.options, name)
+}
+
+function setOption(name, obj) {
+	setProp(userConfig.options, name, obj)
+}
+
 
 //------------------------------ Startup ------------------------------
+
+function setDefaultOptions(name, defaultOptions) {
+    let userOptions = getOption(name)
+    setOption(name, { ...defaultOptions, ...userOptions })
+}
 
 function createNashDirIfRequired() {
     let nashDir = os.homedir() + '/.nash'
     if (!fs.existsSync(nashDir))
 	    fs.mkdirSync(nashDir)
 	createRC()
-	copy2home('../examples/nashrc.js', 'nashrc.js')
-	copy2home('../examples/agnoster-prompt.js', 'agnoster-prompt.js')
-	copy2home('../examples/command-completion.js', 'command-completion.js')
-	copy2home('../examples/custom-keys.js', 'custom-keys.js')
+	copyExamples(['nashrc.js', 'agnoster-prompt.js',
+		'command-completion.js', 'custom-keys.js'])
 }
 
 function loadPlugin(pname) {
 	return require(pname)
-}
-
-function loadPlugins(plugins) {
-	for (let plugin of plugins) {
-		if (plugin.startsWith('.'))
-			plugin = os.homedir() + '/.nash/' + plugin
-		else
-			plugin = './plugins/' + plugin
-		loadPlugin(plugin)
-	}
 }
 
 function loadNashRCJS() {
@@ -76,22 +89,28 @@ function loadNashRCJS() {
 	return rcexports
 }
 
+let pluginModules = []
 
-let userConfig = {
-	options: {}
+function loadPlugins(plugins) {
+	let modules = []
+	for (let plugin of plugins) {
+		if (plugin.startsWith('.'))
+			plugin = os.homedir() + '/.nash/' + plugin
+		else
+			plugin = './plugins/' + plugin
+		modules.push(loadPlugin(plugin))
+	}
+	return modules
 }
 
-function getOption(name) {
-	return getProp(userConfig.options, name)
-}
-
-function setOption(name, obj) {
-	setProp(userConfig.options, name, obj)
-}
-
-function setDefaultOptions(name, defaultOptions) {
-    let userOptions = getOption(name)
-    setOption(name, { ...defaultOptions, ...userOptions })
+function startPlugins(plugins) {
+	for (let i = 0; i < plugins.length; i++) {
+		let module = pluginModules[i]
+		if (module && module.start) {
+			//console.log('Starting ' + plugins[i])
+			module.start()
+		}
+	}
 }
 
 function nashStartup() {
@@ -100,13 +119,22 @@ function nashStartup() {
 	if (userConfig.options === undefined)
 		userConfig.options = {}
 	let plugins = userConfig.plugins
-	loadPlugins(plugins)
+	pluginModules = loadPlugins(plugins)
+	startPlugins(plugins)
 }
 
+function nashShutdown() {
+	for (let module of pluginModules)
+		if (module && module.stop)
+			module.stop()
+}
+
+
 module.exports = {
-	nashStartup,
 	userConfig,
 	getOption,
 	setOption,
-	setDefaultOptions
+	setDefaultOptions,
+	nashStartup,
+	nashShutdown
 }

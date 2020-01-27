@@ -27,15 +27,22 @@ function acceptSuggestion(line, key) {
 }
 
 
-bindKey(['ctrl-space', 'right'], acceptSuggestion,
+let colors
+
+function start() {
+    bindKey(['ctrl-space', 'right'], acceptSuggestion,
     'Accept line suggestion')
 
-registerLineDecorator((plainLine, decoratedLine, line) => {
-    if (line && line.decorateHint == 'no suggestions')
-        return decoratedLine
-    lastSuggestion = getSuggestion(plainLine)
-    return decoratedLine + colorize(colors.scol, lastSuggestion)
-})
+    registerLineDecorator((plainLine, decoratedLine, line) => {
+        if (line && line.decorateHint == 'no suggestions')
+            return decoratedLine
+        lastSuggestion = getSuggestion(plainLine)
+        return decoratedLine + colorize(colors.scol, lastSuggestion)
+    })
 
-setDefaultOptions('colors.suggestion', { scol: '#606060'})
-let colors = getOption('colors.suggestion')
+    setDefaultOptions('colors.suggestion', { scol: '#606060'})
+    colors = getOption('colors.suggestion')
+}
+
+
+module.exports = { start }
