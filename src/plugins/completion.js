@@ -9,7 +9,7 @@ const {
 
 const { bindKey } = require('../key-bindings')
 const {
-    startsWithCaseInsensitive, cutLastChars, commonInitialChars
+    startsWithCaseInsensitive, cutLastChars, fromHomedir
 } = require('../utils')
 const {
     parseBash, traverseAST, NodeType, builtins
@@ -105,13 +105,6 @@ function getCommandCompletions(word) {
         .concat(builtins.filter(w => w.startsWith(word)))
 }
 
-function replaceHomedirWithTilde(path, homedir) {
-    if (path.startsWith(homedir)) {
-        path = '~/' + path.substr(homedir.length)
-    }
-    return path
-}
-
 function getSubcommandCompletions(word, line) {
     // Notice: does not support commands after ";", "|", "&&", etc.
     let command = cutLastChars(line.left, word.length).trim()
@@ -129,7 +122,7 @@ function getMatchingDirsAndFiles(word, homedir) {
         onlyFiles: false,
         markDirectories: true,
         caseSensitiveMatch: false
-    }).map(p => replaceHomedirWithTilde(p, homedir))
+    }).map(p => fromHomedir(p, homedir.slice(0, -1)))
     // Put directories first, then files
     let dirs = dirsAndFiles.filter(p => p.endsWith('/'))
     let files = dirsAndFiles.filter(p => !p.endsWith('/'))

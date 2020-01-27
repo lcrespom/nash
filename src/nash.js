@@ -2,7 +2,7 @@
 const keypress = require('keypress')
 
 const editor = require('./editor')
-const { history } = require('./history')
+const { history, dirHistory } = require('./history')
 const runner = require('./runner')
 const startup = require('./startup')
 
@@ -26,6 +26,7 @@ function main() {
 	startup.nashStartup()
 	editor.initialize()
 	history.load()
+	dirHistory.load()
 	runner.startShell()
 	listenKeyboard()
 }

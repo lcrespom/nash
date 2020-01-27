@@ -19,7 +19,7 @@ class History {
         this.history = []
         this.index = this.history.length
     }
-    
+
     push(cmd) {
         this.history.push(cmd)
         if (this.history.length > this.maxSize)
@@ -28,7 +28,7 @@ class History {
         if (this.fd)
             fs.appendFile(this.fd, cmd + '\n', doNothing)
     }
-    
+
     back(text = '', { updateIndex = true } = {}) {
         let idx = this.index
         let result = null
@@ -43,7 +43,7 @@ class History {
             this.index = idx
         return result
     }
-    
+
     forward(text = '') {
         while (this.index < this.history.length - 1) {
             this.index++
@@ -52,7 +52,7 @@ class History {
         }
         return null
     }
-    
+
     matchBackwards(text) {
         let idx = this.index
         let result = []
@@ -63,13 +63,17 @@ class History {
         }
         return result
     }
-    
+
     toEnd() {
         this.index = this.history.length
     }
-    
+
     all() {
         return this.history
+    }
+
+    peek() {
+        return this.history[this.length - 1]
     }
 
     _openForAppend() {
@@ -78,7 +82,7 @@ class History {
             this.fd = fd
         })
     }
-    
+
     load() {
         if (!fs.existsSync(this.historyPath)) {
             this._openForAppend()
@@ -102,5 +106,6 @@ class History {
 
 
 module.exports = {
-    history: new History('history')
+    history: new History('history'),
+    dirHistory: new History('dirhistory')
 }

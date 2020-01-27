@@ -3,7 +3,7 @@ const { hideCursor, showCursor, verticalMenu } = require('node-terminal-menu')
 const { substrWithColors, memoize } = require('../utils')
 const { bindKey } = require('../key-bindings')
 const { getCursorPosition, setCursorPosition } = require('../prompt')
-const { history } = require('../history')
+const { history, dirHistory } = require('../history')
 const { highlight, colorize } = require('./syntax-highlight')
 
 
@@ -19,7 +19,11 @@ function inverse(str) {
     return '\x1b[7m' + str + '\x1b[0m'
 }
 
-function openVerticalMenu(options, done) {
+function white(str) {
+    return '\x1b[97m' + str + '\x1b[0m'
+}
+
+function openVerticalMenu(options, decorate, done) {
     process.stdout.write('\n')
     let cp = getCursorPosition()
     let rows = Math.min(process.stdout.rows - 10, options.length)
@@ -29,18 +33,15 @@ function openVerticalMenu(options, done) {
         options,
         height: rows,
         selection: options.length - 1,
-        decorate(o, sel) {
-            if (sel) return inverse(o)
-            return highlightCommandMemo(o)
-        },
+        decorate,
         done
     })
 }
 
-function showHistoryMenu(line, options) {
+function showHistoryMenu(line, options, decorate) {
     let menuDone = () => {}
     hideCursor()
-    let menuKeyHandler = openVerticalMenu(options, sel => {
+    let menuKeyHandler = openVerticalMenu(options, decorate, sel => {
         showCursor()
         process.stdout.clearScreenDown()
         if (sel >= 0)
@@ -61,20 +62,44 @@ function showHistoryMenu(line, options) {
 	}
 }
 
-function historyMenu(line) {
-    let options = history.matchBackwards(line.left)
+function optionsMenu(line, options, decorate) {
     if (options.length == 0)
         return line
     if (options.length == 1)
         return { left: options[0], right: '' }
     options = options.reverse()
-    //TODO menu pgup, pgdown
-    return showHistoryMenu(line, options)
+    return showHistoryMenu(line, options, decorate)
+}
+
+function historyMenu(line) {
+    let options = history.matchBackwards(line.left)
+    let decorateCommand =
+        (o, sel) => sel ? inverse(o) : highlightCommandMemo(o)
+    return optionsMenu(line, options, decorateCommand)
+}
+
+
+function dirHistoryMenu(line) {
+    let options = dirHistory.matchBackwards(line.left)
+    let decorateDir = (o, sel) => sel ? inverse(o + '/') : white(o + '/')
+    line = optionsMenu(line, options, decorateDir)
+    if (line.isAsync) {
+        let gl = line.getLine
+        line.getLine = () => {
+            let l = gl()
+            if (l.left + l.right == '') return l
+            return { left: 'cd ' + l.left, right: l.right }
+        }
+    }
+    return line
 }
 
 
 function start() {
-    bindKey('pageup', historyMenu, 'Show menu with matching history lines')
+    bindKey('pageup', historyMenu,
+        'Show menu with matching history lines')
+    bindKey('pagedown', dirHistoryMenu,
+        'Show menu with matching directory history')
 }
 
 

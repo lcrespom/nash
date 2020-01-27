@@ -1,7 +1,9 @@
+const os = require('os')
 const pty = require('node-pty')
 
 const { nashShutdown } = require('./startup')
-const { commonInitialChars } = require('./utils')
+const { commonInitialChars, fromHomedir } = require('./utils')
+const { dirHistory } = require('./history')
 
 const NASH_MARK = '\x1E\x1E>'
 let ptyProcess = null
@@ -102,6 +104,9 @@ function captureStatus(data) {
 		let ustatus = parseUserStatus()
 		if (process.cwd() != ustatus.cwd)
 			process.chdir(ustatus.cwd)
+		ustatus.cwd = fromHomedir(ustatus.cwd, os.homedir())
+		if (dirHistory.peek() != ustatus.cwd)
+			dirHistory.push(ustatus.cwd)
 		promptCB(ustatus)
 		state = TermState.waitingCommand
 	}

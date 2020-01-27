@@ -1,6 +1,6 @@
 const os = require('os')
 
-const { removeAnsiColorCodes } = require('./utils')
+const { removeAnsiColorCodes, fromHomedir } = require('./utils')
 
 
 let cursorX = 0
@@ -39,10 +39,7 @@ function put(str) {
 function getPromptInfo(userStatus) {
 	lastUserStatus = userStatus
 	// Working directory
-	let cwd = userStatus.cwd || process.cwd()
-	let homedir = os.homedir()
-	if (cwd.startsWith(homedir))
-		cwd = '~' + cwd.substr(homedir.length)
+	let cwd = userStatus.cwd || fromHomedir(process.cwd(), os.homedir())
 	// Username
 	let username = userStatus.username || os.userInfo().username
 	// Host name (full and local)

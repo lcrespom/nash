@@ -82,12 +82,11 @@
     - [x] Fancy git status stripe in agnoster-prompt.js
     - [x] Git status stripe in default prompt
 - [x] History menu
-- [ ] Directory navigation (**next**)
+- [ ] Directory navigation
     - [x] 'cd ' + tab
     - [x] tab on empty line
-    - [ ] shift-up => cd ..
-    - [ ] shift-down => dir history back
-    - [ ] pagedown => dir history menu
+    - [x] pagedown => dir history menu
+    - [ ] shift-up/down => cd .. / dir history back
 - [ ] Mouse support for all menus (keypress module supports it)
 
 ## Maximize customization

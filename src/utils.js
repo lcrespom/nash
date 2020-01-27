@@ -87,6 +87,19 @@ function cutLastChars(str, numch) {
 }
 
 /**
+ * If an absolute path is inside the user's home directory, shortens
+ * the path by replacing the home directory with '~'
+ * @param {string} cwd the absolute path
+ * @param {string} homedir the user's home directory
+ */
+function fromHomedir(cwd, homedir) {
+	if (cwd.startsWith(homedir))
+		cwd = '~' + cwd.substr(homedir.length)
+	return cwd
+}
+
+
+/**
  * Creates a cache for the results of a given function
  * @param {Function} func the function to memoize
  * @returns a new function that gets values from the cache when available
@@ -161,6 +174,7 @@ module.exports = {
 	substrWithColors,
     commonInitialChars,
 	cutLastChars,
+	fromHomedir,
 	memoize,
 	getProp,
 	setProp,
