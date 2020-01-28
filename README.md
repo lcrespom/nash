@@ -40,8 +40,9 @@ Check the [ToDo](TODO.md) for a list of features under development and planned f
 
 
 ## Installation
-The [releases](/lcrespom/nash/releases) page contains binary packages for Linux and MacOS. You can download the appropriate
-`nash-[version]-[platform].tar.gz` file, then unpack it into a directory of your choice. For example:
+The [releases](https://github.com/lcrespom/nash/releases) page contains binary packages for Linux and MacOS.
+You can download the appropriate `nash-[version]-[platform].tar.gz` file, then unpack it into a directory of your
+choice. For example:
 ```bash
 $ mkdir -p ~/bin/nash
 $ cd ~/bin/nash
