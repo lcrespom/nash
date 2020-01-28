@@ -205,7 +205,7 @@ function showTableMenu(words, done, interactive = true) {
     let { rows, columns, columnWidth } = computeTableLayout(items)
     if (interactive && rows > process.stdout.rows - 5)
         return null
-    if (interactive && cp.y + rows >= process.stdout.rows)
+    if (interactive && cp.y + rows + 1 >= process.stdout.rows)
         setCursorPosition({x: cp.x, y: process.stdout.rows - rows - 2})
     if (interactive)
         hideCursor()

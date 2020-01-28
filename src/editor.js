@@ -1,7 +1,10 @@
 const {
-	putPrompt, putCursor, hideCursor, showCursor, promptOwnsInput
+	putCursor, getCursorPosition, lineEndPosition,
+	hideCursor, showCursor, 
+	putPrompt, promptOwnsInput
 } = require('./prompt')
 const { getKeyBindings, setLastBinding } = require('./key-bindings')
+const { removeAnsiColorCodes } = require('./utils')
 
 
 let line = { left: '', right: '' }
@@ -56,6 +59,10 @@ function writeLine(newLine) {
 	process.stdout.write(fullLine +  ' ')
 	process.stdout.clearLine(1)
 	putCursor(newLine.left.length)
+	let { h } = lineEndPosition(removeAnsiColorCodes(fullLine).length)
+	let cursor = getCursorPosition()
+	if (h > 0 && cursor.y + h >= process.stdout.rows)
+		cursor.y = process.stdout.rows - h - 1
 	showCursor()
 	line = {
 		left: newLine.left,

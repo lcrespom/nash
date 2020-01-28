@@ -62,7 +62,7 @@
 - [x] Ctrl-space accepts suggestion anywhere in the line
 - [ ] Fix bugs
     - [ ] If suggestion text overflows to next line, it is not cleared
-    - [ ] When at last line of terminal, if suggestion overflows, cursor
+    - [x] When at last line of terminal, if suggestion overflows, cursor
         position is not recovered.
 
 ## Configuration

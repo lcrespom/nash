@@ -113,11 +113,16 @@ function putPrompt(userStatus = lastUserStatus) {
 	return new Promise(resolve => cursorCB = resolve)
 }
 
-function putCursor(len) {
+function lineEndPosition(len) {
 	let ll = cursor.x + len
 	let cols = process.stdout.columns
 	let x = ll % cols
 	let h = Math.floor(ll / cols)
+	return { x, h }
+}
+
+function putCursor(len) {
+	let { x, h } = lineEndPosition(len)
 	process.stdout.cursorTo(x, cursor.y + h)
 }
 
@@ -135,6 +140,7 @@ module.exports = {
 	hideCursor,
 	showCursor,
 	putCursor,
+	lineEndPosition,
 	promptOwnsInput,
 	getCursorPosition,
 	setCursorPosition,
