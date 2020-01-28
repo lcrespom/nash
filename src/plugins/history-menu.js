@@ -38,7 +38,7 @@ function openVerticalMenu(items, decorate, done) {
     })
 }
 
-function showHistoryMenu(line, items, decorate, updateLine) {
+function showHistoryMenu(line, items, { decorate, updateLine = l => l }) {
     let menuDone = () => {}
     let selection
     hideCursor()
@@ -64,19 +64,19 @@ function showHistoryMenu(line, items, decorate, updateLine) {
 	}
 }
 
-function historyMenu(line, items, decorate, updateLine = l => l) {
+function historyMenu(line, items, options) {
     if (items.length == 0)
         return line
     if (items.length == 1)
         return updateLine({ left: items[0], right: '' })
-    return showHistoryMenu(line, items, decorate, updateLine)
+    return showHistoryMenu(line, items, options)
 }
 
 function cmdHistoryMenu(line) {
     let items = history.matchLines(line.left)
-    let decorateCommand =
+    let decorate =
         (o, sel) => sel ? inverse(o) : highlightCommandMemo(o)
-    return historyMenu(line, items, decorateCommand)
+    return historyMenu(line, items, { decorate })
 }
 
 
@@ -87,12 +87,12 @@ function dirHistoryMenu(line) {
     items = removeRepeatedItems(items.reverse()).reverse()
     //Remove current directory
     items.splice(-1, 1)
-    let decorateDir = (o, sel) => {
+    let decorate = (o, sel) => {
         if (!o.endsWith('/')) o += '/'
         return sel ? inverse(o) : white(o)
     }
-    let prependCD = l => ({ left: 'cd ' + l.left, right: l.right })
-    return historyMenu(line, items, decorateDir, prependCD)
+    let updateLine = l => ({ left: 'cd ' + l.left, right: l.right })
+    return historyMenu(line, items, { decorate, updateLine })
 }
 
 
