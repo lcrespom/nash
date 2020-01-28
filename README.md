@@ -5,8 +5,9 @@ Nash is implemented in JavaScript and focuses on:
 - Providing great UX and productivity to the command-line.
 - Being highly extensible and customizable.
 - Bringing shell power to JavaScript developers. Shells such as `zsh` or `fish` are greatly configurable,
-	but customizing them requires writing shell script code, which (for JS developers) is not as user
-	friendly as JavaScript.
+	but customizing them requires writing shell script code, which (for JS developers) is not as user-friendly
+	as JavaScript. Extensions are written much faster in JS, and are easier to understand by the
+	common developer.
 
 ![alt text](nash.png)
 
@@ -35,7 +36,7 @@ Pressing F1 at any time displays a list of all keyboard shoutcuts and their corr
 	- Completion helpers for known commands (git, docker, npm, etc.) are configured via JSON settings.
 - An extensible plugin system which facilitates the addition of features.
 
-Check the [ToDo](TODO.md) for a list of features under development.
+Check the [ToDo](TODO.md) for a list of features under development and planned for the future. Suggestions are welcome.
 
 
 ## Installation

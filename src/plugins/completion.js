@@ -200,16 +200,16 @@ function replaceWordWithMatch(left, cutLen, match) {
 
 function showTableMenu(words, done, interactive = true) {
     process.stdout.write('\n')
-    let options = words.map(basename).map(colorizePath)
+    let items = words.map(basename).map(colorizePath)
     let cp = getCursorPosition()
-    let { rows, columns, columnWidth } = computeTableLayout(options)
+    let { rows, columns, columnWidth } = computeTableLayout(items)
     if (interactive && rows > process.stdout.rows - 5)
         return null
     if (interactive && cp.y + rows >= process.stdout.rows)
         setCursorPosition({x: cp.x, y: process.stdout.rows - rows - 2})
     if (interactive)
         hideCursor()
-    return tableMenu({ options, columns, columnWidth, done })
+    return tableMenu({ items, columns, columnWidth, done })
 }
 
 function showAllWords(line, word, words) {

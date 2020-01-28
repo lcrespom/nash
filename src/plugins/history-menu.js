@@ -23,30 +23,30 @@ function white(str) {
     return '\x1b[97m' + str + '\x1b[0m'
 }
 
-function openVerticalMenu(options, decorate, done) {
+function openVerticalMenu(items, decorate, done) {
     process.stdout.write('\n')
     let cp = getCursorPosition()
-    let rows = Math.min(process.stdout.rows - 10, options.length)
+    let rows = Math.min(process.stdout.rows - 10, items.length)
     if (cp.y + rows >= process.stdout.rows)
         setCursorPosition({x: cp.x, y: process.stdout.rows - rows - 2})
     return verticalMenu({
-        options,
+        items,
         height: rows,
-        selection: options.length - 1,
+        selection: items.length - 1,
         decorate,
         done
     })
 }
 
-function showHistoryMenu(line, options, decorate, updateLine) {
+function showHistoryMenu(line, items, decorate, updateLine) {
     let menuDone = () => {}
     let selection
     hideCursor()
-    let menuKeyHandler = openVerticalMenu(options, decorate, sel => {
+    let menuKeyHandler = openVerticalMenu(items, decorate, sel => {
         showCursor()
         process.stdout.clearScreenDown()
         if (sel >= 0)
-            line = { left: options[sel], right: '' }
+            line = { left: items[sel], right: '' }
         selection = sel
         menuDone()
     })
@@ -64,41 +64,41 @@ function showHistoryMenu(line, options, decorate, updateLine) {
 	}
 }
 
-function optionsMenu(line, options, decorate, updateLine = l => l) {
-    if (options.length == 0)
+function historyMenu(line, items, decorate, updateLine = l => l) {
+    if (items.length == 0)
         return line
-    if (options.length == 1)
-        return updateLine({ left: options[0], right: '' })
-    return showHistoryMenu(line, options, decorate, updateLine)
+    if (items.length == 1)
+        return updateLine({ left: items[0], right: '' })
+    return showHistoryMenu(line, items, decorate, updateLine)
 }
 
-function historyMenu(line) {
-    let options = history.matchLines(line.left)
+function cmdHistoryMenu(line) {
+    let items = history.matchLines(line.left)
     let decorateCommand =
         (o, sel) => sel ? inverse(o) : highlightCommandMemo(o)
-    return optionsMenu(line, options, decorateCommand)
+    return historyMenu(line, items, decorateCommand)
 }
 
 
 function dirHistoryMenu(line) {
     let includes = (i, t) => i.includes(t)
-    let options = dirHistory.matchLines(line.left, includes)
-    // Ensure options are chronological and unique
-    options = removeRepeatedItems(options.reverse()).reverse()
+    let items = dirHistory.matchLines(line.left, includes)
+    // Ensure items are chronological and unique
+    items = removeRepeatedItems(items.reverse()).reverse()
     //Remove current directory
-    options.splice(-1, 1)
+    items.splice(-1, 1)
     let decorateDir = (o, sel) => {
         if (!o.endsWith('/')) o += '/'
         return sel ? inverse(o) : white(o)
     }
     let prependCD = l => ({ left: 'cd ' + l.left, right: l.right })
-    return optionsMenu(line, options, decorateDir, prependCD)
+    return historyMenu(line, items, decorateDir, prependCD)
 }
 
 
 function start() {
-    bindKey('pageup', historyMenu,
-        'Show menu with matching history lines')
+    bindKey('pageup', cmdHistoryMenu,
+        'Show menu with matching command history lines')
     bindKey('pagedown', dirHistoryMenu,
         'Show menu with matching directory history')
 }

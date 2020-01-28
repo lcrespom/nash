@@ -46,7 +46,7 @@
 - [x] Advanced (navigate over list)
     - [x] Custom completion function for "cd" (in `examples`), displaying only
         directories
-    - [ ] Improve menu library API by renaming `options` to `items` (**next**)
+    - [x] Improve menu library API by renaming `options` to `items`
     - [ ] Optional background color for menus (table and list)
     - [ ] Contemplate rest of word at right of the cursor
     - [ ] Let the user type and update menu accordingly (implement inside widget)
