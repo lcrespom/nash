@@ -19,8 +19,8 @@ let monokaiHL = {
 	commandError: '#f92672',  // Fuchsia monokai
 	assignment: 'magentaBright',
 	parameter: '#66d9ef',  // Cyan monokai
-	environment: '#f0f070', // bright yellow
-	//environment: '#e6db74', // VSCode monokai yellow (too much downsampling)
+	//environment: '#f0f070', // bright yellow
+	environment: '#e6db74', // VSCode monokai yellow
 	option: '#ae81ff', // Purple monkai
 	quote: '#fd971f',  // Orange monokai
 	comment: '#666666' // Dark grey
