@@ -263,9 +263,25 @@ function completeWords(line, word, words) {
     return tooManyWords(line, words)
 }
 
+function completeCD() {
+    const noEmptyCD =
+        l => l.left + l.right == 'cd ' ? { left: '', right: ''} : l
+    let line = completeWord({ left: 'cd ', right: '' })
+    if (line.isAsync) {
+        let gl = line.getLine
+        line.getLine = () => {
+            return noEmptyCD(gl())
+        }
+        return line
+    }
+    else {
+        return noEmptyCD(line)
+    }
+}
+
 function completeWord(line) {
-    if (line.left.length == 0)
-        return completeWord({ left: 'cd ', right: '' })
+    if (line.left + line.right == '')
+        return completeCD()
     let [word, type] = getWordAndType(line)
     words = getCompletions(word, type, line)
     if (words.length == 0) {
