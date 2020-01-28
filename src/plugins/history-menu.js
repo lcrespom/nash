@@ -69,12 +69,11 @@ function optionsMenu(line, options, decorate, updateLine = l => l) {
         return line
     if (options.length == 1)
         return updateLine({ left: options[0], right: '' })
-    options = options.reverse()
     return showHistoryMenu(line, options, decorate, updateLine)
 }
 
 function historyMenu(line) {
-    let options = history.matchBackwards(line.left)
+    let options = history.matchLines(line.left)
     let decorateCommand =
         (o, sel) => sel ? inverse(o) : highlightCommandMemo(o)
     return optionsMenu(line, options, decorateCommand)
@@ -83,10 +82,11 @@ function historyMenu(line) {
 
 function dirHistoryMenu(line) {
     let includes = (i, t) => i.includes(t)
-    let options = dirHistory.matchBackwards(line.left, includes)
-    options = removeRepeatedItems(options)
-    if (options.length > 0)
-        options.splice(0, 1)  // Current directory is not required
+    let options = dirHistory.matchLines(line.left, includes)
+    // Ensure options are chronological and unique
+    options = removeRepeatedItems(options.reverse()).reverse()
+    //Remove current directory
+    options.splice(-1, 1)
     let decorateDir = (o, sel) => {
         if (!o.endsWith('/')) o += '/'
         return sel ? inverse(o) : white(o)

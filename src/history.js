@@ -66,6 +66,16 @@ class History {
         return result
     }
 
+    matchLines(text, matcher) {
+        let startsWith = (i, t) => i.startsWith(t)
+        matcher = matcher || startsWith
+        let result = []
+        for (let line of this.history)
+            if (matcher(line, text))
+                result.push(line)
+        return result
+    }
+
     toEnd() {
         this.index = this.history.length
     }
