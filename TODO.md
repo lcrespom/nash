@@ -25,7 +25,6 @@
 ## Line editing
 - [ ] Catch exceptions in bindings to avoid breaking the shell
 - [ ] Refactor prompt.js and editor.js async handling code => use more promises
-- [ ] Colorize help (F1) table output (**next**)
 
 ## History navigation
 - [x] Basic

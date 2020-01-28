@@ -4,6 +4,8 @@ const {
 const { getCursorPosition } = require('../prompt')
 const runner = require('../runner')
 const { history } = require('../history')
+const { getOption } = require('../startup')
+const { colorize } = require('../colors')
 
 
 //--------------- Line movement and deletion ---------------
@@ -203,10 +205,10 @@ function discardLine() {
 
 //--------------- Interactive commands ---------------
 
-function describeKeyBinding(kname, binding) {
-    return kname.padEnd(15) + '  ' +
-        binding.code.name.padEnd(20) + '  ' +
-        binding.desc
+function describeKeyBinding(kname, binding, cols) {
+    return colorize(cols.quote, kname.padEnd(15) + '  ') +
+		colorize(cols.program, binding.code.name.padEnd(20) + '  ') +
+        colorize(cols.parameter, binding.desc)
 }
 
 function describeNextKey(line) {
@@ -235,10 +237,11 @@ function describeNextKey(line) {
 }
 
 function listKeys(line) {
+	let hlColors = getOption('colors.syntaxHighlight')
     for (let kname of getBoundKeys()) {
 		let bnds = getKeyBindings(kname)
 		for (let b of bnds)
-	        process.stdout.write('\n' + describeKeyBinding(kname, b))
+	        process.stdout.write('\n' + describeKeyBinding(kname, b, hlColors))
     }
     process.stdout.write('\n')
     return {
