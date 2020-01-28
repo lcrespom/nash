@@ -21,6 +21,7 @@ class History {
     }
 
     push(cmd) {
+        if (this.peek() == cmd) return  // Skip duplicates
         this.history.push(cmd)
         if (this.history.length > this.maxSize)
             this.history.splice(0, 1)
@@ -85,7 +86,7 @@ class History {
     }
 
     peek() {
-        return this.history[this.length - 1]
+        return this.history[this.history.length - 1]
     }
 
     _openForAppend() {

@@ -105,8 +105,7 @@ function captureStatus(data) {
 		if (process.cwd() != ustatus.cwd)
 			process.chdir(ustatus.cwd)
 		ustatus.cwd = fromHomedir(ustatus.cwd, os.homedir())
-		if (dirHistory.peek() != ustatus.cwd)
-			dirHistory.push(ustatus.cwd)
+		dirHistory.push(ustatus.cwd)
 		promptCB(ustatus)
 		state = TermState.waitingCommand
 	}

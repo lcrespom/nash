@@ -81,6 +81,7 @@
     - [x] Fancy git status stripe in agnoster-prompt.js
     - [x] Git status stripe in default prompt
 - [x] History menu
+    - [ ] Delete key removes line from history
 - [x] Directory navigation
     - [x] 'cd ' + tab
     - [x] tab on empty line
