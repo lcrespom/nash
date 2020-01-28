@@ -9,7 +9,7 @@
     - [ ] Describe all key bindings
     - [ ] Tab completion
     - [ ] History
-    - [ ] Directory navigation (**next** => in main features section)
+    - [ ] Directory navigation
     - [ ] Check that all plugins are properly documented
     - [ ] Inline JavaScript
 - [ ] Customization / Extension API
@@ -17,28 +17,27 @@
 
 ## Installation
 - [ ] Provide and document an installation method that does not require
-    cloning the repository.
+    cloning the repository (i.e., `npm install -g` or unzip to `~/.nash`).
+- [ ] Provide a fully self-contained installation that does not require
+    node.js to be previously installed.
+- [ ] Document how to uninstall it.
 
 ## Line editing
-- [x] Handle multiple independent bindings for the same key combination
-- [x] Add more bash shortcuts in default-bindings
-    (see https://ss64.com/bash/syntax-keyboard.html)
-    - [x] Ctrl-y recovers deleted line
 - [ ] Catch exceptions in bindings to avoid breaking the shell
 - [ ] Refactor prompt.js and editor.js async handling code => use more promises
 
 ## History navigation
 - [x] Basic
-    - [x] Merge histories in parallel terminal sessions (append one line at a time)
-- [x] Context sensitive
+- [x] Context sensitive (show entries that start with the current line)
 - [x] Menu (pageup)
     - [x] Cut lines longer than process.stdout.columns
-    - [ ] Interactive
+    - [ ] Interactive: let the user type and update the menu accordingly
 
 ## Prompt plugin
 - [x] Config options to personalize what to show on prompt
 - [x] Optional agnoster-style prompt
     - [ ] Use config options from default prompt plugin
+    - [ ] Move reusable code from `default-prompt.js` to `prompt.js`
 - [x] Document agnoster prompt & place in examples dir
 
 ## Completion

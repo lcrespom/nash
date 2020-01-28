@@ -18,7 +18,8 @@ function start() {
 
     // Get the key handler identified by 'listKeys' and re-assign it to 'alt-h'
     let help = getKeyBindingByFunction('listKeys')
-    bindKey('meta-h', help.code, help.desc)
+    if (help)
+        bindKey('meta-h', help.code, help.desc)
 }
 
 

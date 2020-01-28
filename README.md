@@ -17,6 +17,8 @@ Pressing F1 at any time displays a list of all keyboard shoutcuts and their corr
 - Powerful command history navigation: the `up` and `down` keys navigate the history, showing only the entries
 	that start with the current line. The `page up` key displays a menu with all history lines that
 	start with the current line.
+- Directory history navigation: the `page down` key displays a menu with the most recently visited directories,
+	showing only the entries that contain the text in the current line.
 - Interactive tab-completion: pressing tab completes a file name, but if multiple matching files are
 	available, a menu is displayed, letting the user navigate and select the file name.
 - Syntax highlight, clearly coloring the different parts of a command, and warning of potential errors.
@@ -25,9 +27,12 @@ Pressing F1 at any time displays a list of all keyboard shoutcuts and their corr
 - Configurable color palette. Colors can be configured by name (e.g. red, gren, etc.) or by RGB hex as
 	in CSS (e.g. #a6e22e).
 - Configuration and extensions are implemented as plain JavaScript code, centered around the
-	`~/.nash/nashrc.js` file, which is loaded during startup. For instance, color settings can be
-	configured via JSON. Example configuration and extensions are provided in the `~/.nash` directory, which is populated when `nash` is started for the first time.
-- Extensible plugin system with powerful default implementations.
+	`~/.nash/nashrc.js` file, which is loaded during startup. Example configuration and extensions are
+	provided in the `~/.nash` directory, which is populated when `nash` is started for the first time.
+	For instance:
+		- Color settings can be configured via JSON.
+		- Keyboard shortcuts can be reassigned using the `bindKey` API.
+- The extensible plugin system facilitates the addition of features.
 
 Check the [ToDo](TODO.md) for a list of features under development.
 
