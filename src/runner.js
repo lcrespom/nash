@@ -1,8 +1,9 @@
 const os = require('os')
 const pty = require('node-pty')
+const { execFileSync } = require('child_process')
 
 const { nashShutdown } = require('./startup')
-const { commonInitialChars, fromHomedir } = require('./utils')
+const { commonInitialChars, fromHomedir, memoize } = require('./utils')
 const { dirHistory } = require('./history')
 
 const NASH_MARK = '\x1E\x1E>'
@@ -165,10 +166,22 @@ function write(txt) {
 	ptyProcess.write(txt)
 }
 
+function whichSlow(command) {
+	try {
+		return execFileSync('/usr/bin/which', [ command ]).toString().trim()
+	}
+	catch (e) {
+		return null
+	}
+}
+
+let which = memoize(whichSlow)
 
 //-------------------- Running --------------------
 
 function runCommand(line, cb = () => {}) {
+	// Clear which cache: after a command, path and commands may have changed
+	//which = memoize(whichSlow)
 	theCommand = expandJS(line.trim())
 	promptCB = cb
 	state = theCommand.length > 0
@@ -180,6 +193,7 @@ function runCommand(line, cb = () => {}) {
 
 module.exports = {
 	runCommand,
+	which,
 	write,
 	startShell
 }

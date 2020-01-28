@@ -108,7 +108,7 @@ function memoize(func) {
 	var cache = {}
 	return function () {
 		var key = JSON.stringify(arguments)
-		if (cache[key]) {
+		if (cache[key] !== undefined) {
 			return cache[key]
 		}
 		else {

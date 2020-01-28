@@ -29,7 +29,8 @@ Pressing F1 at any time displays a list of all keyboard shoutcuts and their corr
 - Configuration and extensions are implemented as plain JavaScript code, centered around the `~/.nash/nashrc.js` file,
 	which is loaded during startup. Example configuration and extensions are provided in the `~/.nash` directory,
 	which is populated when `nash` is started for the first time. For instance:
-	- Color settings are configured via JSON settings.
+	- Color settings are configured via JSON settings - you can make your terminal use the same color palette
+		as your code editor.
 	- Keyboard shortcuts are reassigned using the `bindKey` API.
 	- Completion helpers for known commands (git, docker, npm, etc.) are configured via JSON settings.
 - An extensible plugin system which facilitates the addition of features.

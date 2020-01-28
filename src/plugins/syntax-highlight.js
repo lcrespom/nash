@@ -1,11 +1,10 @@
-const { execFileSync } = require('child_process')
-
 const { registerLineDecorator } = require('../editor')
 const {
     NodeType, NodeTypeNames, builtins, parseBash, traverseAST
 } = require('../parser')
 const { getOption, setDefaultOptions } = require('../startup')
 const colors = require('../colors')
+const { which } = require('../runner')
 
 
 function makeHL(type, loc) {
@@ -14,15 +13,6 @@ function makeHL(type, loc) {
         start: loc.start.char,
         end: loc.end.char
     }
-}
-
-function which(command) {
-	try {
-		return execFileSync('/usr/bin/which', [ command ]).toString().trim()
-	}
-	catch (e) {
-		return null
-	}
 }
 
 function getCommandType(cmd) {

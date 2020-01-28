@@ -106,8 +106,12 @@
 - [ ] Get hostname from runner status
 - [ ] Don't do chdir from runner
 - [ ] Get all environment data from bash, e.g. don't use process.cwd
-    (create specific env module)
+    Create specific `env` module with cwd, ls, homedir, username, hostname, which,
+    process.env, etc.
+    - [ ] The `which` command is used on every keystroke - either disable or maximize
+        memoization
+    - [ ] Detect when bash is remote (e.g. env.hostname != os.hostname)
 
 ## Performance
-- [ ] Memoize `which` => new whichMemo instance every time return is pressed (**next**)
+- [x] Memoize `which` => new whichMemo instance every time return is pressed
 - [ ] Benchmark together: parsing + syntax highlight - find bottlenecks, memoize if required
