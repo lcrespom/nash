@@ -52,7 +52,6 @@ function applyBindings(key) {
 function writeLine(newLine) {
 	let fullLine = decorateLine(newLine)
 	hideCursor()	// Hide cursor to avoid glitches
-	process.stdout.write('\x1b[?25l')
 	putCursor(0)
 	process.stdout.write(fullLine +  ' ')
 	process.stdout.clearLine(1)

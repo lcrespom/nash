@@ -1,10 +1,8 @@
 const os = require('os')
 
-const { removeAnsiColorCodes, fromHomedir } = require('./utils')
+const { fromHomedir } = require('./utils')
 
 
-let cursorX = 0
-let cols = 80
 let cursor = null
 let lastUserStatus = {}
 
@@ -97,25 +95,14 @@ function captureCursorPosition() {
 }
 
 function getCursorPosition() {
-	if (cursor) {
-		return cursor
-	}
-	else {
-		return { x: cursorX }
-	}
+	return cursor
 }
 
 function setCursorPosition(newCursor) {
-	if (cursor) {
-		if (newCursor.x !== undefined)
-			cursor.x = newCursor.x
-		if (newCursor.y !== undefined)
-			cursor.y = newCursor.y
-	}
-	else {
-		if (newCursor.x !== undefined)
-			cursorX = newCursor.x
-	}
+	if (newCursor.x !== undefined)
+		cursor.x = newCursor.x
+	if (newCursor.y !== undefined)
+		cursor.y = newCursor.y
 }
 
 function putPrompt(userStatus = lastUserStatus) {
@@ -123,22 +110,15 @@ function putPrompt(userStatus = lastUserStatus) {
 	put(promptStr)
 	cursor = null
     put(HIDE_TEXT + GET_CURSOR_POS)
-    let lastLine = promptStr.split('\n').pop()
-	cursorX = removeAnsiColorCodes(lastLine).length
-	cols = process.stdout.columns
 	return new Promise(resolve => cursorCB = resolve)
 }
 
 function putCursor(len) {
-	if (cursor) {
-		let ll = cursor.x + len
-		let x = ll % cols
-		let y = cursor.y + Math.floor(ll / cols)
-		process.stdout.cursorTo(x, y)
-	}
-	else {
-		process.stdout.cursorTo(cursorX + len)
-	}
+	let ll = cursor.x + len
+	let cols = process.stdout.columns
+	let x = ll % cols
+	let h = Math.floor(ll / cols)
+	process.stdout.cursorTo(x, cursor.y + h)
 }
 
 function setTerminalTitle(title) {

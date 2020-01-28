@@ -96,6 +96,7 @@
 
 ## Compatibility / Portability
 - [ ] GitBash support
+- [ ] Docker instructions for Windows
 - [x] More linux testing
 - [x] Slow/remote terminal
 
