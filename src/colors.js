@@ -1,9 +1,23 @@
-const chalk = require('chalk')
+const chalkModule = require('chalk')
 
 const { ucfirst } = require('./utils')
+const { getOption } = require('./startup')
 
+
+let chalk = null
+
+function getChalk() {
+    if (chalk) return chalk
+    let trueColor = getOption('colors.trueColor')
+    if (trueColor)
+        chalk = new chalkModule.Instance({ level: 3 })
+    else
+        chalk = chalkModule
+    return chalk
+}
 
 function colorize(cname, str) {
+    let chalk = getChalk()
     if (str == '') return str
     let colors = cname.trim().split(' ')
     let colorfunc = chalk

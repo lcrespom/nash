@@ -25,6 +25,7 @@
 ## Line editing
 - [ ] Catch exceptions in bindings to avoid breaking the shell
 - [ ] Refactor prompt.js and editor.js async handling code => use more promises
+- [ ] Colorize help (F1) table output (**next**)
 
 ## History navigation
 - [x] Basic
@@ -44,12 +45,10 @@
 - [x] Basic (tab)
 - [x] Replace ~ with home when globbing
 - [x] Advanced (navigate over list)
-    - [x] Handle lists too long to display in menu
-    - [x] Highlight menu content: (dirs in white, consider other cases)
-    - [x] Properly format and handle paths with blanks
     - [x] Custom completion function for "cd" (in `examples`), displaying only
         directories
-    - [x] Tab on empty prompt triggers "cd " + completion
+    - [ ] Improve menu library API by renaming `options` to `items` (**next**)
+    - [ ] Optional background color for menus (table and list)
     - [ ] Contemplate rest of word at right of the cursor
     - [ ] Let the user type and update menu accordingly (implement inside widget)
     - [ ] Selecting a directory (using space) opens menu with directory contents
@@ -93,6 +92,7 @@
 - [x] Global settings object / API
 - [x] Color palette
 - [x] Rebind/unbind keys
+- [x] Setting to force truecolor on chalk
 
 ## Compatibility / Portability
 - [ ] GitBash support
@@ -106,6 +106,8 @@
 - [ ] Get hostname from runner status
 - [ ] Don't do chdir from runner
 - [ ] Get all environment data from bash, e.g. don't use process.cwd
+    (create specific env module)
 
 ## Performance
+- [ ] Memoize `which` => new whichMemo instance every time return is pressed (**next**)
 - [ ] Benchmark together: parsing + syntax highlight - find bottlenecks, memoize if required

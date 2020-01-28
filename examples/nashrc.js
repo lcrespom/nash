@@ -48,8 +48,12 @@ module.exports = {
 		'./custom-keys'
 	],
 	options: {
-		// Uncoment line below to make syntax highlight use the Monokai palette
-		// colors: { syntaxHighlight: monokaiHL },
+		colors: {
+			// Uncomment line below to make syntax highlight use the Monokai palette
+			// syntaxHighlight: monokaiHL,
+			// Uncomment line below if your terminal supports 16 million colors
+			// trueColor: true
+		},
 		// Command completions for common programs
 		completion: { commands: completionCommands }
 	}
