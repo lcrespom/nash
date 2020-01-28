@@ -2,7 +2,8 @@
   "name": "nash",
   "version": "1.0.0",
   "description": "A command-line editor for bash or compatible shells, aiming to provide great UX and productivity",
-  "main": "nash.js",
+  "main": "src/nash.js",
+  "bin": "src/nash.js",
   "scripts": {
     "test": "jest --watch",
     "start": "node src/nash.js"
@@ -27,5 +28,8 @@
     "keypress": "^0.2.1",
     "node-pty": "^0.9.0",
     "node-terminal-menu": "^2.0.0"
+  },
+  "pkg": {
+    "scripts": "src/plugins/*.js"
   }
 }

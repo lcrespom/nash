@@ -40,7 +40,22 @@ Check the [ToDo](TODO.md) for a list of features under development and planned f
 
 
 ## Installation
-Being still under development, the way to install `nash` is to just clone the repo, then type `npm install`. To open a shell, type `npm start`.
+The [releases](releases) page contains binary packages for Linux and Windows. You can download the appropriate
+`nash-[version]-[platform].tar.gz` file, then unpack it into a directory of your choice. For example:
+```bash
+$ mkdir -p ~/bin/nash
+$ cd ~/bin/nash
+$ tar -xzf ~/Downloads/nash-1.0.0-linux.tar.gz
+```
+Finally, to run nash:
+```bash
+$ ~/bin/nash/nash
+```
+You can of course copy the extracted files somewhere in your `$PATH`. An appropriate place is `/usr/local/bin`. Then
+you can simply launch it by typing `nash`.
+
+Or if you want to use the latest features, just clone the repo and type `npm install`.
+To open a shell, type `npm start`.
 ```
 git clone https://github.com/lcrespom/nash.git
 npm install

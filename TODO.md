@@ -16,11 +16,11 @@
 - [ ] Contribution guide
 
 ## Installation
-- [ ] Provide and document an installation method that does not require
-    cloning the repository (i.e., `npm install -g` or unzip to `~/.nash`).
-- [ ] Provide a fully self-contained installation that does not require
-    node.js to be previously installed.
-- [ ] Document how to uninstall it.
+- [x] Provide and document an installation method that does not require
+    cloning the repository
+- [x] Provide a fully self-contained installation that does not require
+    node.js to be previously installed => see https://github.com/zeit/pkg
+- [ ] Upload the macos distribution to release 1.0.0.
 
 ## Line editing
 - [ ] Catch exceptions in bindings to avoid breaking the shell
@@ -84,6 +84,7 @@
     - [x] 'cd ' + tab
     - [x] tab on empty line
     - [x] pagedown => dir history menu
+    - [ ] Directly run the `cd path` command after selecting it from the list
     - [ ] shift-up/down => cd .. / dir history back
 - [ ] Mouse support for all menus (keypress module supports it)
 
