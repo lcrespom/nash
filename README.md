@@ -26,13 +26,13 @@ Pressing F1 at any time displays a list of all keyboard shoutcuts and their corr
 	is displayed in grey, letting the user immediately complete the command.
 - Configurable color palette. Colors can be configured by name (e.g. red, gren, etc.) or by RGB hex as
 	in CSS (e.g. #a6e22e).
-- Configuration and extensions are implemented as plain JavaScript code, centered around the
-	`~/.nash/nashrc.js` file, which is loaded during startup. Example configuration and extensions are
-	provided in the `~/.nash` directory, which is populated when `nash` is started for the first time.
-	For instance:
-		- Color settings can be configured via JSON.
-		- Keyboard shortcuts can be reassigned using the `bindKey` API.
-- The extensible plugin system facilitates the addition of features.
+- Configuration and extensions are implemented as plain JavaScript code, centered around the `~/.nash/nashrc.js` file,
+	which is loaded during startup. Example configuration and extensions are provided in the `~/.nash` directory,
+	which is populated when `nash` is started for the first time. For instance:
+	- Color settings are configured via JSON settings.
+	- Keyboard shortcuts are reassigned using the `bindKey` API.
+	- Completion helpers for known commands (git, docker, npm, etc.) are configured via JSON settings.
+- An extensible plugin system which facilitates the addition of features.
 
 Check the [ToDo](TODO.md) for a list of features under development.
 
