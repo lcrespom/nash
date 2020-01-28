@@ -68,6 +68,6 @@ There is no direct Windows support, but an Ubuntu terminal can be installed in w
 
 
 ## Related projects
-If you are thinking about using JavaScript to implement your shell scripts, check out (ShellJS)[https://github.com/shelljs/shelljs].
+If you are thinking about using JavaScript to implement your shell scripts, check out [ShellJS](https://github.com/shelljs/shelljs).
 
 If you are looking for a full shell interpreter with good UX, check out [Oh My Zsh](https://github.com/ohmyzsh/ohmyzsh) and [Fish Shell](https://fishshell.com/).
