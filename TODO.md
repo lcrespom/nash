@@ -20,11 +20,13 @@
     cloning the repository
 - [x] Provide a fully self-contained installation that does not require
     node.js to be previously installed => see https://github.com/zeit/pkg
-- [ ] Upload the macos distribution to release 1.0.0.
+- [x] Upload the macos distribution to release 1.0.0.
+- [ ] Create new release with bug fixes to cursor glitches (**next**)
 
 ## Line editing
 - [ ] Catch exceptions in bindings to avoid breaking the shell
-- [ ] Refactor prompt.js and editor.js async handling code => use more promises
+- [ ] Refactor prompt.js and editor.js async handling code
+    => use more promises (**next**)
 
 ## History navigation
 - [x] Basic
@@ -84,7 +86,8 @@
     - [x] 'cd ' + tab
     - [x] tab on empty line
     - [x] pagedown => dir history menu
-    - [ ] Directly run the `cd path` command after selecting it from the list
+    - [ ] Directly run the `cd path` command after selecting it
+        from the list (**next**)
     - [ ] shift-up/down => cd .. / dir history back
 - [ ] Mouse support for all menus (keypress module supports it)
 
