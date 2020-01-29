@@ -20,8 +20,6 @@
     cloning the repository
 - [x] Provide a fully self-contained installation that does not require
     node.js to be previously installed => see https://github.com/zeit/pkg
-- [x] Upload the macos distribution to release 1.0.0.
-- [ ] Create new release with bug fixes to cursor glitches (**next**)
 
 ## Line editing
 - [ ] Catch exceptions in bindings to avoid breaking the shell
