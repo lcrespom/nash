@@ -96,8 +96,8 @@ function dirHistoryMenu(line) {
     let items = dirHistory.matchLines(line.left, includes)
     // Ensure items are chronological and unique
     items = removeRepeatedItems(items.reverse()).reverse()
-    //Remove current directory
-    items.splice(-1, 1)
+    // If no filtering text, remove current directory
+    if (line.left == '') items.splice(-1, 1)
     let decorate = (o, sel) => {
         if (!o.endsWith('/')) o += '/'
         return sel ? inverse(o) : white(o)
