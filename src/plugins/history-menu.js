@@ -47,29 +47,24 @@ function showHistoryMenu(line, items, { decorate, updateLine, runIt }) {
         process.stdout.clearScreenDown()
         if (sel >= 0)
             line = updateLine({ left: items[sel], right: '' })
-        if (runIt) {
-            runCommand(line.left, uStatus => {
-                line = { left: '', right: ''}
+        if (runIt && sel >= 0) {
+            runCommand(line.left, userStatus => {
                 let cp = getCursorPosition()
                 process.stdout.cursorTo(0, cp.y)
                 process.stdout.clearLine(1)
-                menuDone(uStatus)
+                menuDone({ userStatus })
             })
         }
-        else
-            menuDone()
+        else {
+            menuDone({ ...line, showPrompt: false })
+        }
     })
 	return {
-        isAsync: true,
-        showPrompt: runIt,
-		whenDone(done) {
-            menuDone = done
-		},
+        promise: new Promise(resolve => menuDone = resolve),
 		keyListener(key) {
             //TODO handle plain keys, add them to line, update menu
             menuKeyHandler(key.ch, key)
-        },
-        getLine: () => line
+        }
 	}
 }
 

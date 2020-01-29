@@ -46,13 +46,15 @@ function applyBindings(key) {
 	for (let b of bindings) {
 		newLine = b.code(newLine, key)
 		setLastBinding(b.code)
-		if (newLine.isAsync || newLine.showPrompt)
+		if (newLine.promise || newLine.showPrompt)
 			break
 	}
 	return newLine
 }
 
 function writeLine(newLine) {
+	newLine.left = newLine.left || ''
+	newLine.right = newLine.right || ''
 	let fullLine = decorateLine(newLine)
 	hideCursor()	// Hide cursor to avoid glitches
 	putCursor(0)
@@ -72,7 +74,20 @@ function writeLine(newLine) {
 
 function doNothingKeyListener(key) {}
 
-function editorKeyListener(key) {
+async function handlePromise(line) {
+	if (line.left || line.right)
+		writeLine(line)
+	keyListener = line.keyListener || doNothingKeyListener
+	line.promise.then(async (newLine = {}) => {
+		keyListener = editorKeyListener
+		if (newLine.showPrompt !== false)
+			// TODO use runner.env to store all user environment
+			await putPrompt(newLine.userStatus)
+		writeLine(newLine)
+	})
+}
+
+async function editorKeyListener(key) {
 	let newLine
 	if (key.plain) {
 		newLine = {
@@ -84,30 +99,12 @@ function editorKeyListener(key) {
 	}
 	else {
 		newLine = applyBindings(key)
-		if (newLine.isAsync) {
-			if (newLine.left || newLine.right)
-				writeLine(newLine)
-			keyListener = newLine.keyListener || doNothingKeyListener
-			newLine.whenDone(userStatus => {
-				keyListener = editorKeyListener
-				if (newLine.showPrompt !== false) {
-					putPrompt(userStatus).then(_ =>
-						writeLine(newLine.getLine
-							? newLine.getLine()
-							: { left: '', right: '' }
-						)
-					)
-				}
-				else if (newLine.getLine) {
-					writeLine(newLine.getLine())
-				}
-			})
-		}
+		if (newLine.promise)
+			return handlePromise(newLine)
 		else {
 			if (newLine.showPrompt === true)
-				putPrompt().then(_ => writeLine(newLine))
-			else
-				writeLine(newLine)
+				await putPrompt()
+			writeLine(newLine)
 		}
 	}
 }

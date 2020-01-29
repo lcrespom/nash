@@ -14,16 +14,22 @@ let lastBinding = null
  * `code` parameter is invoked, it receives an object parameter with the
  * current editor line, split in the `left` and `right` properties with the
  * cursor in the middle.
- * The binding function can either be synchronous or asynchronous.
+ * 
+ * The binding function can either be synchronous or asynchronous:
  *
  * If synchronous, it must return an object with a `left` and `right` string
- * properties, which will be used to update the editor line.
+ * properties, which will be used to update the editor line. The prompt is
+ * not redisplayed for synchronous functions, unless the returned object
+ * also contains the `showPrompt` property set to `true`.
  *
  * If asynchronous, it must return an object with the following properties:
- * - isAsync: set to true to indicate that the function is asynchronous
- * - whenDone: a function that the editor will invoke passing a callback
- *   function, which should be invoked when the asynchronous function
- *   has finished.
+ * - promise: a promise that will resolve when the bound function has
+ * 	 finished running. The resolved object will contain the new line `left`
+ *   and `right` properties. The prompt will be redisplayed upon the promise
+ *   completion, unless the resolved line object also contains the `showPrompt`
+ *   property set to `false`.
+ * - keyListener: an optional key listener function that will be invoked for
+ *   each key pressed until the promise is resolved.
  */
 function bindKey(knames, code, desc) {
 	if (!Array.isArray(knames))

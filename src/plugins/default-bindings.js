@@ -174,17 +174,16 @@ function downLineOrHistory(line) {
 //--------------- Keys that break the editing process ---------------
 
 function acceptLine(line) {
+	let promise = new Promise(resolve => {
+		let cmd = line.left + line.right
+		if (cmd.trim().length > 0)
+			history.push(cmd)
+		runner.runCommand(cmd, userStatus =>
+			resolve({ userStatus, decorateHint: 'no suggestions' })
+		)
+	})
 	return {
-		isAsync: true,
-		left: line.left,
-		right: line.right,
-		decorateHint: 'no suggestions',
-		whenDone(done) {
-			let cmd = line.left + line.right
-			if (cmd.trim().length > 0)
-				history.push(cmd)
-			runner.runCommand(cmd, done)
-		},
+		promise,
 		keyListener(key) {
 			runner.write(key.ch || key.sequence)
 		}
@@ -216,17 +215,16 @@ function describeNextKey(line) {
 	if (line.left.length + line.right.length > 0) return line
 	process.stdout.write('\nType a key: ')
 	return {
-		isAsync: true,
-		whenDone(done) {
-			commandDone = done
-		},
+		promise: new Promise(resolve => commandDone = resolve),
 		keyListener(key) {
 			process.stdout.write(key.name ? key.name : key.ch)
             let bnds = getKeyBindings(key.name)
             if (bnds) {
-				for (let bnd of bnds)
-					process.stdout.write(
-    	                '\r' + describeKeyBinding(key.name, bnd) + '\n')
+				let hlColors = getOption('colors.syntaxHighlight')
+				for (let bnd of bnds) {
+					let desc = describeKeyBinding(key.name, bnd, hlColors)
+					process.stdout.write('\r' + desc + '\n')
+				}
 			}
 			else {
 				process.stdout.write('\n')

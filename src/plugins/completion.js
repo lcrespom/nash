@@ -219,21 +219,16 @@ function showAllWords(line, word, words) {
         process.stdout.clearScreenDown()
         if (sel >= 0)
             line.left = replaceWordWithMatch(line.left, word.length, words[sel])
-        menuDone()
+        menuDone({...line, showPrompt: false })
     })
     if (!menuKeyHandler)
         return null     // Too many items to show interactive menu
 	return {
-        isAsync: true,
-        showPrompt: false,
-		whenDone(done) {
-            menuDone = done
-		},
+        promise: new Promise(resolve => menuDone = resolve),
 		keyListener(key) {
             //TODO handle plain keys, add them to line, update menu
             menuKeyHandler(key.ch, key)
-        },
-        getLine: () => line
+        }
 	}
 }
 
@@ -241,18 +236,13 @@ function tooManyWords(line, words) {
     process.stdout.write(`Do you wish to see all ${words.length} matches? `)
     let yesNoDone = () => {}
     return {
-        isAsync: true,
-        showPrompt: true,
-        whenDone(done) {
-            yesNoDone = done
-        },
+        promise: new Promise(resolve => yesNoDone = resolve),
         keyListener(key) {
             if (key.ch == 'y' || key.ch == 'Y')
                 showTableMenu(words, null, false)
             process.stdout.write('\n')
-            yesNoDone()
-        },
-        getLine: () => line
+            yesNoDone(line)
+        }
     }
 }
 
@@ -264,14 +254,14 @@ function completeWords(line, word, words) {
 }
 
 function completeCD() {
-    const noEmptyCD =
-        l => l.left + l.right == 'cd ' ? { left: '', right: ''} : l
+    function noEmptyCD(l) {
+        if (l.left + l.right == 'cd ')
+            return { left: '', right: '', showPrompt: false }
+        return l
+    }
     let line = completeWord({ left: 'cd ', right: '' })
-    if (line.isAsync) {
-        let gl = line.getLine
-        line.getLine = () => {
-            return noEmptyCD(gl())
-        }
+    if (line.promise) {
+        line.promise = line.promise.then(l => noEmptyCD(l))
         return line
     }
     else {

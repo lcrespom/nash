@@ -25,8 +25,7 @@
 
 ## Line editing
 - [ ] Catch exceptions in bindings to avoid breaking the shell
-- [ ] Refactor prompt.js and editor.js async handling code
-    => use more promises (**next**)
+- [*] Refactor editor.js async handling code, make kb bindings use promises
 
 ## History navigation
 - [x] Basic
