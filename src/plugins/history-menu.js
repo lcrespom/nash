@@ -39,8 +39,7 @@ function openVerticalMenu(items, decorate, done) {
     })
 }
 
-function showHistoryMenu(line, items,
-    { decorate, updateLine = l => l, runIt = false }) {
+function showHistoryMenu(line, items, { decorate, updateLine, runIt }) {
     let menuDone = () => {}
     hideCursor()
     let menuKeyHandler = openVerticalMenu(items, decorate, sel => {
@@ -49,9 +48,8 @@ function showHistoryMenu(line, items,
         if (sel >= 0)
             line = updateLine({ left: items[sel], right: '' })
         if (runIt) {
-            let cmd = line.left
-            line = { left: '', right: ''}
-            runCommand(cmd, uStatus => {
+            runCommand(line.left, uStatus => {
+                line = { left: '', right: ''}
                 let cp = getCursorPosition()
                 process.stdout.cursorTo(0, cp.y)
                 process.stdout.clearLine(1)
@@ -75,12 +73,14 @@ function showHistoryMenu(line, items,
 	}
 }
 
-function historyMenu(line, items, options) {
+function historyMenu(line, items,
+        { decorate, updateLine = l => l, runIt = false }) {
     if (items.length == 0)
         return line
     if (items.length == 1)
         return updateLine({ left: items[0], right: '' })
-    return showHistoryMenu(line, items, options)
+    return showHistoryMenu(line, items,
+        { decorate, updateLine, runIt })
 }
 
 function cmdHistoryMenu(line) {
