@@ -66,8 +66,8 @@ function cd(command, word) {
     let dirs
     try {
         dirs = fs.readdirSync(baseDir, { withFileTypes: true })
-        .filter(dirent => dirent.isDirectory())
-        .map(dirent => dirent.name +  '/')
+            .filter(dirent => dirent.isDirectory())
+            .map(dirent => dirent.name + '/')
     }
     catch (err) {
         return null // Command failed, rely on default completion

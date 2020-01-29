@@ -6,6 +6,7 @@ const { getCursorPosition, setCursorPosition } = require('../prompt')
 const { history, dirHistory } = require('../history')
 const { highlight, colorize } = require('./syntax-highlight')
 const { runCommand } = require('../runner')
+const { writeLine } = require('../editor')
 
 
 function highlightCommand(cmd) {
@@ -63,6 +64,12 @@ function showHistoryMenu(line, items, { decorate, updateLine, runIt }) {
         promise: new Promise(resolve => menuDone = resolve),
 		keyListener(key) {
             //TODO handle plain keys, add them to line, update menu
+            // if (key.ch || key.name == 'backspace') {
+            //     if (key.ch) line.left += key.ch
+            //     else if (line.left) line.left = line.left.slice(0, -1)
+            //     writeLine(line)
+            // }
+            // else
             menuKeyHandler(key.ch, key)
         }
 	}

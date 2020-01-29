@@ -240,7 +240,11 @@ function tooManyWords(line, words) {
         keyListener(key) {
             if (key.ch == 'y' || key.ch == 'Y')
                 showTableMenu(words, null, false)
-            process.stdout.write('\n')
+            else {
+                let cp = getCursorPosition()
+                process.stdout.cursorTo(0, cp.y)
+                process.stdout.clearScreenDown()
+            }
             yesNoDone(line)
         }
     }

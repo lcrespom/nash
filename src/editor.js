@@ -161,5 +161,6 @@ function initialize() {
 module.exports = {
 	handleKeypress,
 	registerLineDecorator,
+	writeLine,
 	initialize
 }

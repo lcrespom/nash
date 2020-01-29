@@ -126,7 +126,6 @@ function clearScreen(line) {
 let clipboard = ''
 
 function killWholeLine(line) {
-	//TODO keep it in buffer, recover it with ctrl+y
 	let cursor = getCursorPosition()
 	if (cursor) {
 		process.stdout.cursorTo(cursor.x, cursor.y)
