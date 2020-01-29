@@ -8,6 +8,10 @@
     "test": "jest --watch",
     "start": "node src/nash.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lcrespom/nash.git"
+  },
   "keywords": [
     "node",
     "shell",
@@ -15,7 +19,7 @@
     "oh-my-zsh",
     "productivity"
   ],
-  "author": "Luis Crespo",
+  "author": "Luis Crespo <lcrespom@gmail.com> (https://github.com/lcrespom)",
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^24.9.1",

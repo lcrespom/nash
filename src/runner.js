@@ -104,7 +104,7 @@ function captureStatus(data) {
 		userStatus += data
 		let ustatus = parseUserStatus()
 		if (process.cwd() != ustatus.cwd)
-			process.chdir(ustatus.cwd)
+			try { process.chdir(ustatus.cwd) } catch (err) {}
 		ustatus.cwd = fromHomedir(ustatus.cwd, os.homedir())
 		dirHistory.push(ustatus.cwd)
 		promptCB(ustatus)

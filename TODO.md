@@ -31,6 +31,7 @@
 - [x] Menu (pageup)
     - [x] Cut lines longer than process.stdout.columns
     - [ ] Interactive: let the user type and update the menu accordingly
+    (**next**)
 
 ## Prompt plugin
 - [x] Config options to personalize what to show on prompt
@@ -49,6 +50,7 @@
     - [ ] Optional background color for menus (table and list)
     - [ ] Contemplate rest of word at right of the cursor
     - [ ] Let the user type and update menu accordingly (implement inside widget)
+    (**next**)
     - [ ] Selecting a directory (using space) opens menu with directory contents
 - [x] Customizable (e.g. git command list, etc.)
     - [ ] Optional subcommand description - if available, show under menu
@@ -106,7 +108,7 @@
     - [ ] Then disable highlight from table menus, as `ls` already does
 - [ ] Get hostname from runner status
 - [ ] Don't do chdir from runner
-- [ ] Get all environment data from bash, e.g. don't use process.cwd
+- [ ] Get all environment data from bash, e.g. don't use process.cwd (**next**).
     Create specific `env` module with cwd, ls, homedir, username, hostname, which,
     process.env, etc.
     - [ ] The `which` command is used on every keystroke - either disable or maximize
