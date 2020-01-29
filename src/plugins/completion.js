@@ -214,20 +214,20 @@ function showTableMenu(words, done, interactive = true) {
 
 function showAllWords(line, word, words) {
     let menuDone = () => {}
-    let menuKeyHandler = showTableMenu(words, sel => {
+    let menu = showTableMenu(words, sel => {
         showCursor()
         process.stdout.clearScreenDown()
         if (sel >= 0)
             line.left = replaceWordWithMatch(line.left, word.length, words[sel])
         menuDone({...line, showPrompt: false })
     })
-    if (!menuKeyHandler)
+    if (!menu)
         return null     // Too many items to show interactive menu
 	return {
         promise: new Promise(resolve => menuDone = resolve),
 		keyListener(key) {
             //TODO handle plain keys, add them to line, update menu
-            menuKeyHandler(key.ch, key)
+            menu.keyHandler(key.ch, key)
         }
 	}
 }

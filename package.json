@@ -31,7 +31,7 @@
     "fast-glob": "^3.1.1",
     "keypress": "^0.2.1",
     "node-pty": "^0.9.0",
-    "node-terminal-menu": "^2.0.0"
+    "node-terminal-menu": "^3.0.0"
   },
   "pkg": {
     "scripts": "src/plugins/*.js"

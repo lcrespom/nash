@@ -43,7 +43,7 @@ function openVerticalMenu(items, decorate, done) {
 function showHistoryMenu(line, items, { decorate, updateLine, runIt }) {
     let menuDone = () => {}
     hideCursor()
-    let menuKeyHandler = openVerticalMenu(items, decorate, sel => {
+    let menu = openVerticalMenu(items, decorate, sel => {
         showCursor()
         process.stdout.clearScreenDown()
         if (sel >= 0)
@@ -70,7 +70,7 @@ function showHistoryMenu(line, items, { decorate, updateLine, runIt }) {
             //     writeLine(line)
             // }
             // else
-            menuKeyHandler(key.ch, key)
+            menu.keyHandler(key.ch, key)
         }
 	}
 }
