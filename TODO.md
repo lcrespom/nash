@@ -86,8 +86,8 @@
     - [x] 'cd ' + tab
     - [x] tab on empty line
     - [x] pagedown => dir history menu
-    - [ ] Directly run the `cd path` command after selecting it
-        from the list (**next**)
+    - [x] Directly run the `cd path` command after selecting it
+        from the list
     - [ ] shift-up/down => cd .. / dir history back
 - [ ] Mouse support for all menus (keypress module supports it)
 

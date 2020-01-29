@@ -5,6 +5,7 @@ const { bindKey } = require('../key-bindings')
 const { getCursorPosition, setCursorPosition } = require('../prompt')
 const { history, dirHistory } = require('../history')
 const { highlight, colorize } = require('./syntax-highlight')
+const { runCommand } = require('../runner')
 
 
 function highlightCommand(cmd) {
@@ -38,21 +39,31 @@ function openVerticalMenu(items, decorate, done) {
     })
 }
 
-function showHistoryMenu(line, items, { decorate, updateLine = l => l }) {
+function showHistoryMenu(line, items,
+    { decorate, updateLine = l => l, runIt = false }) {
     let menuDone = () => {}
-    let selection
     hideCursor()
     let menuKeyHandler = openVerticalMenu(items, decorate, sel => {
         showCursor()
         process.stdout.clearScreenDown()
         if (sel >= 0)
-            line = { left: items[sel], right: '' }
-        selection = sel
-        menuDone()
+            line = updateLine({ left: items[sel], right: '' })
+        if (runIt) {
+            let cmd = line.left
+            line = { left: '', right: ''}
+            runCommand(cmd, uStatus => {
+                let cp = getCursorPosition()
+                process.stdout.cursorTo(0, cp.y)
+                process.stdout.clearLine(1)
+                menuDone(uStatus)
+            })
+        }
+        else
+            menuDone()
     })
 	return {
         isAsync: true,
-        showPrompt: false,
+        showPrompt: runIt,
 		whenDone(done) {
             menuDone = done
 		},
@@ -60,7 +71,7 @@ function showHistoryMenu(line, items, { decorate, updateLine = l => l }) {
             //TODO handle plain keys, add them to line, update menu
             menuKeyHandler(key.ch, key)
         },
-        getLine: () => selection >= 0 ? updateLine(line) : line
+        getLine: () => line
 	}
 }
 
@@ -92,7 +103,8 @@ function dirHistoryMenu(line) {
         return sel ? inverse(o) : white(o)
     }
     let updateLine = l => ({ left: 'cd ' + l.left, right: l.right })
-    return historyMenu(line, items, { decorate, updateLine })
+    return historyMenu(line, items,
+        { decorate, updateLine, runIt: true })
 }
 
 
