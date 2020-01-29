@@ -30,8 +30,7 @@
 - [x] Context sensitive (show entries that start with the current line)
 - [x] Menu (pageup)
     - [x] Cut lines longer than process.stdout.columns
-    - [ ] Interactive: let the user type and update the menu accordingly
-    (**next**)
+    - [x] Interactive: let the user type and update the menu accordingly
 
 ## Prompt plugin
 - [x] Config options to personalize what to show on prompt
@@ -49,8 +48,7 @@
     - [x] Improve menu library API by renaming `options` to `items`
     - [ ] Optional background color for menus (table and list)
     - [ ] Contemplate rest of word at right of the cursor
-    - [ ] Let the user type and update menu accordingly (implement inside widget)
-    (**next**)
+    - [ ] Interactive: let the user type and update menu accordingly (**next**)
     - [ ] Selecting a directory (using space) opens menu with directory contents
 - [x] Customizable (e.g. git command list, etc.)
     - [ ] Optional subcommand description - if available, show under menu

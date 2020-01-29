@@ -67,6 +67,7 @@ function traverseAST(node, nodeCB) {
 }
 
 function parseBash(line) {
+    if (!line) return null 
     try {
         return parse(line, { insertLOC: true })
     }

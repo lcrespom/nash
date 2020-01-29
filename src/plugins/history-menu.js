@@ -5,7 +5,7 @@ const { bindKey } = require('../key-bindings')
 const { getCursorPosition, setCursorPosition } = require('../prompt')
 const { history, dirHistory } = require('../history')
 const { highlight, colorize } = require('./syntax-highlight')
-const { runCommand } = require('../runner')
+const runner = require('../runner')
 const { writeLine } = require('../editor')
 
 
@@ -14,8 +14,6 @@ function highlightCommand(cmd) {
     let colCmd = colorize(cmd, hls)
     return substrWithColors(colCmd, 0, process.stdout.columns - 2)
 }
-
-const highlightCommandMemo = memoize(highlightCommand)
 
 function inverse(str) {
     return '\x1b[7m' + str + '\x1b[0m'
@@ -40,52 +38,77 @@ function openVerticalMenu(items, decorate, done) {
     })
 }
 
-function showHistoryMenu(line, items, { decorate, updateLine, runIt }) {
+function runCommand(cmd, done) {
+    runner.runCommand(cmd, userStatus => {
+        let cp = getCursorPosition()
+        process.stdout.cursorTo(0, cp.y)
+        process.stdout.clearLine(1)
+        done({ userStatus })
+    })
+}
+
+function updateMenu(menu, key, line, initialItems, initialLen, filter) {
+    if (key.ch) line.left += key.ch
+    else if (line.left.length > initialLen)
+        line.left = line.left.slice(0, -1)
+    writeLine(line)
+    hideCursor()
+    process.stdout.write('\n')
+    let items = initialItems.filter(i => filter(i, line.left))
+    if (items.length > 0)
+        menu.update({ items, selection: items.length - 1, scrollStart: 0 })
+    else
+        process.stdout.clearScreenDown()
+    return items
+}
+
+function showHistoryMenu(line, items,
+    { decorate, updateLine, runIt, filter }) {
     let menuDone = () => {}
+    let initialItems = items
+    let initialLen = line.left.length
     hideCursor()
     let menu = openVerticalMenu(items, decorate, sel => {
         showCursor()
         process.stdout.clearScreenDown()
         if (sel >= 0)
             line = updateLine({ left: items[sel], right: '' })
-        if (runIt && sel >= 0) {
-            runCommand(line.left, userStatus => {
-                let cp = getCursorPosition()
-                process.stdout.cursorTo(0, cp.y)
-                process.stdout.clearLine(1)
-                menuDone({ userStatus })
-            })
-        }
-        else {
+        if (runIt && sel >= 0)
+            runCommand(line.left, menuDone)
+        else
             menuDone({ ...line, showPrompt: false })
-        }
     })
 	return {
         promise: new Promise(resolve => menuDone = resolve),
 		keyListener(key) {
-            //TODO handle plain keys, add them to line, update menu
-            // if (key.ch || key.name == 'backspace') {
-            //     if (key.ch) line.left += key.ch
-            //     else if (line.left) line.left = line.left.slice(0, -1)
-            //     writeLine(line)
-            // }
-            // else
-            menu.keyHandler(key.ch, key)
+            if (key.ch || key.name == 'backspace')
+                items = updateMenu(menu, key, line, initialItems, initialLen, filter)
+            else if (items.length > 0)
+                menu.keyHandler(key.ch, key)
         }
 	}
 }
 
+function startsWith(item, text) {
+    return item.startsWith(text)
+}
+
+function includes(item, text) {
+    return item.includes(text)
+}
+
 function historyMenu(line, items,
-        { decorate, updateLine = l => l, runIt = false }) {
+    { decorate, updateLine = l => l, runIt = false, filter = startsWith}) {
     if (items.length == 0)
         return line
     if (items.length == 1)
         return updateLine({ left: items[0], right: '' })
     return showHistoryMenu(line, items,
-        { decorate, updateLine, runIt })
+        { decorate, updateLine, runIt, filter })
 }
 
 function cmdHistoryMenu(line) {
+    let highlightCommandMemo = memoize(highlightCommand)
     let items = history.matchLines(line.left)
     let decorate =
         (o, sel) => sel ? inverse(o) : highlightCommandMemo(o)
@@ -94,7 +117,6 @@ function cmdHistoryMenu(line) {
 
 
 function dirHistoryMenu(line) {
-    let includes = (i, t) => i.includes(t)
     let items = dirHistory.matchLines(line.left, includes)
     // Ensure items are chronological and unique
     items = removeRepeatedItems(items.reverse()).reverse()
@@ -106,7 +128,7 @@ function dirHistoryMenu(line) {
     }
     let updateLine = l => ({ left: 'cd ' + l.left, right: l.right })
     return historyMenu(line, items,
-        { decorate, updateLine, runIt: true })
+        { decorate, updateLine, runIt: true, filter: includes })
 }
 
 

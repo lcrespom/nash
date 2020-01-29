@@ -34,7 +34,7 @@ function removeAnsiColorCodes(str) {
  * @param {number} len the number of characters to include
  */
 function substrWithColors(str, from, len) {
-	if (len <= 0) return ''
+	if (!str || len <= 0) return ''
 	let result = ''
 	let pos = 0
 	let l = 0
