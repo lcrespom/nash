@@ -19,12 +19,6 @@
     - [ ] Blog post
     - [ ] Youtube walkthrough
 
-## Installation
-- [x] Provide and document an installation method that does not require
-    cloning the repository
-- [x] Provide a fully self-contained installation that does not require
-    node.js to be previously installed => see https://github.com/zeit/pkg
-
 ## Line editing
 - [ ] Catch exceptions in bindings to avoid breaking the shell
 - [x] Refactor editor.js async handling code, make kb bindings use promises
@@ -49,20 +43,11 @@
 - [x] Document agnoster prompt & place in examples dir
 
 ## Completion
-- [x] Basic (tab)
-- [x] Replace ~ with home when globbing
-- [x] Advanced (navigate over list)
-    - [x] Custom completion function for "cd" (in `examples`), displaying only
-        directories
-    - [x] Improve menu library API by renaming `options` to `items`
-    - [x] Interactive: let the user type and update menu accordingly
-    - [ ] Optional background color for menus (table and list)
-    - [ ] Selecting a directory (using space) opens menu with directory contents
+- [ ] Optional background color for menus (table and list)
+- [ ] Selecting a directory (using space) opens menu with directory contents
 - [x] Customizable (e.g. git command list, etc.)
     - [ ] Optional subcommand description - if available, show under menu
-
-## Syntax highlight
-- [ ] Highlight JavaScript
+    - [ ] Parse man pages to generate descrpitons
 
 ## History suggestions
 - [x] Remove suggestion decoration when the user presses enter
@@ -78,9 +63,6 @@
 - [ ] Embedded JS code context using 'with'
 
 ## Cool extensions
-- [x] Cool git prompt
-    - [x] Fancy git status stripe in agnoster-prompt.js
-    - [x] Git status stripe in default prompt
 - [x] History menu
     - [ ] Delete key removes line from history
 - [x] Directory navigation
@@ -92,14 +74,8 @@
     - [ ] shift-up/down => cd .. / dir history back
 - [ ] Mouse support for all menus (keypress module supports it)
 
-## Maximize customization
-- [x] Global settings object / API
-- [x] Color palette
-- [x] Rebind/unbind keys
-- [x] Setting to force truecolor on chalk
-
 ## Compatibility / Portability
-- [ ] GitBash support
+- [ ] GitBash support (**next**)
 - [ ] Docker instructions for Windows
 - [x] More linux testing
 - [x] Slow/remote terminal
@@ -116,7 +92,3 @@
     - [ ] The `which` command is used on every keystroke - either disable or maximize
         memoization
     - [ ] Detect when bash is remote (e.g. env.hostname != os.hostname)
-
-## Performance
-- [x] Memoize `which` => new whichMemo instance every time return is pressed
-- [ ] Benchmark together: parsing + syntax highlight - find bottlenecks, memoize if required
