@@ -19,11 +19,12 @@ Pressing F1 at any time displays a list of all keyboard shoutcuts and their corr
 	- The `up` and `down` keys navigate the history, showing only the entries
 	that start with the current line.
 	- The `page up` key displays a menu with all history lines that start with the current line.
-	Typing more characters updates the menu with the corresponding matching lines.
 - Directory history navigation: the `page down` key displays a menu with the most recently visited directories,
 	showing only the entries that contain the text in the current line.
 - Interactive tab-completion: pressing tab completes a file name, but if multiple matching files are
 	available, a menu is displayed, letting the user navigate and select the file name.
+- All menus (command history, directory history and tab-completion) allow typing more characters to narrow the
+	search.
 - Syntax highlight, clearly coloring the different parts of a command, and warning of potential errors.
 - History suggestions: when typing a command, if the text matches a previous command, the remaining text
 	is displayed in grey, letting the user immediately complete the command.

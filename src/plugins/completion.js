@@ -3,19 +3,18 @@ const os = require('os')
 const glob = require('fast-glob')
 const chalk = require('chalk')
 
-const {
-    hideCursor, showCursor, computeTableLayout, tableMenu
-} = require('node-terminal-menu')
+const { computeTableLayout, tableMenu } = require('node-terminal-menu')
 
 const { bindKey } = require('../key-bindings')
 const {
-    startsWithCaseInsensitive, cutLastChars, fromHomedir
+    startsWithCaseInsensitive, cutLastChars, fromHomedir, removeAnsiColorCodes
 } = require('../utils')
 const {
     parseBash, traverseAST, NodeType, builtins
 } = require('../parser')
 const { getCursorPosition, setCursorPosition } = require('../prompt')
 const { getOption } = require('../startup')
+const { writeLine } = require('../editor')
 
 
 //------------------------- AST Searching -------------------------
@@ -198,36 +197,72 @@ function replaceWordWithMatch(left, cutLen, match) {
 
 //------------------------- Key binding -------------------------
 
-function showTableMenu(words, done, interactive = true) {
+function showTableMenu(items, done, interactive = true) {
     process.stdout.write('\n')
-    let items = words.map(basename).map(colorizePath)
     let cp = getCursorPosition()
     let { rows, columns, columnWidth } = computeTableLayout(items)
     if (interactive && rows > process.stdout.rows - 5)
         return null
     if (interactive && cp.y + rows + 1 >= process.stdout.rows)
         setCursorPosition({x: cp.x, y: process.stdout.rows - rows - 2})
-    if (interactive)
-        hideCursor()
     return tableMenu({ items, columns, columnWidth, done })
+}
+
+function updateMenu(menu, key, line, initialItems, initialLen) {
+    if (key.ch) {
+        line.left += key.ch
+        line.word += key.ch
+    }
+    else if (line.left.length > initialLen) {
+        line.left = line.left.slice(0, -1)
+        line.word = line.word.slice(0, -1)
+    }
+    process.stdout.write('\n')
+    let startsWith = (
+        i => removeAnsiColorCodes(i).startsWith(line.word.split('/').pop()))
+    let items = initialItems.filter(startsWith)
+    if (items.length > 0) {
+        if (menu.selection >= items.length)
+            menu.selection = items.length - 1
+        menu.update({ items })
+    }
+    else {
+        process.stdout.clearScreenDown()
+    }
+    writeLine(line)
+    return items
 }
 
 function showAllWords(line, word, words) {
     let menuDone = () => {}
-    let menu = showTableMenu(words, sel => {
-        showCursor()
+    let items = words
+        .map(basename)
+        .map(colorizePath)
+        .map((w, i) => { let s = new String(w); s.from = words[i]; return s })
+    let initialItems = items
+    let initialLen = line.left.length
+    line.word = word
+    let menu = showTableMenu(items, sel => {
+        line.left = line.left.substr(0, initialLen)
         process.stdout.clearScreenDown()
         if (sel >= 0)
-            line.left = replaceWordWithMatch(line.left, word.length, words[sel])
+            line.left = replaceWordWithMatch(line.left, word.length, items[sel].from)
         menuDone({...line, showPrompt: false })
     })
     if (!menu)
         return null     // Too many items to show interactive menu
-	return {
+    writeLine(line)
+    return {
         promise: new Promise(resolve => menuDone = resolve),
 		keyListener(key) {
-            //TODO handle plain keys, add them to line, update menu
-            menu.keyHandler(key.ch, key)
+            if (key.ch || key.name == 'backspace') {
+                items = updateMenu(menu, key, line, initialItems, initialLen)
+            }
+            else if (items.length > 0) {
+                process.stdout.write('\n')
+                menu.keyHandler(key.ch, key)
+                writeLine(line)
+            }
         }
 	}
 }

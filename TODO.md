@@ -14,6 +14,10 @@
     - [ ] Inline JavaScript
 - [ ] Customization / Extension API
 - [ ] Contribution guide
+- [ ] Make it visible
+    - [ ] Twitter
+    - [ ] Blog post
+    - [ ] Youtube walkthrough
 
 ## Installation
 - [x] Provide and document an installation method that does not require
@@ -23,7 +27,12 @@
 
 ## Line editing
 - [ ] Catch exceptions in bindings to avoid breaking the shell
-- [*] Refactor editor.js async handling code, make kb bindings use promises
+- [x] Refactor editor.js async handling code, make kb bindings use promises
+
+## Bugs
+- [ ] Typing while non-interactive command is running makes
+    `runner.checkPromptAndWrite(...)` fail
+- [ ] If suggestion text overflows to next line, it is not cleared
 
 ## History navigation
 - [x] Basic
@@ -46,9 +55,8 @@
     - [x] Custom completion function for "cd" (in `examples`), displaying only
         directories
     - [x] Improve menu library API by renaming `options` to `items`
+    - [x] Interactive: let the user type and update menu accordingly
     - [ ] Optional background color for menus (table and list)
-    - [ ] Contemplate rest of word at right of the cursor
-    - [ ] Interactive: let the user type and update menu accordingly (**next**)
     - [ ] Selecting a directory (using space) opens menu with directory contents
 - [x] Customizable (e.g. git command list, etc.)
     - [ ] Optional subcommand description - if available, show under menu
@@ -59,11 +67,7 @@
 ## History suggestions
 - [x] Remove suggestion decoration when the user presses enter
 - [x] Ctrl-space accepts suggestion anywhere in the line
-- [ ] Fix bugs
-    - [ ] If suggestion text overflows to next line, it is not cleared
-    - [x] When at last line of terminal, if suggestion overflows, cursor
-        position is not recovered.
-
+ 
 ## Configuration
 - [x] Load all plugins from nashrc.js
 - [x] start()/stop() function in all plugins to control lifecycle
