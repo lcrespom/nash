@@ -1,4 +1,4 @@
-const { hideCursor, showCursor, verticalMenu } = require('node-terminal-menu')
+const { verticalMenu } = require('node-terminal-menu')
 
 const { substrWithColors, memoize, removeRepeatedItems } = require('../utils')
 const { bindKey } = require('../key-bindings')
@@ -51,14 +51,17 @@ function updateMenu(menu, key, line, initialItems, initialLen, filter) {
     if (key.ch) line.left += key.ch
     else if (line.left.length > initialLen)
         line.left = line.left.slice(0, -1)
-    writeLine(line)
-    hideCursor()
     process.stdout.write('\n')
     let items = initialItems.filter(i => filter(i, line.left))
-    if (items.length > 0)
-        menu.update({ items, selection: items.length - 1, scrollStart: 0 })
-    else
+    if (items.length > 0) {
+        let height = Math.min(process.stdout.rows - 10, items.length)
+        let selection = items.length - 1
+        menu.update({ items, selection, height, scrollStart: 0 })
+    }
+    else {
         process.stdout.clearScreenDown()
+    }
+    writeLine(line)
     return items
 }
 
@@ -67,9 +70,8 @@ function showHistoryMenu(line, items,
     let menuDone = () => {}
     let initialItems = items
     let initialLen = line.left.length
-    hideCursor()
+    line.decorateHint = 'no suggestions'
     let menu = openVerticalMenu(items, decorate, sel => {
-        showCursor()
         process.stdout.clearScreenDown()
         if (sel >= 0)
             line = updateLine({ left: items[sel], right: '' })
@@ -78,13 +80,17 @@ function showHistoryMenu(line, items,
         else
             menuDone({ ...line, showPrompt: false })
     })
+    writeLine(line)
 	return {
         promise: new Promise(resolve => menuDone = resolve),
 		keyListener(key) {
             if (key.ch || key.name == 'backspace')
                 items = updateMenu(menu, key, line, initialItems, initialLen, filter)
-            else if (items.length > 0)
+            else if (items.length > 0) {
+                process.stdout.write('\n')
                 menu.keyHandler(key.ch, key)
+                writeLine(line)
+            }
         }
 	}
 }
