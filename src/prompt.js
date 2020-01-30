@@ -119,8 +119,8 @@ function lineEndPosition(len) {
 	return { x, h }
 }
 
-function putCursor(len) {
-	let { x, h } = lineEndPosition(len)
+function putCursorAtPrompt(lineLen) {
+	let { x, h } = lineEndPosition(lineLen)
 	process.stdout.cursorTo(x, cursor.y + h)
 }
 
@@ -137,7 +137,7 @@ module.exports = {
 	putPrompt,
 	hideCursor,
 	showCursor,
-	putCursor,
+	putCursorAtPrompt,
 	lineEndPosition,
 	promptOwnsInput,
 	getPromptPosition,

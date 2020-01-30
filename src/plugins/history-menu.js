@@ -6,7 +6,7 @@ const { getPromptPosition, adjustPromptPosition } = require('../prompt')
 const { history, dirHistory } = require('../history')
 const { highlight, colorize } = require('./syntax-highlight')
 const runner = require('../runner')
-const { writeLine } = require('../editor')
+const editor = require('../editor')
 
 
 function highlightCommand(cmd) {
@@ -59,7 +59,7 @@ function updateMenu(menu, key, line, initialItems, initialLen, filter) {
     else {
         process.stdout.clearScreenDown()
     }
-    writeLine(line)
+    editor.writeLine(line)
     return items
 }
 
@@ -78,7 +78,7 @@ function showHistoryMenu(line, items,
         else
             menuDone({ ...line, showPrompt: false })
     })
-    writeLine(line)
+    editor.writeLine(line)
 	return {
         promise: new Promise(resolve => menuDone = resolve),
 		keyListener(key) {
@@ -87,7 +87,7 @@ function showHistoryMenu(line, items,
             else if (items.length > 0) {
                 process.stdout.write('\n')
                 menu.keyHandler(key.ch, key)
-                writeLine(line)
+                editor.writeLine(line)
             }
         }
 	}

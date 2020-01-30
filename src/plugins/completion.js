@@ -14,7 +14,7 @@ const {
 } = require('../parser')
 const { getPromptPosition, adjustPromptPosition } = require('../prompt')
 const { getOption } = require('../startup')
-const { writeLine } = require('../editor')
+const editor = require('../editor')
 
 
 //------------------------- AST Searching -------------------------
@@ -228,7 +228,7 @@ function updateMenu(menu, key, line, initialItems, initialLen) {
     else {
         process.stdout.clearScreenDown()
     }
-    writeLine(line)
+    editor.writeLine(line)
     return items
 }
 
@@ -250,7 +250,7 @@ function showAllWords(line, word, words) {
     })
     if (!menu)
         return null     // Too many items to show interactive menu
-    writeLine(line)
+    editor.writeLine(line)
     return {
         promise: new Promise(resolve => menuDone = resolve),
 		keyListener(key) {
@@ -260,7 +260,7 @@ function showAllWords(line, word, words) {
             else if (items.length > 0) {
                 process.stdout.write('\n')
                 menu.keyHandler(key.ch, key)
-                writeLine(line)
+                editor.writeLine(line)
             }
         }
 	}
