@@ -102,13 +102,22 @@ function parseUserStatus() {
 	}
 }
 
+function chdir(dir) {
+	try {
+		process.chdir(dir)
+	}
+	catch (err) {
+		process.stdout.write('\nWARNING: could not chdir to ' + dir + '\n')
+	}
+}
+
 function captureStatus(data) {
 	if (data.endsWith(NASH_MARK)) {
 		data = data.substr(0, data.length - NASH_MARK.length)
 		userStatus += data
 		let ustatus = parseUserStatus()
 		if (process.cwd() != ustatus.cwd)
-			try { process.chdir(ustatus.cwd) } catch (err) {}
+			chdir(ustatus.cwd)
 		ustatus.cwd = fromHomedir(ustatus.cwd, os.homedir())
 		dirHistory.push(ustatus.cwd)
 		promptCB(ustatus)

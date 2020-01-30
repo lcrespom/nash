@@ -2,7 +2,7 @@ const { verticalMenu } = require('node-terminal-menu')
 
 const { substrWithColors, memoize, removeRepeatedItems } = require('../utils')
 const { bindKey } = require('../key-bindings')
-const { getCursorPosition, setCursorPosition } = require('../prompt')
+const { getPromptPosition, adjustPromptPosition } = require('../prompt')
 const { history, dirHistory } = require('../history')
 const { highlight, colorize } = require('./syntax-highlight')
 const runner = require('../runner')
@@ -25,10 +25,8 @@ function white(str) {
 
 function openVerticalMenu(items, decorate, done) {
     process.stdout.write('\n')
-    let cp = getCursorPosition()
     let rows = Math.min(process.stdout.rows - 10, items.length)
-    if (cp.y + rows >= process.stdout.rows)
-        setCursorPosition({x: cp.x, y: process.stdout.rows - rows - 2})
+    adjustPromptPosition(rows + 1)
     return verticalMenu({
         items,
         height: rows,
@@ -40,7 +38,7 @@ function openVerticalMenu(items, decorate, done) {
 
 function runCommand(cmd, done) {
     runner.runCommand(cmd, userStatus => {
-        let cp = getCursorPosition()
+        let cp = getPromptPosition()
         process.stdout.cursorTo(0, cp.y)
         process.stdout.clearLine(1)
         done({ userStatus })

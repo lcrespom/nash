@@ -1,5 +1,5 @@
 const {
-	putCursor, getCursorPosition, lineEndPosition,
+	putCursor, getPromptPosition, lineEndPosition,
 	hideCursor, showCursor, 
 	putPrompt, promptOwnsInput
 } = require('./prompt')
@@ -62,7 +62,7 @@ function writeLine(newLine) {
 	process.stdout.clearLine(1)
 	putCursor(newLine.left.length)
 	let { h } = lineEndPosition(removeAnsiColorCodes(fullLine).length)
-	let cursor = getCursorPosition()
+	let cursor = getPromptPosition()
 	if (h > 0 && cursor.y + h >= process.stdout.rows)
 		cursor.y = process.stdout.rows - h - 1
 	showCursor()

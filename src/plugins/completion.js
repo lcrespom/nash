@@ -12,7 +12,7 @@ const {
 const {
     parseBash, traverseAST, NodeType, builtins
 } = require('../parser')
-const { getCursorPosition, setCursorPosition } = require('../prompt')
+const { getPromptPosition, adjustPromptPosition } = require('../prompt')
 const { getOption } = require('../startup')
 const { writeLine } = require('../editor')
 
@@ -199,12 +199,11 @@ function replaceWordWithMatch(left, cutLen, match) {
 
 function showTableMenu(items, done, interactive = true) {
     process.stdout.write('\n')
-    let cp = getCursorPosition()
     let { rows, columns, columnWidth } = computeTableLayout(items)
     if (interactive && rows > process.stdout.rows - 5)
         return null
-    if (interactive && cp.y + rows + 1 >= process.stdout.rows)
-        setCursorPosition({x: cp.x, y: process.stdout.rows - rows - 2})
+    if (interactive)
+        adjustPromptPosition(rows + 1)
     return tableMenu({ items, columns, columnWidth, done })
 }
 
@@ -276,7 +275,7 @@ function tooManyWords(line, words) {
             if (key.ch == 'y' || key.ch == 'Y')
                 showTableMenu(words, null, false)
             else {
-                let cp = getCursorPosition()
+                let cp = getPromptPosition()
                 process.stdout.cursorTo(0, cp.y)
                 process.stdout.clearScreenDown()
             }

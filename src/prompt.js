@@ -94,15 +94,13 @@ function captureCursorPosition() {
 	})
 }
 
-function getCursorPosition() {
+function getPromptPosition() {
 	return cursor
 }
 
-function setCursorPosition(newCursor) {
-	if (newCursor.x !== undefined)
-		cursor.x = newCursor.x
-	if (newCursor.y !== undefined)
-		cursor.y = newCursor.y
+function adjustPromptPosition(rows) {
+	if (cursor.y + rows >= process.stdout.rows)
+		cursor.y = process.stdout.rows - rows - 1
 }
 
 function putPrompt(userStatus = lastUserStatus) {
@@ -142,7 +140,7 @@ module.exports = {
 	putCursor,
 	lineEndPosition,
 	promptOwnsInput,
-	getCursorPosition,
-	setCursorPosition,
+	getPromptPosition,
+	adjustPromptPosition,
 	setTerminalTitle
 }

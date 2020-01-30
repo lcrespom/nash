@@ -1,7 +1,7 @@
 const {
 	bindKey, getKeyBindings, getLastBinding, getBoundKeys
 } = require('../key-bindings')
-const { getCursorPosition } = require('../prompt')
+const { getPromptPosition } = require('../prompt')
 const runner = require('../runner')
 const { history } = require('../history')
 const { getOption } = require('../startup')
@@ -126,7 +126,7 @@ function clearScreen(line) {
 let clipboard = ''
 
 function killWholeLine(line) {
-	let cursor = getCursorPosition()
+	let cursor = getPromptPosition()
 	if (cursor) {
 		process.stdout.cursorTo(cursor.x, cursor.y)
 	}
