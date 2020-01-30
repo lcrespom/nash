@@ -67,8 +67,12 @@ function hideCommand(data) {
 		}
 	}
 	else {
-		// Invalid state...
-		process.stdout.write(data)
+		if (state == TermState.readingStatus && data.includes(theCommand)) {
+			data = data.substr(data.indexOf(theCommand) +  theCommand.length)
+			state = TermState.capturingStatus
+			if (data.length > 0)
+				dataFromShell(data)
+		}
 	}
 	return data
 }
@@ -78,7 +82,6 @@ function checkPromptAndWrite(data) {
 		data = data.substr(0, data.length - NASH_MARK.length)
 		process.stdout.write(data)
 		state = TermState.readingStatus
-		//TODO prepend ctrl-e + ctrl-u to clear line buffer
 		theCommand = ' __rc=$?;whoami;pwd;echo $__rc;$(exit $__rc)'
 		userStatus = ''
 		ptyProcess.write(theCommand + '\n')		
