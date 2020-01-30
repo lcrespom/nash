@@ -113,6 +113,15 @@ function startPlugins(plugins) {
 	}
 }
 
+function getWelcomeMessage() {
+	let defaultMsg = 'Welcome to nash (https://github.com/lcrespom/nash)\n' +
+		'Press F1 for help on keyboard commands'
+	let greeting = getOption('greeting')
+	if (greeting === undefined) greeting = defaultMsg
+	if (greeting.length > 0) greeting += '\n'
+	return greeting
+}
+
 function nashStartup() {
 	createNashDirIfRequired()
 	userConfig = loadNashRCJS()
@@ -121,6 +130,7 @@ function nashStartup() {
 	let plugins = userConfig.plugins
 	pluginModules = loadPlugins(plugins)
 	startPlugins(plugins)
+	process.stdout.write(getWelcomeMessage())
 }
 
 function nashShutdown() {

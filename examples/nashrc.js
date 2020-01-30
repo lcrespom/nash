@@ -49,11 +49,13 @@ module.exports = {
 	],
 	options: {
 		colors: {
-			// Uncomment line below to make syntax highlight use the Monokai palette
+			// Uncomment the line below to make syntax highlight use the Monokai palette
 			// syntaxHighlight: monokaiHL,
 			// Uncomment line below if your terminal supports 16 million colors
 			// trueColor: true
 		},
+		// Uncomment the line below to change the welcome message
+		// greeting: 'Greetings, human!',
 		// Command completions for common programs
 		completion: { commands: completionCommands }
 	}

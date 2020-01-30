@@ -148,13 +148,7 @@ function handleKeypress(ch, key) {
 	keyListener(key)
 }
 
-function getWelcomeMessage() {
-	return 'Welcome to nash (https://github.com/lcrespom/nash)\n' +
-		'Press F1 for help on keyboard commands\n'
-}
-
 function initialize() {
-	process.stdout.write(getWelcomeMessage())
 	putPrompt().then(_ => writeLine({ left: '', right: '' }))
 }
 
