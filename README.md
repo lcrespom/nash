@@ -13,6 +13,8 @@ Nash is implemented in JavaScript and focuses on:
 
 Pressing F1 at any time displays a list of all keyboard shoutcuts and their corresponding actions.
 
+> Check the [user manual](docs/manual) for a detailed description of `nash` functions.
+
 ## Main features
 - Flexible prompt, configurable by settings and by JavaScript code.
 - Powerful command history navigation:
