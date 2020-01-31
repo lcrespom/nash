@@ -94,6 +94,39 @@ The prompt plugin supports the following configuration options:
         the **maxDirs** parameter has shortened it.
 
 ### Tab completion
+The tab-completion plugin is activated by typing the `tab` key, and helps the user by completing the
+text at the left of the cursor. If there is only one possible completion, the text is added to the line.
+If multiple completions are available, a menu with all options is displayed, so the user can select
+the correct one and continue typing.
+
+It has different working modes:
+- When the cursor is right next to the first word of the line, the user is trying to type a command.
+    Typing `tab` at this point displays a menu with the available commands that begin with the text at
+    the left of the cursor.
+- When the cursor is after a command, the user is trying to type a command parameter, quite probably a file
+    name. Typing `tab` at this point displays a menu with all matching files in the current directory.
+- When the cursor at the very beginning of a line or the command is `cd`, typing `tab` displays a menu with
+    all matching subdiretories of the current directory. In this case and the case above, after selecting a
+    directory from the menu, typing `tab` again will display the content of the selected subdirectory.
+    The user can continue pressing `tab` and selecting subdirectires as long as required.
+- When the cursor is right next to a word starting with `$`, the user is trying to type an environment variable.
+    Typing `tab` at this point displays a menu with the list of environment variables known by `nash`.
+    Notice that `nash` cannot capture all the variables available in the current session, so there can be
+    more variables not listed in the menu, which will have to be typed by hand.
+
+In all working modes, when the menu is displayed, the search can be narrowed down by typing further characters, 
+thus filtering out the items that do not start with word at the left of the cursor.
+
+The menu is navigated by using `left`, `right`, `up` and `down` keys. The `return` key accepts the selected item
+and adds it to the command line, and the `escape` key closes the menu without updating the command line.
+
+The completion plugin can be configured via the **completion.commands** option. The sample file
+`~/.nash/command-completion.js` defines the list of parameters that are expected by the following commands:
+- `git`
+- `docker`
+- `npm`
+- `kubectl`
+Check the source code to see how the lists are configured.
 
 ### Syntax highlight
 
