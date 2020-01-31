@@ -2,7 +2,7 @@ const { verticalMenu } = require('node-terminal-menu')
 
 const { substrWithColors, memoize, removeRepeatedItems } = require('../utils')
 const { bindKey } = require('../key-bindings')
-const { getPromptPosition, adjustPromptPosition } = require('../prompt')
+const { adjustPromptPosition } = require('../prompt')
 const { history, dirHistory } = require('../history')
 const { highlight, colorize } = require('./syntax-highlight')
 const runner = require('../runner')
@@ -37,12 +37,10 @@ function openVerticalMenu(items, decorate, done) {
 }
 
 function runCommand(cmd, done) {
-    runner.runCommand(cmd, userStatus => {
-        let cp = getPromptPosition()
-        process.stdout.cursorTo(0, cp.y)
-        process.stdout.clearLine(1)
-        done({ userStatus })
-    })
+    runner.runCommand(
+        cmd,
+        userStatus => process.nextTick(() => done(userStatus))
+    )
 }
 
 function updateMenu(menu, key, line, initialItems, initialLen, filter) {
