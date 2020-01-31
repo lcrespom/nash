@@ -126,6 +126,7 @@ The completion plugin can be configured via the **completion.commands** option. 
 - `docker`
 - `npm`
 - `kubectl`
+
 Check the source code to see how the lists are configured.
 
 ### Syntax highlight
