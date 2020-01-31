@@ -1,6 +1,3 @@
-const os = require('os')
-
-const { fromHomedir } = require('./utils')
 const env = require('./env')
 
 
@@ -38,11 +35,11 @@ function put(str) {
 function getPromptInfo(userStatus) {
 	lastUserStatus = userStatus
 	// Working directory
-	let cwd = userStatus.cwd || fromHomedir(env.cwd(), os.homedir())
+	let cwd = userStatus.cwd || env.pathFromHome(env.cwd(), env.homedir())
 	// Username
-	let username = userStatus.username || os.userInfo().username
+	let username = userStatus.username || env.username()
 	// Host name (full and local)
-	let fqdn = os.hostname()
+	let fqdn = env.hostname()
 	let hostname = fqdn.split('.')[0]
 	// Return code
 	let retCode = userStatus.retCode || 0

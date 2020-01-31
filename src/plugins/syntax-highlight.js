@@ -4,7 +4,7 @@ const {
 } = require('../parser')
 const { getOption, setDefaultOptions } = require('../startup')
 const colors = require('../colors')
-const { which } = require('../runner')
+const { which } = require('../env')
 
 
 function makeHL(type, loc) {

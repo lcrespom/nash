@@ -3,8 +3,9 @@ List of subcommands for common programs such as git, docker, etc.
 These lists are used by the command completion plugin, which activates
 when the user types "tab".
 */
-const fs = require('fs')
 const path = require('path')
+
+const env = require(NASH_BASE + '/env')
 
 
 let git = ('add am archive bisect branch bundle checkout cherry citool clean ' +
@@ -65,8 +66,7 @@ function cd(command, word) {
     // Get all directories
     let dirs
     try {
-        dirs = fs.readdirSync(baseDir, { withFileTypes: true })
-            .filter(dirent => dirent.isDirectory())
+            dirs = env.getDirs(baseDir)
             .map(dirent => dirent.name + '/')
     }
     catch (err) {

@@ -1,9 +1,7 @@
-const os = require('os')
 const pty = require('node-pty')
-const { execFileSync } = require('child_process')
 
 const { nashShutdown } = require('./startup')
-const { commonInitialChars, fromHomedir, memoize } = require('./utils')
+const { commonInitialChars } = require('./utils')
 const { dirHistory } = require('./history')
 const env = require('./env')
 
@@ -118,7 +116,7 @@ function captureStatus(data) {
 		let ustatus = parseUserStatus()
 		if (env.cwd() != ustatus.cwd)
 			chdirOrWarn(ustatus.cwd)
-		ustatus.cwd = fromHomedir(ustatus.cwd, os.homedir())
+		ustatus.cwd = env.pathFromHome(ustatus.cwd)
 		dirHistory.push(ustatus.cwd)
 		promptCB(ustatus)
 		state = TermState.waitingCommand
@@ -179,34 +177,22 @@ function write(txt) {
 	ptyProcess.write(txt)
 }
 
-function whichSlow(command) {
-	try {
-		return execFileSync('/usr/bin/which', [ command ]).toString().trim()
-	}
-	catch (e) {
-		return null
-	}
-}
-
-let which = memoize(whichSlow)
 
 //-------------------- Running --------------------
 
 function runCommand(line, cb = () => {}) {
-	// Clear which cache: after a command, path and commands may have changed
-	which = memoize(whichSlow)
 	theCommand = expandJS(line.trim())
 	promptCB = cb
 	state = theCommand.length > 0
 		? TermState.readingCommand
 		: TermState.runningCommand
 	ptyProcess.write(theCommand + '\n')
+	env.refreshWhich()	// Clear which cache: after a command, path and commands may have changed
 }
 
 
 module.exports = {
 	runCommand,
-	which,
 	write,
 	startShell
 }

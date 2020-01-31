@@ -1,13 +1,13 @@
 const path = require('path')
-const os = require('os')
 const glob = require('fast-glob')
 const chalk = require('chalk')
 
 const { computeTableLayout, tableMenu } = require('node-terminal-menu')
 
+const env = require('../env')
 const { bindKey } = require('../key-bindings')
 const {
-    startsWithCaseInsensitive, cutLastChars, fromHomedir, removeAnsiColorCodes
+    startsWithCaseInsensitive, cutLastChars, removeAnsiColorCodes
 } = require('../utils')
 const {
     parseBash, traverseAST, NodeType, builtins
@@ -121,7 +121,7 @@ function getMatchingDirsAndFiles(word, homedir) {
         onlyFiles: false,
         markDirectories: true,
         caseSensitiveMatch: false
-    }).map(p => fromHomedir(p, homedir.slice(0, -1)))
+    }).map(p => env.pathFromHome(p, homedir))
     // Put directories first, then files
     let dirs = dirsAndFiles.filter(p => p.endsWith('/'))
     let files = dirsAndFiles.filter(p => !p.endsWith('/'))
@@ -134,12 +134,12 @@ function getParameterCompletions(word, line) {
     if (subCommands)
         return subCommands
     // Accomodate word to glob
-    let homedir = os.homedir() + '/'
+    let homedir = env.homedir()
     word = word.replace(/\\ /g, ' ')
+    if (word.startsWith('~/'))
+        word = homedir + word.substr(1)
     if (!word.includes('*'))
         word += '*'
-    if (word.startsWith('~/'))
-        word = homedir + word.substr(2)
     // Perform glob
     return getMatchingDirsAndFiles(word, homedir)
 }
