@@ -2,8 +2,6 @@
 
 ## Keyboard shortcuts
 - Cursor movement
-    - **backspace**: Deletes the character at the left of the cursor.
-    - **delete**: Deletes the character at the cursor position.
     - **left**: Moves the cursor left.
     - **right**: Moves the cursor right.
     - **ctrl-b**: Moves the cursor one word to the left.
@@ -11,14 +9,16 @@
     - **home**, **ctrl-a**: Moves the cursor to beginning of the line.
     - **end**, **ctrl-e**: Moves the cursor to end of the line.
 - Line editing
+    - **backspace**: Deletes the character at the left of the cursor.
+    - **delete**: Deletes the character at the cursor position.
     - **meta-backspace**: Deletes the word at the left of the cursor.
     - **escape**, **ctrl-u**: Clears the current line and stores it in a buffer.
     - **ctrl-y**: Recovers the cleared line.
-    - **ctrl-l**: Clears the screen.
 - Miscellaneous
     - **return**: Run the command currently being edited.
-    - **ctrl-d**: Quit `nash` and return to the parent shell.
     - **ctrl-c**: Discards the line.
+    - **ctrl-l**: Clears the screen.
+    - **ctrl-d**: Quit `nash` and return to the parent shell.
 - Command and directory history
     - **up**: Move backwards through history.
     - **down**: Move forward through history.
