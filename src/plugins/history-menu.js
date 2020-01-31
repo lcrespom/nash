@@ -5,7 +5,7 @@ const { bindKey } = require('../key-bindings')
 const { adjustPromptPosition } = require('../prompt')
 const { history, dirHistory } = require('../history')
 const { highlight, colorize } = require('./syntax-highlight')
-const runner = require('../runner')
+const { runCommand } = require('../runner')
 const editor = require('../editor')
 
 
@@ -34,13 +34,6 @@ function openVerticalMenu(items, decorate, done) {
         decorate,
         done
     })
-}
-
-function runCommand(cmd, done) {
-    runner.runCommand(
-        cmd,
-        userStatus => process.nextTick(() => done(userStatus))
-    )
 }
 
 function updateMenu(menu, key, line, initialItems, initialLen, filter) {
