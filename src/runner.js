@@ -194,7 +194,7 @@ let which = memoize(whichSlow)
 
 function runCommand(line, cb = () => {}) {
 	// Clear which cache: after a command, path and commands may have changed
-	//which = memoize(whichSlow)
+	which = memoize(whichSlow)
 	theCommand = expandJS(line.trim())
 	promptCB = cb
 	state = theCommand.length > 0
