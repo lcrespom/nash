@@ -19,6 +19,9 @@
     - [ ] Blog post
     - [ ] Youtube walkthrough
 
+## Installation
+- [ ] Add the packaging script to the repository & binaries to .gitignore
+
 ## Line editing
 - [ ] Catch exceptions in bindings to avoid breaking the shell
 - [x] Refactor editor.js async handling code, make kb bindings use promises
@@ -27,6 +30,7 @@
 - [ ] Typing while non-interactive command is running makes
     `runner.checkPromptAndWrite(...)` fail
 - [ ] If suggestion text overflows to next line, it is not cleared
+- [ ] Aliases are not detected by the which command
 
 ## History navigation
 - [x] Basic

@@ -15,13 +15,13 @@
     - **escape**, **ctrl-u**: Clears the current line and stores it in a buffer.
     - **ctrl-y**: Recovers the cleared line.
 - Miscellaneous
-    - **return**: Run the command currently being edited.
+    - **return**: Runs the command currently being edited.
     - **ctrl-c**: Discards the line.
     - **ctrl-l**: Clears the screen.
-    - **ctrl-d**: Quit `nash` and return to the parent shell.
+    - **ctrl-d**: If the command line is empty, quits `nash` and returns to the parent shell.
 - Command and directory history
-    - **up**: Move backwards through history.
-    - **down**: Move forward through history.
+    - **up**: Moves backwards through history.
+    - **down**: Moves forward through history.
     - **ctrl-space**: Accepts the line suggestion, i.e., the dim text that is not yet typed by the
         user and appears automatically at the right of the cursor when a previous command that starts
         with the current text is available. See the [Suggestions](#suggestions) section for more details.
