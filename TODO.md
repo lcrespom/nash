@@ -21,10 +21,14 @@
 
 ## Installation
 - [ ] Add the packaging script to the repository & binaries to .gitignore
+- [ ] Check that .nash/*.js scripts load correctly with binary distribution
 
 ## Line editing
-- [ ] Catch exceptions in bindings to avoid breaking the shell
 - [x] Refactor editor.js async handling code, make kb bindings use promises
+- [ ] Move line under prompt when line overflows
+- [ ] Catch exceptions in bindings to avoid breaking the shell
+- [ ] Improve support for multi-line prompt (agnoster), e.g. in
+    completion.tooManyWords and in directory history.
 
 ## Bugs
 - [ ] Typing while non-interactive command is running makes

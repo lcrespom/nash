@@ -1,6 +1,4 @@
-const requireNash = module.parent.require.bind(module.parent)
-
-const { bindKey, getKeyBindingByFunction } = requireNash('./key-bindings')
+const { bindKey, getKeyBindingByFunction } = require(NASH_BASE + '/key-bindings')
 
 
 function deleteWordToLeft(line) {

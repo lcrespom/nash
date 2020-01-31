@@ -92,6 +92,10 @@ function loadNashRCJS() {
 let pluginModules = []
 
 function loadPlugins(plugins) {
+	// Expose global variables so custom extensions can require nash modules
+	global.NASH_BASE = __dirname
+	global.NODE_MODULES = __dirname + '/../node_modules'
+	// Load plugins exported by nashrc.js
 	let modules = []
 	for (let plugin of plugins) {
 		if (plugin.startsWith('.'))

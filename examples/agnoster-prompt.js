@@ -6,12 +6,10 @@
  * 	 [Powerline](https://github.com/powerline/fonts) GitHub page.
  */
 
-const requireNash = module.parent.require.bind(module.parent)
+const chalk = require(NODE_MODULES + '/chalk')
 
-const chalk = requireNash('chalk')
-
-const { setPrompt, setTerminalTitle } = requireNash('./prompt')
-const { gitStatus, gitStatusFlags } = requireNash('./plugins/git-status')
+const { setPrompt, setTerminalTitle } = require(NASH_BASE + '/prompt')
+const { gitStatus, gitStatusFlags } = require(NASH_BASE + '/plugins/git-status')
 
 
 const SEGMENT_SEPARATOR = '\ue0b0'
