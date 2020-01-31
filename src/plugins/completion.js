@@ -97,7 +97,7 @@ function getCommandCompletions(word) {
         // Should filter by executable attribute
         return getParameterCompletions(word)
     let paths = process.env.PATH
-        .split(':')
+        .split(path.delimiter)
         .map(p => p + '/' + word + '*')
     return safeGlob(paths)
         .map(w => w.split('/').pop())
