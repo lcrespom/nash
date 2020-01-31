@@ -1,6 +1,7 @@
 const os = require('os')
 
 const { fromHomedir } = require('./utils')
+const env = require('./env')
 
 
 let cursor = null
@@ -37,7 +38,7 @@ function put(str) {
 function getPromptInfo(userStatus) {
 	lastUserStatus = userStatus
 	// Working directory
-	let cwd = userStatus.cwd || fromHomedir(process.cwd(), os.homedir())
+	let cwd = userStatus.cwd || fromHomedir(env.cwd(), os.homedir())
 	// Username
 	let username = userStatus.username || os.userInfo().username
 	// Host name (full and local)

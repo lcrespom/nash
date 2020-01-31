@@ -95,7 +95,7 @@
 - [ ] Get hostname from runner status
 - [ ] Don't do chdir from runner
 - [ ] Get all environment data from bash, e.g. don't use process.cwd (**next**).
-    Create specific `env` module with cwd, ls, homedir, username, hostname, which,
+    Create specific `env` module with *cwd, *chdir, ls, homedir, username, hostname, which,
     process.env, etc.
     - [ ] The `which` command is used on every keystroke - either disable or maximize
         memoization

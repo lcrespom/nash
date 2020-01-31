@@ -5,8 +5,8 @@ const { execFileSync } = require('child_process')
 const { nashShutdown } = require('./startup')
 const { commonInitialChars, fromHomedir, memoize } = require('./utils')
 const { dirHistory } = require('./history')
+const env = require('./env')
 
-const NASH_MARK = '\x1E\x1E>'
 let ptyProcess = null
 
 
@@ -78,8 +78,8 @@ function hideCommand(data) {
 }
 
 function checkPromptAndWrite(data) {
-	if (data.endsWith(NASH_MARK)) {
-		data = data.substr(0, data.length - NASH_MARK.length)
+	if (data.endsWith(env.NASH_MARK)) {
+		data = data.substr(0, data.length - env.NASH_MARK.length)
 		process.stdout.write(data)
 		state = TermState.readingStatus
 		theCommand = ' __rc=$?;whoami;pwd;echo $__rc;$(exit $__rc)'
@@ -102,9 +102,9 @@ function parseUserStatus() {
 	}
 }
 
-function chdir(dir) {
+function chdirOrWarn(dir) {
 	try {
-		process.chdir(dir)
+		env.chdir(dir)
 	}
 	catch (err) {
 		process.stdout.write('\nWARNING: could not chdir to ' + dir + '\n')
@@ -112,12 +112,12 @@ function chdir(dir) {
 }
 
 function captureStatus(data) {
-	if (data.endsWith(NASH_MARK)) {
-		data = data.substr(0, data.length - NASH_MARK.length)
+	if (data.endsWith(env.NASH_MARK)) {
+		data = data.substr(0, data.length - env.NASH_MARK.length)
 		userStatus += data
 		let ustatus = parseUserStatus()
-		if (process.cwd() != ustatus.cwd)
-			chdir(ustatus.cwd)
+		if (env.cwd() != ustatus.cwd)
+			chdirOrWarn(ustatus.cwd)
 		ustatus.cwd = fromHomedir(ustatus.cwd, os.homedir())
 		dirHistory.push(ustatus.cwd)
 		promptCB(ustatus)
@@ -155,8 +155,8 @@ function getShellNameAndParams() {
 function startShell() {
     let [shell, params] = getShellNameAndParams()
     let term = process.env.TERM || 'xterm-256color'
-	let dir = process.cwd() || process.env.HOME
-	process.env.PS1 = NASH_MARK
+	let dir = env.cwd() || process.env.HOME
+	process.env.PS1 = env.NASH_MARK
     ptyProcess = pty.spawn(shell, params, {
         name: term,
         cols: process.stdout.columns,
