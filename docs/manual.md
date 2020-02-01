@@ -169,18 +169,18 @@ Earch color property is configured via a string. Here is an excerpt of an exampl
 ```javascript
 
 module.exports = {
-	plugins: [
+    plugins: [
         //... plugins here
-	],
-	options: {
-		colors: {
+    ],
+    options: {
+        colors: {
             prompt: {
                 userAtHost: 'underline green',
                 path: 'yellow'
             }
         }
         // ... other options here
-	}
+    }
 }
 ```
 
