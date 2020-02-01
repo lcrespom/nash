@@ -5,12 +5,12 @@
 - [x] Features
 - [x] Examples directory with documented customizations
 - [x] Copy examples to `~/.nash` upon first startup
-- [ ] Usage
-    - [ ] Describe all key bindings
-    - [ ] Tab completion
-    - [ ] History
-    - [ ] Directory navigation
-    - [ ] Check that all plugins are properly documented
+- [x] Usage
+    - [x] Describe all key bindings
+    - [x] Tab completion
+    - [x] History
+    - [x] Directory navigation
+    - [x] Check that all plugins are properly documented
     - [ ] Inline JavaScript
 - [ ] Customization / Extension API
 - [ ] Contribution guide
