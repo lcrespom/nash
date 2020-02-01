@@ -63,7 +63,7 @@ via the `module.exports` object:
     The default `nashrc.js` file includes some defaults and has other sample options commented out, which
     the user can uncomment to test out.
 
-> Check the [Colors](#colors) section to see how colors are configured.
+> Check the [Configuring colors](#configuring-colors) section to see how colors are configured.
 
 ## Plugins
 
@@ -117,20 +117,89 @@ It has different working modes:
 In all working modes, when the menu is displayed, the search can be narrowed down by typing further characters, 
 thus filtering out the items that do not start with word at the left of the cursor.
 
-The menu is navigated by using `left`, `right`, `up` and `down` keys. The `return` key accepts the selected item
+The menu is navigated by using the cursor keys. The `return` key accepts the selected item
 and adds it to the command line, and the `escape` key closes the menu without updating the command line.
 
 The completion plugin can be configured via the **completion.commands** option. The sample file
-`~/.nash/command-completion.js` defines the list of parameters that are expected by the following commands:
-- `git`
-- `docker`
-- `npm`
-- `kubectl`
-
-Check the source code to see how the lists are configured.
+`~/.nash/command-completion.js` defines the list of parameters that are expected by `git`, `docker`, `npm` and `kubectl`, and more can be easily added - just check the source code to see how the lists are configured.
 
 ### Syntax highlight
+This plugin parses the command line as the user types it, and gives different colors to the different
+parts of it. It distinguishes the following parts of a command:
+- **Program**: any executable program or script.
+- **Builtin**: builtin functions of `bash` such as `echo`, `alias`, etc.
+- **Alias**: commands registered as alias via the `alias` builtin.
+- **Command error**: a word in a command position, but that is not identified as any of the above.
+- **Option**: a command parameter that starts with `-`.
+- **Parameter**: any other unquoted command parameter.
+- **Quote**: text between quotes.
+- **Redirect**: a redirection such as `>file`.
+- **Environment**: an environment variable such as `$PATH`.
+- **Assignment**: an environment variable assignment, e.g. `greeting="Hello"`.
+- **Comment**: any text after `#`.
+
+The configuration option **colors.syntaxHighlight** expects an object with an optional property for
+each of the above types. You can check the source code of `~/.nash/nashrc.js` to see how it is configured.
 
 ### Suggestions
+This plugin looks into the command history, and if it finds a command that begins with what the user
+is typing, it displays the most recen one at the end of the current line in a dim color. The user
+can type `ctrl-space` at any moment to complete the line with the suggestion. If the cursor is at
+the end of the line, the `right` key can also be used.
+
+The suggestion color can be configured with the **colors.suggestion.scol** property.
 
 ### History menu
+Nash keeps track of both command and directory history:
+- **Command history**: all executed commands are recorded and added to the `~/.nash/history` file.
+- **Directory history**: all directories visited via `cd` are recorded and added to the
+    `~/.nash/dirHistory` file.
+
+This plugin provides menus for displaying and interactively searching through both of them:
+- When the user types the `page-up` key, a drop-down menu with recent commands is shown,
+selecting the most recent one. The menu displays only the lines that begin with the current
+text, and typing more text further filters out the menu.
+- When the user types the `page-down` key, a drop-down menu with recent directories is shown.
+The menu displays only the directories that contain the current text, and typing more text further
+filters out the menu.
+
+
+## Configuring colors
+Earch color property is configured via a string. Here is an excerpt of an example `nashrc.js` file:
+```javascript
+
+module.exports = {
+	plugins: [
+        //... plugins here
+	],
+	options: {
+		colors: {
+            prompt: {
+                userAtHost: 'underline green',
+                path: 'yellow'
+            }
+        }
+        // ... other options here
+	}
+}
+```
+
+The **colors** option contains color configuration objects for different plugins. In the above
+example, color preferences for the `default-prompt` plugin are defined. Each color property is
+a string with one or more words separated by a space. Each word can be one of the following:
+- A standard terminal color name: black, red, green, yellow, blue, magenta, cyan, white,
+    blackBright (alias: gray, grey), redBright, greenBright, yellowBright, blueBright,
+    magentaBright, cyanBright and whiteBright.
+- A text modifier: bold, dim, italic, underline, inverse, hidden, strikethroug, reset. Notice
+    that text modifiers are frequently ignored by terminals, or else interpreted freely.
+    Testing is required in order to see their effect, but don't expect all of them to work.
+- A hexadecimal RGB color value, in CSS style, e.g. '#e6db74'.
+- Background colors can be set by prepending any color name or hexadecimal code with `/`.
+    For example: `white /blue` can be used to configure white foregroud on blue background.
+
+Some examples of valid color configuration strings are the following:
+- `bold yellow /blue`: Bold yellow text on blue background.
+- `underline #ff00ff`: Underlined bright magenta text over default background.
+- `green /#fd971f`: green text on orange background.
+
+> Text coloring in `nash` is supported via the great [chalk](https://github.com/chalk/chalk) library.
