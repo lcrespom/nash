@@ -92,10 +92,10 @@ function safeGlob(paths, options) {
     }
 }
 
-function getCommandCompletions(word) {
+function getCommandCompletions(word, line) {
     if (word.includes('/'))
         // Should filter by executable attribute
-        return getParameterCompletions(word)
+        return getParameterCompletions(word, line)
     let paths = process.env.PATH
         .split(path.delimiter)
         .map(p => p + '/' + word + '*')
@@ -160,7 +160,7 @@ function getCompletions(word, type, line) {
         case NodeType.unknown:
             return []
         case NodeType.command:
-            return getCommandCompletions(word)
+            return getCommandCompletions(word, line)
         case NodeType.parameter:
             return getParameterCompletions(word, line)
         case NodeType.environment:
