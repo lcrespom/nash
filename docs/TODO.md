@@ -94,3 +94,5 @@
     - [ ] The `which` command is used on every keystroke - either disable or maximize
         memoization
     - [ ] Detect when bash is remote (e.g. env.hostname != os.hostname)
+    - [ ] Adapt git-status plugin / move runCommand function to env /
+        search for other execFileSync invocations
