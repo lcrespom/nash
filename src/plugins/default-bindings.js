@@ -177,11 +177,10 @@ function acceptLine(line) {
 		let cmd = line.left + line.right
 		if (cmd.trim().length > 0)
 			history.push(cmd)
-		runner.runCommand(cmd, userStatus =>
-			resolve({ userStatus, decorateHint: 'no suggestions' })
-		)
+		runner.runCommand(cmd, userStatus => resolve({ userStatus }))
 	})
 	return {
+		...line,
 		promise,
 		keyListener(key) {
 			runner.write(key.ch || key.sequence)
