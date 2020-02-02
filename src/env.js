@@ -8,12 +8,7 @@ const { memoize } = require('./utils')
 const NASH_MARK = '\x1E\x1E>'
 
 function chdir(dir) {
-	try {
-		process.chdir(dir)
-	}
-	catch (err) {
-		process.stdout.write('\nWARNING: could not chdir to ' + dir + '\n')
-	}
+	process.chdir(dir)
 }
 
 function cwd() {

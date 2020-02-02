@@ -39,7 +39,7 @@ function getPromptInfo(userStatus) {
 	// Username
 	let username = userStatus.username || env.username()
 	// Host name (full and local)
-	let fqdn = env.hostname()
+	let fqdn = userStatus.hostname || env.hostname()
 	let hostname = fqdn.split('.')[0]
 	// Return code
 	let retCode = userStatus.retCode || 0
