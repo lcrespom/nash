@@ -6,12 +6,6 @@
 - [x] Examples directory with documented customizations
 - [x] Copy examples to `~/.nash` upon first startup
 - [x] Usage
-    - [x] Describe all key bindings
-    - [x] Tab completion
-    - [x] History
-    - [x] Directory navigation
-    - [x] Check that all plugins are properly documented
-    - [ ] Inline JavaScript
 - [ ] Customization / Extension API
 - [ ] Contribution guide
 - [ ] Make it visible
@@ -83,7 +77,7 @@
 - [ ] Mouse support for all menus (keypress module supports it)
 
 ## Compatibility / Portability
-- [ ] GitBash support (**next**)
+- [ ] GitBash support
 - [ ] Docker instructions for Windows
 - [x] More linux testing
 - [x] Slow/remote terminal

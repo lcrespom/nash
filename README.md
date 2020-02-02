@@ -41,7 +41,7 @@ Pressing F1 at any time displays a list of all keyboard shoutcuts and their corr
 	- Completion helpers for known commands (git, docker, npm, etc.) are configured via JSON settings.
 - An extensible plugin system which facilitates the addition of features.
 
-Check the [ToDo](TODO.md) for a list of features under development and planned for the future. Suggestions are welcome.
+Check the [ToDo](docs/TODO.md) for a list of features under development and planned for the future. Suggestions are welcome.
 
 
 ## Installation
