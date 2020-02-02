@@ -48,26 +48,17 @@ let TermState = {
 
 let promptCB = null
 let theCommand = null
+let grabOutput = false
 let state = TermState.waitingCommand
 let userStatus = ''
 
-function hideCommand(data) {
+function hideCommand(data, nextState) {
 	let cic = commonInitialChars(data, theCommand)
 	if (cic > 0) {
 		data = data.substr(cic)
 		theCommand = theCommand.substr(cic)
 		if (theCommand.length === 0) {
-			state = state == TermState.readingCommand
-				? TermState.runningCommand
-				: TermState.capturingStatus
-			if (data.length > 0)
-				dataFromShell(data)
-		}
-	}
-	else {
-		if (state == TermState.readingStatus && data.includes(theCommand)) {
-			data = data.substr(data.indexOf(theCommand) +  theCommand.length)
-			state = TermState.capturingStatus
+			state = nextState
 			if (data.length > 0)
 				dataFromShell(data)
 		}
@@ -75,14 +66,11 @@ function hideCommand(data) {
 	return data
 }
 
-function checkPromptAndWrite(data) {
+function readCommandOutput(data) {
 	if (data.endsWith(env.NASH_MARK)) {
 		data = data.substr(0, data.length - env.NASH_MARK.length)
 		process.stdout.write(data)
-		state = TermState.readingStatus
-		theCommand = ' __rc=$?;hostname;whoami;pwd;echo $__rc;$(exit $__rc)'
-		userStatus = ''
-		ptyProcess.write(theCommand + '\n')		
+		promptCB()
 	}
 	else {
 		process.stdout.write(data)
@@ -132,11 +120,11 @@ function dataFromShell(data) {
 		case TermState.waitingCommand:
 			return
 		case TermState.readingCommand:
-			return hideCommand(data)
+			return hideCommand(data, TermState.runningCommand)
 		case TermState.runningCommand:
-			return checkPromptAndWrite(data)
+			return readCommandOutput(data)
 		case TermState.readingStatus:
-			return hideCommand(data)
+			return hideCommand(data, TermState.capturingStatus)
 		case TermState.capturingStatus:
 			return captureStatus(data)
 	}
@@ -181,14 +169,30 @@ function write(txt) {
 
 //-------------------- Running --------------------
 
-function runCommand(line, cb = () => {}) {
-	theCommand = expandJS(line.trim())
+function runCommandInternal(cmd, cb) {
+	theCommand = cmd
 	promptCB = cb
-	state = theCommand.length > 0
+	ptyProcess.write(theCommand + '\n')
+}
+
+function runHiddenCommand(cmd, cb) {
+	grabOutput = true
+	userStatus = ''
+	runCommandInternal(` __rc=$?;${cmd};$(exit $__rc)`, cb)
+}
+
+function runCommand(line, cb = () => {}) {
+	grabOutput = false
+	let cmd = expandJS(line.trim())
+	state = cmd.length > 0
 		? TermState.readingCommand
 		: TermState.runningCommand
-	ptyProcess.write(theCommand + '\n')
-	env.refreshWhich()	// Clear which cache: after a command, path and commands may have changed
+	runCommandInternal(cmd, _ => {
+		state = TermState.readingStatus
+		runHiddenCommand('hostname;whoami;pwd;echo $__rc', cb)
+	})
+	// Clear which cache: after a command, path and commands may have changed
+	env.refreshWhich()
 }
 
 
