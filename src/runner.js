@@ -108,17 +108,11 @@ function chdirOrWarn(dir) {
 function captureOutput(data) {
 	if (data.endsWith(env.NASH_MARK)) {
 		data = data.substr(0, data.length - env.NASH_MARK.length)
-		cmdOutput += data
-		let ustatus = parseUserStatus()
-		if (env.cwd() != ustatus.cwd)
-			chdirOrWarn(ustatus.cwd)
-		ustatus.cwd = env.pathFromHome(ustatus.cwd)
-		dirHistory.push(ustatus.cwd)
-		promptCB(ustatus)
-		state = TermState.waitingCommand
+		processCommandOutput(data)
+		promptCB()
 	}
 	else {
-		cmdOutput += data
+		processCommandOutput(data)
 	}
 }
 
@@ -188,7 +182,7 @@ function runHiddenCommand(cmd, cb) {
 	runCommandInternal(` __rc=$?;${cmd};$(exit $__rc)`, cb)
 }
 
-function runCommand(line, cb = () => {}) {
+function runCommand(line, userCB = () => {}) {
 	grabOutput = false
 	let cmd = expandJS(line.trim())
 	state = cmd.length > 0
@@ -196,7 +190,15 @@ function runCommand(line, cb = () => {}) {
 		: TermState.runningCommand
 	runCommandInternal(cmd, _ => {
 		state = TermState.readingStatus
-		runHiddenCommand('hostname;whoami;pwd;echo $__rc', cb)
+		runHiddenCommand('hostname;whoami;pwd;echo $__rc', _ => {
+			let ustatus = parseUserStatus()
+			if (env.cwd() != ustatus.cwd)
+				chdirOrWarn(ustatus.cwd)
+			ustatus.cwd = env.pathFromHome(ustatus.cwd)
+			dirHistory.push(ustatus.cwd)
+			userCB(ustatus)
+			state = TermState.waitingCommand
+		})
 	})
 	// Clear which cache: after a command, path and commands may have changed
 	env.refreshWhich()
