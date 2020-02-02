@@ -6,6 +6,7 @@
 - [x] Examples directory with documented customizations
 - [x] Copy examples to `~/.nash` upon first startup
 - [x] Usage
+    - [ ] How to execute `nash` to ensure `bash` is located
 - [ ] Customization / Extension API
 - [ ] Contribution guide
 - [ ] Make it visible
