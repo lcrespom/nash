@@ -42,8 +42,6 @@ let TermState = {
 	waitingCommand: 'waiting',
 	readingCommand: 'reading',
 	runningCommand: 'running',
-	readingStatus: 'rstatus',
-	capturingStatus: 'cstatus'
 }
 
 let promptCB = null
@@ -52,13 +50,13 @@ let grabOutput = false
 let state = TermState.waitingCommand
 let cmdOutput = ''
 
-function hideCommand(data, nextState) {
+function hideCommand(data) {
 	let cic = commonInitialChars(data, theCommand)
 	if (cic > 0) {
 		data = data.substr(cic)
 		theCommand = theCommand.substr(cic)
 		if (theCommand.length === 0) {
-			state = nextState
+			state = TermState.runningCommand
 			if (data.length > 0)
 				dataFromShell(data)
 		}
@@ -105,29 +103,14 @@ function chdirOrWarn(dir) {
 	}
 }
 
-function captureOutput(data) {
-	if (data.endsWith(env.NASH_MARK)) {
-		data = data.substr(0, data.length - env.NASH_MARK.length)
-		processCommandOutput(data)
-		promptCB()
-	}
-	else {
-		processCommandOutput(data)
-	}
-}
-
 function dataFromShell(data) {
 	switch (state) {
 		case TermState.waitingCommand:
 			return
 		case TermState.readingCommand:
-			return hideCommand(data, TermState.runningCommand)
+			return hideCommand(data)
 		case TermState.runningCommand:
 			return readCommandOutput(data)
-		case TermState.readingStatus:
-			return hideCommand(data, TermState.capturingStatus)
-		case TermState.capturingStatus:
-			return captureOutput(data)
 	}
 }
 
@@ -189,7 +172,7 @@ function runCommand(line, userCB = () => {}) {
 		? TermState.readingCommand
 		: TermState.runningCommand
 	runCommandInternal(cmd, _ => {
-		state = TermState.readingStatus
+		state = TermState.readingCommand
 		runHiddenCommand('hostname;whoami;pwd;echo $__rc', _ => {
 			let ustatus = parseUserStatus()
 			if (env.cwd() != ustatus.cwd)
