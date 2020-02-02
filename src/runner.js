@@ -50,7 +50,7 @@ let promptCB = null
 let theCommand = null
 let grabOutput = false
 let state = TermState.waitingCommand
-let userStatus = ''
+let cmdOutput = ''
 
 function hideCommand(data, nextState) {
 	let cic = commonInitialChars(data, theCommand)
@@ -66,19 +66,26 @@ function hideCommand(data, nextState) {
 	return data
 }
 
+function processCommandOutput(data) {
+	if (grabOutput)
+		cmdOutput += data
+	else
+		process.stdout.write(data)
+}
+
 function readCommandOutput(data) {
 	if (data.endsWith(env.NASH_MARK)) {
 		data = data.substr(0, data.length - env.NASH_MARK.length)
-		process.stdout.write(data)
+		processCommandOutput(data)
 		promptCB()
 	}
 	else {
-		process.stdout.write(data)
+		processCommandOutput(data)
 	}
 }
 
 function parseUserStatus() {
-	let lines = userStatus.split('\n')
+	let lines = cmdOutput.split('\n')
 		.map(l => l.trim())
 		.filter(l => l.length > 0)
 	return {
@@ -98,10 +105,10 @@ function chdirOrWarn(dir) {
 	}
 }
 
-function captureStatus(data) {
+function captureOutput(data) {
 	if (data.endsWith(env.NASH_MARK)) {
 		data = data.substr(0, data.length - env.NASH_MARK.length)
-		userStatus += data
+		cmdOutput += data
 		let ustatus = parseUserStatus()
 		if (env.cwd() != ustatus.cwd)
 			chdirOrWarn(ustatus.cwd)
@@ -111,7 +118,7 @@ function captureStatus(data) {
 		state = TermState.waitingCommand
 	}
 	else {
-		userStatus += data
+		cmdOutput += data
 	}
 }
 
@@ -126,7 +133,7 @@ function dataFromShell(data) {
 		case TermState.readingStatus:
 			return hideCommand(data, TermState.capturingStatus)
 		case TermState.capturingStatus:
-			return captureStatus(data)
+			return captureOutput(data)
 	}
 }
 
@@ -177,7 +184,7 @@ function runCommandInternal(cmd, cb) {
 
 function runHiddenCommand(cmd, cb) {
 	grabOutput = true
-	userStatus = ''
+	cmdOutput = ''
 	runCommandInternal(` __rc=$?;${cmd};$(exit $__rc)`, cb)
 }
 
