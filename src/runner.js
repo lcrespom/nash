@@ -153,35 +153,36 @@ function write(txt) {
 
 //-------------------- Running --------------------
 
-function runCommandInternal(cmd, cb) {
-	theCommand = cmd
-	promptCB = cb
-	ptyProcess.write(theCommand + '\n')
+function runCommandInternal(cmd) {
+	return new Promise(resolve => {
+		theCommand = cmd
+		promptCB = resolve
+		state = cmd.length > 0
+			? TermState.readingCommand
+			: TermState.runningCommand
+		ptyProcess.write(theCommand + '\n')
+	})
 }
 
-function runHiddenCommand(cmd, cb) {
+function runHiddenCommand(cmd) {
 	grabOutput = true
 	cmdOutput = ''
-	runCommandInternal(` __rc=$?;${cmd};$(exit $__rc)`, cb)
+	return runCommandInternal(` __rc=$?;${cmd};$(exit $__rc)`)
 }
 
 function runCommand(line, userCB = () => {}) {
 	grabOutput = false
 	let cmd = expandJS(line.trim())
-	state = cmd.length > 0
-		? TermState.readingCommand
-		: TermState.runningCommand
-	runCommandInternal(cmd, _ => {
-		state = TermState.readingCommand
-		runHiddenCommand('hostname;whoami;pwd;echo $__rc', _ => {
-			let ustatus = parseUserStatus()
-			if (env.cwd() != ustatus.cwd)
-				chdirOrWarn(ustatus.cwd)
-			ustatus.cwd = env.pathFromHome(ustatus.cwd)
-			dirHistory.push(ustatus.cwd)
-			userCB(ustatus)
-			state = TermState.waitingCommand
-		})
+	runCommandInternal(cmd)
+	.then(() => runHiddenCommand('hostname;whoami;pwd;echo $__rc'))
+	.then(() => {
+		let ustatus = parseUserStatus()
+		if (env.cwd() != ustatus.cwd)
+			chdirOrWarn(ustatus.cwd)
+		ustatus.cwd = env.pathFromHome(ustatus.cwd)
+		dirHistory.push(ustatus.cwd)
+		userCB(ustatus)
+		state = TermState.waitingCommand
 	})
 	// Clear which cache: after a command, path and commands may have changed
 	env.refreshWhich()
