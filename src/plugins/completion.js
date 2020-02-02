@@ -217,8 +217,9 @@ function updateMenu(menu, key, line, initialItems, initialLen) {
         line.word = line.word.slice(0, -1)
     }
     process.stdout.write('\n')
+    let wordEnd = line.word.split('/').pop()
     let startsWith = (
-        i => removeAnsiColorCodes(i).startsWith(line.word.split('/').pop()))
+        i => startsWithCaseInsensitive(removeAnsiColorCodes(i), wordEnd))
     let items = initialItems.filter(startsWith)
     if (items.length > 0) {
         if (menu.selection >= items.length)
@@ -311,6 +312,8 @@ function completeWord(line) {
     if (line.left + line.right == '')
         return completeCD()
     let [word, type] = getWordAndType(line)
+    if (type == NodeType.unknown && line.left.endsWith('$'))
+        [word, type] = ['$', NodeType.environment]
     words = getCompletions(word, type, line)
     if (words.length == 0) {
         // No match: do nothing
