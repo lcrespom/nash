@@ -8,7 +8,15 @@ const { memoize } = require('./utils')
 
 const NASH_MARK = '\x1E\x1E>'
 let userStatus = null
+let isRemote = false
+let runnerRHC = undefined
 
+
+function runHiddenCommand(cmd) {
+	if (!runnerRHC)
+		runnerRHC = require('./runner').runHiddenCommand
+	return runnerRHC(cmd)
+}
 
 function initUserStatus() {
 	let fqdn = os.hostname()
@@ -29,10 +37,14 @@ function getUserStatus() {
 
 function setUserStatus(ustat) {
 	userStatus = ustat
+	userStatus.fqdn = ustat.hostname
+	userStatus.hostname = ustat.fqdn.split('.')[0]
+	isRemote = userStatus.fqdn != os.hostname()
 }
 
 function chdir(dir) {
-	process.chdir(dir)
+	if (!isRemote)
+		process.chdir(dir)
 }
 
 function cwd() {
@@ -45,7 +57,7 @@ function homedir() {
 
 function listDirs(path) {
 	return fs.readdirSync(path, { withFileTypes: true })
-	.filter(dirent => dirent.isDirectory())
+		.filter(dirent => dirent.isDirectory())
 }
 
 /**

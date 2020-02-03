@@ -189,6 +189,7 @@ async function runCommand(line) {
 
 module.exports = {
 	runCommand,
+	runHiddenCommand,
 	write,
 	startShell
 }
