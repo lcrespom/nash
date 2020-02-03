@@ -66,7 +66,7 @@ function cd(command, word) {
     // Get all directories
     let dirs
     try {
-            dirs = env.listDirs(baseDir)
+        dirs = env.listDirs(baseDir)
             .map(dirent => dirent.name + '/')
     }
     catch (err) {
