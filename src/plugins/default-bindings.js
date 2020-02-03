@@ -173,15 +173,12 @@ function downLineOrHistory(line) {
 //--------------- Keys that break the editing process ---------------
 
 function acceptLine(line) {
-	let promise = new Promise(resolve => {
-		let cmd = line.left + line.right
-		if (cmd.trim().length > 0)
-			history.push(cmd)
-		runner.runCommand(cmd, userStatus => resolve({ userStatus }))
-	})
+	let cmd = line.left + line.right
+	if (cmd.trim().length > 0)
+		history.push(cmd)
 	return {
 		...line,
-		promise,
+		promise: runner.runCommand(cmd),
 		keyListener(key) {
 			runner.write(key.ch || key.sequence)
 		}

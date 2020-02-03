@@ -42,14 +42,13 @@ let TermState = {
 	waitingCommand: 'waiting',
 	readingCommand: 'reading',
 	runningCommand: 'running',
-	readingStatus: 'rstatus',
-	capturingStatus: 'cstatus'
 }
 
 let promptCB = null
 let theCommand = null
+let grabOutput = false
 let state = TermState.waitingCommand
-let userStatus = ''
+let cmdOutput = ''
 
 function hideCommand(data) {
 	let cic = commonInitialChars(data, theCommand)
@@ -57,17 +56,7 @@ function hideCommand(data) {
 		data = data.substr(cic)
 		theCommand = theCommand.substr(cic)
 		if (theCommand.length === 0) {
-			state = state == TermState.readingCommand
-				? TermState.runningCommand
-				: TermState.capturingStatus
-			if (data.length > 0)
-				dataFromShell(data)
-		}
-	}
-	else {
-		if (state == TermState.readingStatus && data.includes(theCommand)) {
-			data = data.substr(data.indexOf(theCommand) +  theCommand.length)
-			state = TermState.capturingStatus
+			state = TermState.runningCommand
 			if (data.length > 0)
 				dataFromShell(data)
 		}
@@ -75,22 +64,27 @@ function hideCommand(data) {
 	return data
 }
 
-function checkPromptAndWrite(data) {
+function processCommandOutput(data) {
+	if (grabOutput)
+		cmdOutput += data
+	else
+		process.stdout.write(data)
+}
+
+function readCommandOutput(data) {
 	if (data.endsWith(env.NASH_MARK)) {
 		data = data.substr(0, data.length - env.NASH_MARK.length)
-		process.stdout.write(data)
-		state = TermState.readingStatus
-		theCommand = ' __rc=$?;hostname;whoami;pwd;echo $__rc;$(exit $__rc)'
-		userStatus = ''
-		ptyProcess.write(theCommand + '\n')		
+		processCommandOutput(data)
+		state = TermState.waitingCommand
+		promptCB()
 	}
 	else {
-		process.stdout.write(data)
+		processCommandOutput(data)
 	}
 }
 
-function parseUserStatus() {
-	let lines = userStatus.split('\n')
+function parseUserStatus(output) {
+	let lines = output.split('\n')
 		.map(l => l.trim())
 		.filter(l => l.length > 0)
 	return {
@@ -110,23 +104,6 @@ function chdirOrWarn(dir) {
 	}
 }
 
-function captureStatus(data) {
-	if (data.endsWith(env.NASH_MARK)) {
-		data = data.substr(0, data.length - env.NASH_MARK.length)
-		userStatus += data
-		let ustatus = parseUserStatus()
-		if (env.cwd() != ustatus.cwd)
-			chdirOrWarn(ustatus.cwd)
-		ustatus.cwd = env.pathFromHome(ustatus.cwd)
-		dirHistory.push(ustatus.cwd)
-		promptCB(ustatus)
-		state = TermState.waitingCommand
-	}
-	else {
-		userStatus += data
-	}
-}
-
 function dataFromShell(data) {
 	switch (state) {
 		case TermState.waitingCommand:
@@ -134,11 +111,7 @@ function dataFromShell(data) {
 		case TermState.readingCommand:
 			return hideCommand(data)
 		case TermState.runningCommand:
-			return checkPromptAndWrite(data)
-		case TermState.readingStatus:
-			return hideCommand(data)
-		case TermState.capturingStatus:
-			return captureStatus(data)
+			return readCommandOutput(data)
 	}
 }
 
@@ -181,14 +154,36 @@ function write(txt) {
 
 //-------------------- Running --------------------
 
-function runCommand(line, cb = () => {}) {
-	theCommand = expandJS(line.trim())
-	promptCB = cb
-	state = theCommand.length > 0
-		? TermState.readingCommand
-		: TermState.runningCommand
-	ptyProcess.write(theCommand + '\n')
-	env.refreshWhich()	// Clear which cache: after a command, path and commands may have changed
+async function runCommandInternal(cmd) {
+	return new Promise(resolve => {
+		theCommand = cmd
+		promptCB = resolve
+		state = cmd.length > 0
+			? TermState.readingCommand
+			: TermState.runningCommand
+		ptyProcess.write(theCommand + '\n')
+	})
+}
+
+async function runHiddenCommand(cmd) {
+	grabOutput = true
+	cmdOutput = ''
+	await runCommandInternal(` __rc=$?;${cmd};$(exit $__rc)`)
+	return cmdOutput
+}
+
+async function runCommand(line) {
+	env.refreshWhich()	// Clear which cache
+	grabOutput = false
+	let cmd = expandJS(line.trim())
+	await runCommandInternal(cmd)
+	let output = await runHiddenCommand('hostname;whoami;pwd;echo $__rc')
+	let ustatus = parseUserStatus(output)
+	if (env.cwd() != ustatus.cwd)
+		chdirOrWarn(ustatus.cwd)
+	ustatus.cwd = env.pathFromHome(ustatus.cwd)
+	dirHistory.push(ustatus.cwd)
+	env.setUserStatus(ustatus)
 }
 
 

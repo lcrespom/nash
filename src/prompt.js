@@ -2,7 +2,6 @@ const env = require('./env')
 
 
 let cursor = null
-let lastUserStatus = {}
 
 // Default prompt function
 let prompt = (pinfo) => 'nash> '
@@ -30,27 +29,6 @@ function setPrompt(promptFunction) {
 
 function put(str) {
 	process.stdout.write(str)
-}
-
-function getPromptInfo(userStatus) {
-	lastUserStatus = userStatus
-	// Working directory
-	let cwd = userStatus.cwd || env.pathFromHome(env.cwd(), env.homedir())
-	// Username
-	let username = userStatus.username || env.username()
-	// Host name (full and local)
-	let fqdn = userStatus.hostname || env.hostname()
-	let hostname = fqdn.split('.')[0]
-	// Return code
-	let retCode = userStatus.retCode || 0
-	// All together
-	return {
-		cwd,
-		username,
-		hostname,
-		fqdn,
-		retCode
-	}
 }
 
 const HIDE_CURSOR = '\x1b[?25l'
@@ -101,8 +79,8 @@ function adjustPromptPosition(rows) {
 		cursor.y = process.stdout.rows - rows - 1
 }
 
-function putPrompt(userStatus = lastUserStatus) {
-	let promptStr = prompt(getPromptInfo(userStatus))
+function putPrompt() {
+	let promptStr = prompt(env.getUserStatus())
 	put(promptStr)
 	cursor = null
     put(HIDE_TEXT + GET_CURSOR_POS)

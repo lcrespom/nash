@@ -89,10 +89,11 @@
     - [ ] Then disable highlight from table menus, as `ls` already does
 - [ ] Get hostname from runner status
 - [ ] Don't do chdir from runner
-- [x] Get all environment data from bash, e.g. don't use process.cwd (**next**).
+- [x] Get all environment data from bash, e.g. don't use process.cwd.
     Create specific `env` module with cwd, chdir, ls, homedir, username, hostname, which, etc.
     - [ ] The `which` command is used on every keystroke - either disable or maximize
         memoization
     - [ ] Detect when bash is remote (e.g. env.hostname != os.hostname)
     - [ ] Adapt git-status plugin / move runCommand function to env /
         search for other execFileSync invocations
+    - [ ] Refactor to use much more promises and async/await, less plain callbacks
