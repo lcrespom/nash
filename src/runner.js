@@ -83,8 +83,8 @@ function readCommandOutput(data) {
 	}
 }
 
-function parseUserStatus() {
-	let lines = cmdOutput.split('\n')
+function parseUserStatus(output) {
+	let lines = output.split('\n')
 		.map(l => l.trim())
 		.filter(l => l.length > 0)
 	return {
@@ -154,7 +154,7 @@ function write(txt) {
 
 //-------------------- Running --------------------
 
-function runCommandInternal(cmd) {
+async function runCommandInternal(cmd) {
 	return new Promise(resolve => {
 		theCommand = cmd
 		promptCB = resolve
@@ -165,26 +165,25 @@ function runCommandInternal(cmd) {
 	})
 }
 
-function runHiddenCommand(cmd) {
+async function runHiddenCommand(cmd) {
 	grabOutput = true
 	cmdOutput = ''
-	return runCommandInternal(` __rc=$?;${cmd};$(exit $__rc)`)
+	await runCommandInternal(` __rc=$?;${cmd};$(exit $__rc)`)
+	return cmdOutput
 }
 
-function runCommand(line) {
+async function runCommand(line) {
 	env.refreshWhich()	// Clear which cache
 	grabOutput = false
 	let cmd = expandJS(line.trim())
-	return runCommandInternal(cmd)
-		.then(() => runHiddenCommand('hostname;whoami;pwd;echo $__rc'))
-		.then(() => {
-			let ustatus = parseUserStatus()
-			if (env.cwd() != ustatus.cwd)
-				chdirOrWarn(ustatus.cwd)
-			ustatus.cwd = env.pathFromHome(ustatus.cwd)
-			dirHistory.push(ustatus.cwd)
-			return ustatus
-		})
+	await runCommandInternal(cmd)
+	let output = await runHiddenCommand('hostname;whoami;pwd;echo $__rc')
+	let ustatus = parseUserStatus(output)
+	if (env.cwd() != ustatus.cwd)
+		chdirOrWarn(ustatus.cwd)
+	ustatus.cwd = env.pathFromHome(ustatus.cwd)
+	dirHistory.push(ustatus.cwd)
+	return ustatus
 }
 
 
