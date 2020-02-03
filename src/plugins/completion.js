@@ -258,9 +258,10 @@ function showAllWords(line, word, words) {
             if (key.ch || key.name == 'backspace') {
                 items = updateMenu(menu, key, line, initialItems, initialLen)
             }
-            else if (items.length > 0) {
+            else {
                 process.stdout.write('\n')
-                menu.keyHandler(key.ch, key)
+                if (key.name == 'escape' || items.length > 0)
+                    menu.keyHandler(key.ch, key)
                 editor.writeLine(line)
             }
         }
