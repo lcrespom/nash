@@ -8,6 +8,7 @@
 - [x] Usage
     - [ ] How to execute `nash` to ensure `bash` is located
 - [ ] Customization / Extension API
+    - [ ] Writing your own plugin (start/stop, etc)
 - [ ] Contribution guide
 - [ ] Make it visible
     - [ ] Twitter
@@ -90,7 +91,7 @@
 - [ ] Get hostname from runner status
 - [ ] Don't do chdir from runner
 - [x] Get all environment data from bash, e.g. don't use process.cwd.
-    Create specific `env` module with cwd, chdir, ls, homedir, username, hostname, which, etc.
+    Create specific `env` module with cwd, chdir, ls, homedir, which, etc.
     - [ ] The `which` command is used on every keystroke - either disable or maximize
         memoization
     - [ ] Detect when bash is remote (e.g. env.hostname != os.hostname)

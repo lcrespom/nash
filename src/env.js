@@ -10,10 +10,10 @@ let userStatus = null
 
 
 function initUserStatus() {
-	let fqdn = hostname()
+	let fqdn = os.hostname()
 	return {
 		cwd: pathFromHome(cwd(), homedir()),
-		username: username(),
+		username: os.userInfo().username,
 		hostname: fqdn.split('.')[0],
 		fqdn,
 		retCode: 0
@@ -60,14 +60,6 @@ function pathFromHome(cwd, home) {
 	return cwd
 }
 
-function username() {
-	return os.userInfo().username
-}
-
-function hostname() {
-	return os.hostname()
-}
-
 function whichSlow(command) {
 	try {
 		return execFileSync('/usr/bin/which', [ command ]).toString().trim()
@@ -93,5 +85,4 @@ module.exports = {
 	getUserStatus, setUserStatus,
 	which, refreshWhich,
 	cwd, chdir, homedir, listDirs, pathFromHome,
-	username, hostname
 }
