@@ -1,6 +1,7 @@
 const os = require('os')
 const fs = require('fs')
 const { execFileSync } = require('child_process')
+const fastglob = require('fast-glob')
 
 const { memoize } = require('./utils')
 
@@ -60,6 +61,10 @@ function pathFromHome(cwd, home) {
 	return cwd
 }
 
+function glob(paths, options) {
+	return fastglob.sync(paths, options)
+}
+
 function whichSlow(command) {
 	try {
 		return execFileSync('/usr/bin/which', [ command ]).toString().trim()
@@ -83,6 +88,6 @@ refreshWhich()
 module.exports = {
     NASH_MARK,
 	getUserStatus, setUserStatus,
+	cwd, chdir, homedir, glob, listDirs, pathFromHome,
 	which, refreshWhich,
-	cwd, chdir, homedir, listDirs, pathFromHome,
 }

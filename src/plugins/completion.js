@@ -1,5 +1,4 @@
 const path = require('path')
-const glob = require('fast-glob')
 const chalk = require('chalk')
 
 const { computeTableLayout, tableMenu } = require('node-terminal-menu')
@@ -85,7 +84,7 @@ function getWordAndType(line) {
 
 function safeGlob(paths, options) {
     try {
-        return glob.sync(paths, options)
+        return env.glob(paths, options)
     }
     catch (err) {
         return []
@@ -311,7 +310,7 @@ function completeWord(line) {
     let [word, type] = getWordAndType(line)
     if (type == NodeType.unknown && line.left.endsWith('$'))
         [word, type] = ['$', NodeType.environment]
-    words = getCompletions(word, type, line)
+    let words = getCompletions(word, type, line)
     if (words.length == 0) {
         // No match: do nothing
         return line
@@ -342,6 +341,5 @@ module.exports = {
     completeWord,
     getWordAndType,
     NodeType,
-    safeGlob,
     start
 }
