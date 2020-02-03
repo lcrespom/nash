@@ -22,14 +22,16 @@ let lastBinding = null
  * not redisplayed for synchronous functions, unless the returned object
  * also contains the `showPrompt` property set to `true`.
  *
- * If asynchronous, it must return an object with the following properties:
- * - promise: a promise that will resolve when the bound function has
- * 	 finished running. The resolved object will contain the new line `left`
- *   and `right` properties. The prompt will be redisplayed upon the promise
- *   completion, unless the resolved line object also contains the `showPrompt`
- *   property set to `false`.
- * - keyListener: an optional key listener function that will be invoked for
- *   each key pressed until the promise is resolved.
+ * If asynchronous, it must return a promise that will resolve when the bound
+ * function has finished running. The resolved object will contain the new
+ * line `left` and `right` properties. The prompt will be redisplayed upon
+ * the promise completion, unless the resolved line object also contains the
+ * `showPrompt` property set to `false`.
+ * 
+ * Asynchronous bindings usually handle keyboard input. Keyboard events
+ * can be obtained by calling the `onKeyPressed` function of the `editor`
+ * module and passing a listener function. The listener will be automatically
+ * discarded after the promise resolves.
  */
 function bindKey(knames, code, desc) {
 	if (!Array.isArray(knames))

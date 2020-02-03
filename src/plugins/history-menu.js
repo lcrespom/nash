@@ -69,18 +69,16 @@ function showHistoryMenu(line, items,
             menuDone({ ...line, showPrompt: false })
     })
     editor.writeLine(line)
-	return {
-        promise: new Promise(resolve => menuDone = resolve),
-		keyListener(key) {
-            if (key.ch || key.name == 'backspace')
-                items = updateMenu(menu, key, line, initialItems, initialLen, filter)
-            else if (items.length > 0) {
-                process.stdout.write('\n')
-                menu.keyHandler(key.ch, key)
-                editor.writeLine(line)
-            }
+    editor.onKeyPressed(key => {
+        if (key.ch || key.name == 'backspace')
+            items = updateMenu(menu, key, line, initialItems, initialLen, filter)
+        else if (items.length > 0) {
+            process.stdout.write('\n')
+            menu.keyHandler(key.ch, key)
+            editor.writeLine(line)
         }
-	}
+    })
+	return new Promise(resolve => menuDone = resolve)
 }
 
 function startsWith(item, text) {

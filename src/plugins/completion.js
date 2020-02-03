@@ -252,28 +252,24 @@ function showAllWords(line, word, words) {
     if (!menu)
         return null     // Too many items to show interactive menu
     editor.writeLine(line)
-    return {
-        promise: new Promise(resolve => menuDone = resolve),
-		keyListener(key) {
-            if (key.ch || key.name == 'backspace') {
-                items = updateMenu(menu, key, line, initialItems, initialLen)
-            }
-            else {
-                process.stdout.write('\n')
-                if (key.name == 'escape' || items.length > 0)
-                    menu.keyHandler(key.ch, key)
-                editor.writeLine(line)
-            }
+    editor.onKeyPressed(key => {
+        if (key.ch || key.name == 'backspace') {
+            items = updateMenu(menu, key, line, initialItems, initialLen)
         }
-	}
+        else {
+            process.stdout.write('\n')
+            if (key.name == 'escape' || items.length > 0)
+                menu.keyHandler(key.ch, key)
+            editor.writeLine(line)
+        }
+    })
+    return new Promise(resolve => menuDone = resolve)
 }
 
 function tooManyWords(line, words) {
     process.stdout.write(`Do you wish to see all ${words.length} matches? `)
-    let yesNoDone = () => {}
-    return {
-        promise: new Promise(resolve => yesNoDone = resolve),
-        keyListener(key) {
+    return new Promise(resolve => {
+        editor.onKeyPressed(key => {
             if (key.ch == 'y' || key.ch == 'Y')
                 showTableMenu(words, null, false)
             else {
@@ -281,9 +277,9 @@ function tooManyWords(line, words) {
                 process.stdout.cursorTo(0, cp.y)
                 process.stdout.clearScreenDown()
             }
-            yesNoDone(line)
-        }
-    }
+            resolve(line)
+        })
+    })
 }
 
 function completeWords(line, word, words) {
