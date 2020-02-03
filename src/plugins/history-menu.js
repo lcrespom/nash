@@ -59,7 +59,6 @@ function showHistoryMenu(line, items,
     let menuDone = () => {}
     let initialItems = items
     let initialLen = line.left.length
-    line.decorateHint = 'no suggestions'
     let menu = openVerticalMenu(items, decorate, sel => {
         process.stdout.clearScreenDown()
         if (sel >= 0)

@@ -39,6 +39,7 @@ function unknownKey(key) {
 }
 
 function applyBindings(key) {
+	//TODO re-document key binding API
 	let bindings = getKeyBindings(key.name)
 	if (!bindings || bindings.length == 0)
 		return unknownKey(key)
@@ -46,7 +47,7 @@ function applyBindings(key) {
 	for (let b of bindings) {
 		newLine = b.code(newLine, key)
 		setLastBinding(b.code)
-		if (newLine.promise || newLine.showPrompt)
+		if (newLine instanceof Promise || newLine.showPrompt)
 			break
 	}
 	return newLine
@@ -74,16 +75,14 @@ function writeLine(newLine) {
 
 function doNothingKeyListener(key) {}
 
-async function handlePromise(line) {
-	if (line.left || line.right)
-		writeLine(line)
-	keyListener = line.keyListener || doNothingKeyListener
-	line.promise.then(async (newLine = {}) => {
-		keyListener = editorKeyListener
-		if (newLine.showPrompt !== false)
-			await putPrompt()
-		writeLine(newLine)
-	})
+async function handlePromise(promise) {
+	if (keyListener == editorKeyListener)
+		keyListener = doNothingKeyListener
+	let newLine = await promise || {}
+	keyListener = editorKeyListener
+	if (newLine.showPrompt !== false)
+		await putPrompt()
+	writeLine(newLine)
 }
 
 async function editorKeyListener(key) {
@@ -98,7 +97,7 @@ async function editorKeyListener(key) {
 	}
 	else {
 		newLine = applyBindings(key)
-		if (newLine.promise)
+		if (newLine instanceof Promise)
 			return handlePromise(newLine)
 		else {
 			if (newLine.showPrompt === true)
@@ -141,6 +140,10 @@ function analyzeKey(ch, key) {
 	return key
 }
 
+function onKeyPressed(kl) {
+	keyListener = kl
+}
+
 function handleKeypress(ch, key) {
 	if (promptOwnsInput()) return
 	key = analyzeKey(ch, key)
@@ -154,6 +157,7 @@ function initialize() {
 module.exports = {
 	handleKeypress,
 	registerLineDecorator,
+	onKeyPressed,
 	writeLine,
 	initialize
 }

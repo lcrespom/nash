@@ -6,6 +6,7 @@ const runner = require('../runner')
 const { history } = require('../history')
 const { getOption } = require('../startup')
 const { colorize } = require('../colors')
+const editor = require('../editor')
 
 
 //--------------- Line movement and deletion ---------------
@@ -176,13 +177,9 @@ function acceptLine(line) {
 	let cmd = line.left + line.right
 	if (cmd.trim().length > 0)
 		history.push(cmd)
-	return {
-		...line,
-		promise: runner.runCommand(cmd),
-		keyListener(key) {
-			runner.write(key.ch || key.sequence)
-		}
-	}
+	editor.onKeyPressed(key => runner.write(key.ch || key.sequence))
+	editor.writeLine(line)
+	return runner.runCommand(cmd)
 }
 
 function goodbye(line) {
@@ -206,15 +203,13 @@ function describeKeyBinding(kname, binding, cols) {
 }
 
 function describeNextKey(line) {
-	let commandDone = () => {}
 	if (line.left.length + line.right.length > 0) return line
-	process.stdout.write('\nType a key: ')
-	return {
-		promise: new Promise(resolve => commandDone = resolve),
-		keyListener(key) {
+	return new Promise(resolve => {
+		process.stdout.write('\nType a key: ')
+		editor.onKeyPressed(key => {
 			process.stdout.write(key.name ? key.name : key.ch)
-            let bnds = getKeyBindings(key.name)
-            if (bnds) {
+			let bnds = getKeyBindings(key.name)
+			if (bnds) {
 				let hlColors = getOption('colors.syntaxHighlight')
 				for (let bnd of bnds) {
 					let desc = describeKeyBinding(key.name, bnd, hlColors)
@@ -224,9 +219,9 @@ function describeNextKey(line) {
 			else {
 				process.stdout.write('\n')
 			}
-			commandDone()
-		}
-	}
+			resolve()
+		})
+	})
 }
 
 function listKeys(line) {
