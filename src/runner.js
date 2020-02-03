@@ -170,22 +170,21 @@ function runHiddenCommand(cmd) {
 	return runCommandInternal(` __rc=$?;${cmd};$(exit $__rc)`)
 }
 
-function runCommand(line, userCB = () => {}) {
+function runCommand(line) {
+	env.refreshWhich()	// Clear which cache
 	grabOutput = false
 	let cmd = expandJS(line.trim())
-	runCommandInternal(cmd)
-	.then(() => runHiddenCommand('hostname;whoami;pwd;echo $__rc'))
-	.then(() => {
-		let ustatus = parseUserStatus()
-		if (env.cwd() != ustatus.cwd)
-			chdirOrWarn(ustatus.cwd)
-		ustatus.cwd = env.pathFromHome(ustatus.cwd)
-		dirHistory.push(ustatus.cwd)
-		userCB(ustatus)
-		state = TermState.waitingCommand
-	})
-	// Clear which cache: after a command, path and commands may have changed
-	env.refreshWhich()
+	return runCommandInternal(cmd)
+		.then(() => runHiddenCommand('hostname;whoami;pwd;echo $__rc'))
+		.then(() => {
+			let ustatus = parseUserStatus()
+			if (env.cwd() != ustatus.cwd)
+				chdirOrWarn(ustatus.cwd)
+			ustatus.cwd = env.pathFromHome(ustatus.cwd)
+			dirHistory.push(ustatus.cwd)
+			state = TermState.waitingCommand
+			return ustatus
+		})
 }
 
 
