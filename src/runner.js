@@ -75,6 +75,7 @@ function readCommandOutput(data) {
 	if (data.endsWith(env.NASH_MARK)) {
 		data = data.substr(0, data.length - env.NASH_MARK.length)
 		processCommandOutput(data)
+		state = TermState.waitingCommand
 		promptCB()
 	}
 	else {
@@ -182,7 +183,6 @@ function runCommand(line) {
 				chdirOrWarn(ustatus.cwd)
 			ustatus.cwd = env.pathFromHome(ustatus.cwd)
 			dirHistory.push(ustatus.cwd)
-			state = TermState.waitingCommand
 			return ustatus
 		})
 }
