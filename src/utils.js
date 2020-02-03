@@ -27,6 +27,14 @@ function removeAnsiColorCodes(str) {
 }
 
 /**
+ * Removes any ANSI terminal codes from a given string
+ * @param {string} str 
+ */
+function removeAnsiCodes(str) {
+	return str.replace(/\x1b\[[0-9:;<=>\?]*[A-Za-z]/g, '')
+}
+
+/**
  * Cuts a substring from a string that potentially contains ANSI
  * color commands, preserving the visible length.
  * @param {string} str the input string
@@ -168,6 +176,7 @@ module.exports = {
 	ucfirst,
 	startsWithCaseInsensitive,
 	removeAnsiColorCodes,
+	removeAnsiCodes,
 	substrWithColors,
     commonInitialChars,
 	cutLastChars,

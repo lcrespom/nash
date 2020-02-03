@@ -3,7 +3,7 @@ const fs = require('fs')
 const { execFileSync } = require('child_process')
 const fastglob = require('fast-glob')
 
-const { memoize, removeAnsiColorCodes } = require('./utils')
+const { memoize, removeAnsiCodes } = require('./utils')
 
 
 const NASH_MARK = '\x1E\x1E>'
@@ -56,6 +56,7 @@ function homedir() {
 }
 
 function listDirs(path) {
+	//TODO delegate on glob
 	return fs.readdirSync(path, { withFileTypes: true })
 		.filter(dirent => dirent.isDirectory())
 }
@@ -76,10 +77,10 @@ function pathFromHome(cwd, home) {
 async function glob(paths, options) {
 	if (isRemote) {
 		//TODO paths can be an array
-		//TODO do not use --color=none, but remove ansi color codes
-		let command = `ls -p1d --color=none ${paths}; echo $?`
+		let command = `ls -p1d ${paths}; echo $?`
 		let out = await runHiddenCommand(command)
-		let files = out.split('\n')
+		let files = removeAnsiCodes(out)
+			.split('\n')
 			.map(l => l.trim())
 			.filter(l => l.length > 0)
 		let rc = files.pop()
