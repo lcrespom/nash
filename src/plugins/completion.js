@@ -82,24 +82,24 @@ function getWordAndType(line) {
 
 //------------------------- Completion search -------------------------
 
-function safeGlob(paths, options) {
+async function safeGlob(paths, options) {
     try {
-        return env.glob(paths, options)
+        return await env.glob(paths, options)
     }
     catch (err) {
         return []
     }
 }
 
-function getCommandCompletions(word, line) {
+async function getCommandCompletions(word, line) {
     if (word.includes('/'))
         // Should filter by executable attribute
         return getParameterCompletions(word, line)
     let paths = process.env.PATH
         .split(path.delimiter)
         .map(p => p + '/' + word + '*')
-    return safeGlob(paths)
-        .map(w => w.split('/').pop())
+    let words = await safeGlob(paths)
+    return words.map(w => w.split('/').pop())
         .concat(builtins.filter(w => w.startsWith(word)))
 }
 
@@ -115,19 +115,20 @@ function getSubcommandCompletions(word, line) {
         return subCommands.filter(sc => startsWithCaseInsensitive(sc, word))
 }
 
-function getMatchingDirsAndFiles(word, homedir) {
-    let dirsAndFiles = safeGlob(word, {
+async function getMatchingDirsAndFiles(word, homedir) {
+    let dirsAndFiles = await safeGlob(word, {
         onlyFiles: false,
         markDirectories: true,
         caseSensitiveMatch: false
-    }).map(p => env.pathFromHome(p, homedir))
+    })
+    dirsAndFiles = dirsAndFiles.map(p => env.pathFromHome(p, homedir))
     // Put directories first, then files
     let dirs = dirsAndFiles.filter(p => p.endsWith('/'))
     let files = dirsAndFiles.filter(p => !p.endsWith('/'))
     return dirs.concat(files)
 }
 
-function getParameterCompletions(word, line) {
+async function getParameterCompletions(word, line) {
     // Special case: configured subcommand
     let subCommands = getSubcommandCompletions(word, line)
     if (subCommands)
@@ -140,7 +141,7 @@ function getParameterCompletions(word, line) {
     if (!word.includes('*'))
         word += '*'
     // Perform glob
-    return getMatchingDirsAndFiles(word, homedir)
+    return await getMatchingDirsAndFiles(word, homedir)
 }
 
 function getEnvironmentCompletions(word) {
@@ -154,14 +155,14 @@ function getOptionCompletions(word) {
     return []
 }
 
-function getCompletions(word, type, line) {
+async function getCompletions(word, type, line) {
     switch (type) {
         case NodeType.unknown:
             return []
         case NodeType.command:
-            return getCommandCompletions(word, line)
+            return await getCommandCompletions(word, line)
         case NodeType.parameter:
-            return getParameterCompletions(word, line)
+            return await getParameterCompletions(word, line)
         case NodeType.environment:
             return getEnvironmentCompletions(word)
         case NodeType.option:
@@ -304,22 +305,23 @@ function completeCD() {
     }
 }
 
-function completeWord(line) {
+async function completeWord(line) {
     if (line.left + line.right == '')
         return completeCD()
     let [word, type] = getWordAndType(line)
     if (type == NodeType.unknown && line.left.endsWith('$'))
         [word, type] = ['$', NodeType.environment]
-    let words = getCompletions(word, type, line)
+    let words = await getCompletions(word, type, line)
     if (words.length == 0) {
         // No match: do nothing
-        return line
+        return { ...line, showPrompt: false }
     }
     if (words.length == 1) {
         // Exactly one match: update line
         return {
             left: replaceWordWithMatch(line.left, word.length, words[0]),
-            right: line.right
+            right: line.right,
+            showPrompt: false
         }
     }
     else {

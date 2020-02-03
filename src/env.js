@@ -3,7 +3,7 @@ const fs = require('fs')
 const { execFileSync } = require('child_process')
 const fastglob = require('fast-glob')
 
-const { memoize } = require('./utils')
+const { memoize, removeAnsiColorCodes } = require('./utils')
 
 
 const NASH_MARK = '\x1E\x1E>'
@@ -73,8 +73,19 @@ function pathFromHome(cwd, home) {
 	return cwd
 }
 
-function glob(paths, options) {
-	return fastglob.sync(paths, options)
+async function glob(paths, options) {
+	if (isRemote) {
+		//TODO paths can be an array
+		//TODO do not use --color=none, but remove ansi color codes
+		let command = `ls -p1d --color=none ${paths}; echo $?`
+		let out = await runHiddenCommand(command)
+		let files = out.split('\n')
+			.map(l => l.trim())
+			.filter(l => l.length > 0)
+		let rc = files.pop()
+		return rc === '0' ? files : []
+	}
+	else return await fastglob(paths, options)
 }
 
 function whichSlow(command) {

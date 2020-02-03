@@ -177,7 +177,12 @@ function acceptLine(line) {
 	let cmd = line.left + line.right
 	if (cmd.trim().length > 0)
 		history.push(cmd)
-	editor.onKeyPressed(key => runner.write(key.ch || key.sequence))
+	editor.onKeyPressed(key => {
+		if (key.name == 'ctrl-r')
+			runner.write("\x05\x15PS1=$'\\x1E\\x1E>'\n")
+		else
+			runner.write(key.ch || key.sequence)
+	})
 	editor.writeLine(line)
 	return runner.runCommand(cmd)
 }
