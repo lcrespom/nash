@@ -81,8 +81,7 @@ async function handlePromise(line) {
 	line.promise.then(async (newLine = {}) => {
 		keyListener = editorKeyListener
 		if (newLine.showPrompt !== false)
-			// TODO use runner.env to store all user environment
-			await putPrompt(newLine.userStatus)
+			await putPrompt()
 		writeLine(newLine)
 	})
 }

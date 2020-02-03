@@ -65,8 +65,7 @@ function showHistoryMenu(line, items,
         if (sel >= 0)
             line = updateLine({ left: items[sel], right: '' })
         if (runIt && sel >= 0)
-            runCommand(line.left)
-            .then(userStatus => menuDone({ userStatus }))
+            runCommand(line.left).then(menuDone)
         else
             menuDone({ ...line, showPrompt: false })
     })

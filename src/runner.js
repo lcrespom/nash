@@ -183,7 +183,7 @@ async function runCommand(line) {
 		chdirOrWarn(ustatus.cwd)
 	ustatus.cwd = env.pathFromHome(ustatus.cwd)
 	dirHistory.push(ustatus.cwd)
-	return ustatus
+	env.setUserStatus(ustatus)
 }
 
 

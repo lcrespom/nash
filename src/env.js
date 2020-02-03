@@ -6,6 +6,29 @@ const { memoize } = require('./utils')
 
 
 const NASH_MARK = '\x1E\x1E>'
+let userStatus = null
+
+
+function initUserStatus() {
+	let fqdn = hostname()
+	return {
+		cwd: pathFromHome(cwd(), homedir()),
+		username: username(),
+		hostname: fqdn.split('.')[0],
+		fqdn,
+		retCode: 0
+	}
+}
+
+function getUserStatus() {
+	if (!userStatus)
+		userStatus = initUserStatus()
+	return userStatus
+}
+
+function setUserStatus(ustat) {
+	userStatus = ustat
+}
 
 function chdir(dir) {
 	process.chdir(dir)
@@ -67,13 +90,8 @@ refreshWhich()
 
 module.exports = {
     NASH_MARK,
-    cwd,
-	chdir,
-	homedir,
-	listDirs,
-	pathFromHome,
-	which,
-	refreshWhich,
-	username,
-	hostname
+	getUserStatus, setUserStatus,
+	which, refreshWhich,
+	cwd, chdir, homedir, listDirs, pathFromHome,
+	username, hostname
 }

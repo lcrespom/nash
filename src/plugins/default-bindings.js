@@ -176,11 +176,9 @@ function acceptLine(line) {
 	let cmd = line.left + line.right
 	if (cmd.trim().length > 0)
 		history.push(cmd)
-	let promise = runner.runCommand(cmd)
-		.then(userStatus => ({ userStatus }))
 	return {
 		...line,
-		promise,
+		promise: runner.runCommand(cmd),
 		keyListener(key) {
 			runner.write(key.ch || key.sequence)
 		}
