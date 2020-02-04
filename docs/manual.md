@@ -213,8 +213,12 @@ Some examples of valid color configuration strings are the following:
 
 ## Support for remote connections
 Because `nash` is just a UI wrapper around `bash`, it can be used in a remote
-connection **even if `nash` is not installed in the remote system**.
+connection **even if `nash` is not installed in the remote system**: only `bash`
+is required.
+
 When connecting to a remote system, e.g. via `ssh` or using a `docker run -it ...`
-command, the UI will be the default one provided by bash. If at any moment the
-user types `ctrl+r` at the command line, `nash` will gain control of the line
-editor and provide the same functionality as on the machine it was installed.
+command, the UI will be the default one provided by the remote system. If
+the remote shell is `bash`, the user can type `ctrl+r` at the command line to
+make `nash` take control of the line editor and provide the same functionality
+as on the machine it was installed.
+
