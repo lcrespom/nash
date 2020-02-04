@@ -32,8 +32,8 @@ Pressing F1 at any time displays a list of all keyboard shoutcuts and their corr
 	is displayed in grey, letting the user immediately complete the command.
 - All these features are also available when establishing a connection with a remote system, even if `nash` is
 	not installed in the remote system: only `bash` is required. This is especially useful when:
-		- Accessing restricted systems where installing `nash` is not easy or even not possible.
-		- Accessing small or short-lived environments, such as a docker container.
+	- Accessing restricted systems where installing `nash` is not easy or even not possible.
+	- Accessing small or short-lived environments, such as a docker container.
 - Configurable color palette. Colors can be configured by name (e.g. red, gren, etc.) or by RGB hex as
 	in CSS (e.g. #a6e22e).
 - Configuration and extensions are implemented as plain JavaScript code, centered around the `~/.nash/nashrc.js` file,
