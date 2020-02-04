@@ -181,11 +181,10 @@ async function runCommand(line) {
 	let statusCmd = 'hostname;whoami;pwd;echo $HOME;echo $__rc'
 	let output = await runHiddenCommand(statusCmd)
 	let ustatus = parseUserStatus(output)
-	if (env.cwd() != ustatus.cwd)
-		chdirOrWarn(ustatus.cwd)
-	ustatus.cwd = env.pathFromHome(ustatus.cwd)
-	dirHistory.push(ustatus.cwd)
 	env.setUserStatus(ustatus)
+	dirHistory.push(ustatus.cwd)
+	if (env.cwd() != ustatus.cwdfull)
+		chdirOrWarn(ustatus.cwdfull)
 }
 
 

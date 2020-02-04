@@ -8,7 +8,6 @@ const { memoize, removeAnsiCodes } = require('./utils')
 
 const NASH_MARK = '\x1E\x1E>'
 let userStatus = null
-let isRemote = false
 let runnerRHC = undefined
 
 
@@ -40,11 +39,13 @@ function setUserStatus(ustat) {
 	userStatus = ustat
 	userStatus.fqdn = ustat.hostname
 	userStatus.hostname = ustat.fqdn.split('.')[0]
-	isRemote = userStatus.fqdn != os.hostname()
+	userStatus.cwdfull = ustat.cwd
+	userStatus.cwd = pathFromHome(ustat.cwd)
+	userStatus.isRemote = userStatus.fqdn != os.hostname()
 }
 
 function chdir(dir) {
-	if (!isRemote)
+	if (!getUserStatus().isRemote)
 		process.chdir(dir)
 }
 
@@ -54,12 +55,6 @@ function cwd() {
 
 function homedir() {
 	return getUserStatus().home
-}
-
-function listDirs(path) {
-	//TODO delegate on glob
-	return fs.readdirSync(path, { withFileTypes: true })
-		.filter(dirent => dirent.isDirectory())
 }
 
 /**
@@ -76,7 +71,7 @@ function pathFromHome(cwd, home) {
 }
 
 async function glob(paths, options) {
-	if (isRemote) {
+	if (getUserStatus().isRemote) {
 		//TODO paths can be an array
 		let command = `ls -p1d ${paths}; echo $?`
 		let out = await runHiddenCommand(command)
@@ -113,6 +108,6 @@ refreshWhich()
 module.exports = {
     NASH_MARK,
 	getUserStatus, setUserStatus,
-	cwd, chdir, homedir, glob, listDirs, pathFromHome,
+	cwd, chdir, homedir, glob, pathFromHome,
 	which, refreshWhich,
 }
