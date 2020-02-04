@@ -42,51 +42,7 @@ let npm = ('access adduser audit bin bugs c cache ci cit clean-install ' +
     'stars start stop t team test token tst un uninstall unpublish unstar ' +
     'up update v version view whoami').split(' ')
 
-
-//-------------------- Subcommand function for `cd` --------------------
-function getBaseDir(word) {
-    // Compute base directory (absolute or relative)
-    // TODO support for `~` => home dir
-    let baseDir
-    if (word.startsWith('/'))
-        baseDir = ''
-    else
-        baseDir = process.cwd() +'/'
-    // Search word is full directory
-    if (word.endsWith('/'))
-        baseDir += word
-    // Search word is partial directory name
-    else if (word.includes('/'))
-        baseDir += path.dirname(word) + '/'
-    return baseDir
-}
-
-function cd(command, word) {
-    let baseDir = getBaseDir(word)
-    // Get all directories
-    let dirs
-    try {
-        dirs = env.listDirs(baseDir)
-            .map(dirent => dirent.name + '/')
-    }
-    catch (err) {
-        return null // Command failed, rely on default completion
-    }
-    // Discard hidden directories, unless explicitly requested
-    if (!path.basename(word).startsWith('.'))
-        dirs = dirs.filter(name => !name.startsWith('.'))
-    // Now prefix names in result
-    if (word.endsWith('/'))
-        dirs = dirs.map(d => word + d)
-    else if (word.includes('/'))
-        dirs = dirs.map(d => path.dirname(word) + '/' + d)
-    // Finally, filter out the files that don't start with the search word
-    return dirs.filter(dir => dir.startsWith(word))
-}
-
-
-module.exports = {
-    cd,
+    module.exports = {
     git,
     docker,
     'docker container': dockerContainer,

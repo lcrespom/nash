@@ -115,7 +115,7 @@ function getSubcommandCompletions(word, line) {
         return subCommands.filter(sc => startsWithCaseInsensitive(sc, word))
 }
 
-async function getMatchingDirsAndFiles(word, homedir) {
+async function getMatchingDirsAndFiles(word, homedir, line) {
     let dirsAndFiles = await safeGlob(word, {
         onlyFiles: false,
         markDirectories: true,
@@ -124,6 +124,8 @@ async function getMatchingDirsAndFiles(word, homedir) {
     dirsAndFiles = dirsAndFiles.map(p => env.pathFromHome(p, homedir))
     // Put directories first, then files
     let dirs = dirsAndFiles.filter(p => p.endsWith('/'))
+    if (line.left.match(/^cd [^;&]*$/))
+        return dirs
     let files = dirsAndFiles.filter(p => !p.endsWith('/'))
     return dirs.concat(files)
 }
@@ -141,7 +143,7 @@ async function getParameterCompletions(word, line) {
     if (!word.includes('*'))
         word += '*'
     // Perform glob
-    return await getMatchingDirsAndFiles(word, homedir)
+    return await getMatchingDirsAndFiles(word, homedir, line)
 }
 
 function getEnvironmentCompletions(word) {
