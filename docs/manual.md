@@ -228,7 +228,7 @@ the commands typed on each environment are context-specific.
 
 ## How `nash` works
 If you are curious, here is how `nash` is able to improve the UX of `bash` while
-at the same time relying on it for all the command processing: by opening a `bash``
+at the same time relying on it for all the command processing: by opening `bash`
 in a [pseudo-terminal(https://en.wikipedia.org/wiki/Pseudoterminal) and then
 controlling all input and output to and from it.
 

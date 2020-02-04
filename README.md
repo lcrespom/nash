@@ -16,30 +16,36 @@ Pressing F1 at any time displays a list of all keyboard shoutcuts and their corr
 > Check the [user manual](docs/manual.md) for a detailed description of `nash` functions.
 
 ## Main features
-- Flexible prompt, configurable by settings and by JavaScript code.
-- Powerful command history navigation:
+- Flexible [prompt](docs/manual.md#prompt), configurable by settings and by JavaScript code.
+- Powerful [command history](docs/manual.md#history-menu) navigation:
 	- The `up` and `down` keys navigate the history, showing only the entries
 	that start with the current line.
 	- The `page up` key displays a menu with all history lines that start with the current line.
-- Directory history navigation: the `page down` key displays a menu with the most recently visited directories,
-	showing only the entries that contain the text in the current line.
-- Interactive tab-completion: pressing tab completes a file name, but if multiple matching files are
-	available, a menu is displayed, letting the user navigate and select the file name.
-- All menus (command history, directory history and tab-completion) allow typing more characters to narrow the
-	search.
-- Syntax highlight, clearly coloring the different parts of a command, and warning of potential errors.
-- History suggestions: when typing a command, if the text matches a previous command, the remaining text
-	is displayed in grey, letting the user immediately complete the command.
-- All these features are also available when establishing a connection with a remote system, even if `nash` is
-	not installed in the remote system: only `bash` is required. This is especially useful when:
+- [Directory history](docs/manual.md#history-menu) navigation: the `page down` key displays
+	a menu with the most recently visited directories, showing only the entries that contain the
+	text in the current line.
+- Interactive [tab-completion](docs/manual.md#tab-completion): pressing tab completes a file name,
+	but if multiple matching files are available, a menu is displayed, letting the user navigate
+	and select the file name.
+- All menus (command history, directory history and tab-completion) allow typing more characters
+	to narrow the search.
+- [Syntax highlight](docs/manual.md#syntax-highlight), clearly coloring the different parts of a command,
+	and warning of potential errors.
+- [History suggestions](docs/manual.md#suggestions): when typing a command, if the text matches
+	a previous command, the remaining text is displayed in grey, letting the user immediately complete
+	the command.
+- All these features are also available when establishing a connection with a
+	[remote system](docs/manual.md#support-for-remote-connections), even if `nash` is not installed
+	in the remote system: only `bash` is required. This is especially useful when:
 	- Accessing restricted systems where installing `nash` is not easy or even not possible.
 	- Accessing small or short-lived environments, such as a docker container.
-- Configurable color palette. Colors can be configured by name (e.g. red, gren, etc.) or by RGB hex as
-	in CSS (e.g. #a6e22e).
-- Configuration and extensions are implemented as plain JavaScript code, centered around the `~/.nash/nashrc.js` file,
-	which is loaded during startup. Example configuration and extensions are provided in the `~/.nash` directory,
-	which is populated when `nash` is started for the first time. For instance:
-	- Color settings are configured via JSON settings - you can make your terminal use the same color palette
+- Configurable [color palette](docs/manual.md#configuring-colors). Colors can be configured by
+	name (e.g. "red", "gren", etc.) or by RGB hex as in CSS (e.g. #a6e22e).
+- [Configuration](manual.md#configuration) and extensions are implemented as plain JavaScript code,
+	centered around the `~/.nash/nashrc.js` file, which is loaded during startup. Example
+	configuration and extensions are provided in the `~/.nash` directory, which is populated when
+	`nash` is started for the first time. For instance:
+	- Color settings are configured via JSON - you can make your terminal use the same color palette
 		as your code editor.
 	- Keyboard shortcuts are reassigned using the `bindKey` API.
 	- Completion helpers for known commands (git, docker, npm, etc.) are configured via JSON settings.
