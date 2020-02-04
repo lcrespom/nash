@@ -83,18 +83,6 @@ function readCommandOutput(data) {
 	}
 }
 
-function parseUserStatus(output) {
-	let lines = output.split('\n')
-		.map(l => l.trim())
-		.filter(l => l.length > 0)
-	return {
-		hostname: lines[0],
-		username: lines[1],
-		cwd: lines[2],
-		retCode: lines[3]
-	}
-}
-
 function chdirOrWarn(dir) {
 	try {
 		env.chdir(dir)
@@ -172,12 +160,26 @@ async function runHiddenCommand(cmd) {
 	return cmdOutput
 }
 
+function parseUserStatus(output) {
+	let lines = output.split('\n')
+		.map(l => l.trim())
+		.filter(l => l.length > 0)
+	return {
+		hostname: lines[0],
+		username: lines[1],
+		cwd: lines[2],
+		home: lines[3],
+		retCode: lines[4]
+	}
+}
+
 async function runCommand(line) {
 	env.refreshWhich()	// Clear which cache
 	grabOutput = false
 	let cmd = expandJS(line.trim())
 	await runCommandInternal(cmd)
-	let output = await runHiddenCommand('hostname;whoami;pwd;echo $__rc')
+	let statusCmd = 'hostname;whoami;pwd;echo $HOME;echo $__rc'
+	let output = await runHiddenCommand(statusCmd)
 	let ustatus = parseUserStatus(output)
 	if (env.cwd() != ustatus.cwd)
 		chdirOrWarn(ustatus.cwd)

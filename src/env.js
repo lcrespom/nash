@@ -21,10 +21,11 @@ function runHiddenCommand(cmd) {
 function initUserStatus() {
 	let fqdn = os.hostname()
 	return {
-		cwd: pathFromHome(cwd(), homedir()),
+		cwd: pathFromHome(cwd(), os.homedir()),
 		username: os.userInfo().username,
 		hostname: fqdn.split('.')[0],
 		fqdn,
+		home: os.homedir(),
 		retCode: 0
 	}
 }
@@ -52,7 +53,7 @@ function cwd() {
 }
 
 function homedir() {
-	return os.homedir()
+	return getUserStatus().home
 }
 
 function listDirs(path) {
