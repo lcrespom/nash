@@ -53,6 +53,7 @@
 ## Completion
 - [ ] Optional background color for menus (table and list)
 - [ ] Selecting a directory (using space) opens menu with directory contents
+- [ ] Add `..` to the directory list for `cd`.
 - [x] Customizable (e.g. git command list, etc.)
     - [ ] Optional subcommand description - if available, show under menu
     - [ ] Parse man pages to generate descrpitons

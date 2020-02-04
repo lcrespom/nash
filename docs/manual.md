@@ -222,3 +222,35 @@ the remote shell is `bash`, the user can type `ctrl+r` at the command line to
 make `nash` take control of the line editor and provide the same functionality
 as on the machine it was installed.
 
+Nash keeps separate command and directory histories for each different host, so
+the commands typed on each environment are context-specific.
+
+
+## How `nash` works
+If you are curious, here is how `nash` is able to improve the UX of `bash` while
+at the same time relying on it for all the command processing: by opening a `bash``
+in a [pseudo-terminal(https://en.wikipedia.org/wiki/Pseudoterminal) and then
+controlling all input and output to and from it.
+
+Once `nash` sits in the middle between the real terminal and `bash`, the trick
+to this technique is knowing when is `bash` showing the prompt and
+waiting for the user to enter the next command, and when is it running a command
+from the user. To detect when `bash` is showing the prompt, `nash` sets `$PS1`
+(the main prompt variable) to display a very specific sequence of characters.
+In this case, the sequence `'\x1E\x1E>` is used, but any other weird prompt
+sequence would be fine, as long as it does not appear in the normal output from
+a command - and the fact that `\x1E` is a non-displayable character ensures that.
+
+When the special prompt mark is detected, `nash` replaces it with the configured
+prompt, and provides its own line editor, along with all the colors and widgets
+such as the interactive menus. The moment the user hits enter, the edited command
+is passed along to `bash`, and input and output is piped between the real terminal
+and `bash`, until the command execution ends and `bash` shows the prompt again,
+and `nash` fancy line editor takes control again.
+
+This technique allows `nash` to be used on remote systems: after all, it is just
+piping characters from one place to another. There are some cases where access
+to the local environment is required, for example in order to show a menu with
+the files in the current directory. In such cases, `nash` knows that it is on a
+remote environment and then issues a *hidden* `ls` command, gathering the output
+and building the menu from it.
