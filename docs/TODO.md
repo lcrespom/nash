@@ -42,6 +42,8 @@
 
 ## Prompt plugin
 - [x] Config options to personalize what to show on prompt
+- [ ] Separate user + at + host
+- [ ] Identify remote sessions
 - [x] Optional agnoster-style prompt
     - [ ] Use config options from default prompt plugin
     - [ ] Move reusable code from `default-prompt.js` to `prompt.js`

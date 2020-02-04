@@ -50,8 +50,11 @@ function makePath(cwd) {
 
 async function prompt({ cwd, username, hostname, isRemote }) {
 	let userAtHost = ''
-	if (promptConfig.showUserAtHost)
+	if (promptConfig.showUserAtHost) {
 		userAtHost = colorize(colors.userAtHost, username + '@' + hostname)
+		if (isRemote)
+			userAtHost = colorize('inverse', userAtHost)
+	}
 	let path = ''
 	if (promptConfig.showDir)
 		path = colorize(colors.path, makePath(cwd))
