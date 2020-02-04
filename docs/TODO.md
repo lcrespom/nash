@@ -6,6 +6,7 @@
 - [x] Examples directory with documented customizations
 - [x] Copy examples to `~/.nash` upon first startup
 - [x] Usage
+    - [x] Remote mode
     - [ ] Record videos with https://asciinema.org/
     - [ ] How to execute `nash` to ensure `bash` is located
 - [ ] Customization / Extension API
@@ -88,16 +89,16 @@
 - [x] Slow/remote terminal
 
 ## Support remote bash
-- [ ] Just type `PS1=$'\x1E\x1E>'` on a remote shell to activate nash line editor
-- [ ] Avoid reading local files and rely on piping `ls -1ap` (e.g. tab-completion)
-    - [ ] Then disable highlight from table menus, as `ls` already does
-- [ ] Get hostname from runner status
-- [ ] Don't do chdir from runner
+- [x] Just type `PS1=$'\x1E\x1E>'` on a remote shell to activate nash line editor
+- [x] Avoid reading local files and rely on piping `ls -1ap` (e.g. tab-completion)
+- [x] Get hostname from runner status
+- [x] Don't do chdir in remote sessions
 - [x] Get all environment data from bash, e.g. don't use process.cwd.
     Create specific `env` module with cwd, chdir, ls, homedir, which, etc.
     - [ ] The `which` command is used on every keystroke - either disable or maximize
         memoization
-    - [ ] Detect when bash is remote (e.g. env.hostname != os.hostname)
-    - [ ] Adapt git-status plugin / move runCommand function to env /
+    - [x] Detect when bash is remote (e.g. env.hostname != os.hostname)
+    - [x] Adapt git-status plugin / move runCommand function to env /
         search for other execFileSync invocations
-    - [ ] Refactor to use much more promises and async/await, less plain callbacks
+    - [x] Refactor to use much more promises and async/await, less plain callbacks
+- [ ] Hide the $P1=... text when user types ctrl+r

@@ -76,13 +76,19 @@ The prompt plugin displays the prompt in front of the cursor, and is made up of 
 
 The prompt plugin supports the following configuration options:
 - **colors.prompt**:
-    - **userAtHost**: color of the user@host segment.
-    - **path**: color of the directory segment.
+    - **user**: color of the user name.
+    - **at**: color of the `@` symbol.
+    - **host**: color of the host name.
+    - **remoteHost**: color of the host name in a remote session
+        (see [below](#support-for-remote-connections) for a description of remote sessions).
+    - **path**: color of the working directory.
     - **gitDirty**: color of the Git segment, when the repository is *dirty*, i.e., it has some uncommited files.
     - **gitClean**: color of the Git segment, when the repository is clean.
 - **prompt**:
-    - **showUserAtHost**: boolean specifying whether to show the user@host segment or not.
-    - **showDir**: boolean specifying whether to show the directory segment or not.
+    - **showUser**: boolean specifying whether to show the user name or not.
+    - **showAt**: boolean specifying whether to show `@` or not.
+    - **showHost**: boolean specifying whether to show the host name or not.
+    - **showPath**: boolean specifying whether to show the directory segment or not.
     - **showGit**: boolean specifying whether to show the Git status segment or not.
     - **maxDirs**: number - if present, limits the number of directory levels to show in the directory segment.
         This option is used to abbreviate the display of potentially long working directories.
@@ -203,3 +209,12 @@ Some examples of valid color configuration strings are the following:
 - `green /#fd971f`: green text on orange background.
 
 > Text coloring in `nash` is supported via the great [chalk](https://github.com/chalk/chalk) library.
+
+
+## Support for remote connections
+Because `nash` is just a UI wrapper around `bash`, it can be used in a remote
+connection **even if `nash` is not installed in the remote system**.
+When connecting to a remote system, e.g. via `ssh` or using a `docker run -it ...`
+command, the UI will be the default one provided by bash. If at any moment the
+user types `ctrl+r` at the command line, `nash` will gain control of the line
+editor and provide the same functionality as on the machine it was installed.

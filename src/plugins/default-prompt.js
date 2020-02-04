@@ -2,6 +2,7 @@ const { gitStatus, gitStatusFlags } = require('./git-status')
 const { setPrompt, setTerminalTitle } = require('../prompt')
 const { getOption, setDefaultOptions } = require('../startup')
 const { colorize } = require('../colors')
+const { ucfirst } = require('../utils')
 
 
 let colors
@@ -48,18 +49,21 @@ function makePath(cwd) {
 	return dirs.join('/')
 }
 
+function segment(name, value) {
+	if (!promptConfig['show' + ucfirst(name)]) return ''
+	return colorize(colors[name], value)
+}
+
 async function prompt({ cwd, username, hostname, isRemote }) {
-	let userAtHost = ''
-	if (promptConfig.showUserAtHost) {
-		userAtHost = colorize(colors.userAtHost, username + '@' + hostname)
-		if (isRemote)
-			userAtHost = colorize('inverse', userAtHost)
+	let userAtHost = segment('user', username) + segment('at', '@')
+	if (promptConfig.showHost) {
+		let hostCol = isRemote ? colors.remoteHost : colors.host
+		userAtHost += colorize(hostCol, hostname)
 	}
 	let path = ''
-	if (promptConfig.showDir)
+	if (promptConfig.showPath)
 		path = colorize(colors.path, makePath(cwd))
 	let git = '> '
-	//TODO update git-status plugin to run `git status` directly on bash
 	if (promptConfig.showGit)
 		git = (await gitSection(isRemote)) || '> '
 	return userAtHost + ' ' + path + git
@@ -67,7 +71,10 @@ async function prompt({ cwd, username, hostname, isRemote }) {
 
 function setDefaults() {
     let defaultColors = {
-		userAtHost: 'magentaBright',
+		user: 'magentaBright',
+		at: 'cyanBright',
+		host: 'greenBright',
+		remoteHost: 'redBright',
         path: 'cyan',
         gitDirty: 'yellow',
         gitClean: 'green',
@@ -75,10 +82,12 @@ function setDefaults() {
     setDefaultOptions('colors.prompt', defaultColors)
 	colors = getOption('colors.prompt')
 	setDefaultOptions('prompt', {
-		showUserAtHost: true,
-		showDir: true,
+		showUser: true,
+		showAt: true,
+		showHost: true,
+		showPath: true,
 		showGit: true,
-		parentDirMaxLen: 1,
+		//parentDirMaxLen: 1,
 		//parentDirEllipsis: '\u2026',
 		//maxDirs: 4,
 		//maxDirEllipsis: '...'
