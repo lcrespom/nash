@@ -6,6 +6,7 @@
 - [x] Examples directory with documented customizations
 - [x] Copy examples to `~/.nash` upon first startup
 - [x] Usage
+    - [ ] Record videos with https://asciinema.org/
     - [ ] How to execute `nash` to ensure `bash` is located
 - [ ] Customization / Extension API
     - [ ] Writing your own plugin (start/stop, etc)

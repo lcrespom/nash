@@ -79,8 +79,8 @@ function adjustPromptPosition(rows) {
 		cursor.y = process.stdout.rows - rows - 1
 }
 
-function putPrompt() {
-	let promptStr = prompt(env.getUserStatus())
+async function putPrompt() {
+	let promptStr = await prompt(env.getUserStatus())
 	put(promptStr)
 	cursor = null
     put(HIDE_TEXT + GET_CURSOR_POS)

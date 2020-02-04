@@ -8,8 +8,8 @@ let colors
 let promptConfig
 const GIT_SYMBOL = '\ue0a0'
 
-function gitSection() {
-	let gstatus = gitStatus()
+async function gitSection(isRemote) {
+	let gstatus = await gitStatus(isRemote)
 	if (!gstatus) return ''
 	let flags = gitStatusFlags(gstatus)
 	if (flags) flags = ' ' + flags
@@ -48,7 +48,7 @@ function makePath(cwd) {
 	return dirs.join('/')
 }
 
-function prompt({ cwd, username, hostname, isRemote }) {
+async function prompt({ cwd, username, hostname, isRemote }) {
 	let userAtHost = ''
 	if (promptConfig.showUserAtHost)
 		userAtHost = colorize(colors.userAtHost, username + '@' + hostname)
@@ -57,8 +57,8 @@ function prompt({ cwd, username, hostname, isRemote }) {
 		path = colorize(colors.path, makePath(cwd))
 	let git = '> '
 	//TODO update git-status plugin to run `git status` directly on bash
-	if (promptConfig.showGit && !isRemote)
-		git = gitSection() || '> '
+	if (promptConfig.showGit)
+		git = (await gitSection(isRemote)) || '> '
 	return userAtHost + ' ' + path + git
 }
 

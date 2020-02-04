@@ -1,15 +1,25 @@
 const { execFileSync } = require('child_process')
+const runner = require('../runner')
 
 function runCommand(cmd) {
     try {
         let args = cmd.split(' ')
         let options = { stdio: ['ignore', 'pipe', 'ignore'] }
         return execFileSync(args[0], args.slice(1), options)
-            .toString()
+            .toString().trim().split('\n')
     }
     catch (err) {
-        return ''
+        return null
     }
+}
+
+async function runRemoteCommand(cmd) {
+    let out = await runner.runHiddenCommand(cmd + ';echo $?')
+    let lines = out.trim().split('\n').map(l => l.trimRight())
+    if (!lines || lines.length == 0) return null
+    let rc = lines.pop()
+    if (rc !== '0') return null
+    return lines
 }
 
 function parseBranch(line) {
@@ -72,11 +82,12 @@ function parseGitStatus(lines) {
     return { branch, index, tree, conflicts, dirty, ahead, behind }
 }
 
-function gitStatus() {
-    let lines = runCommand('git status --porcelain -b')
-        .trim().split('\n')
-    if (lines.length == 0 || !lines[0])
-        return null
+async function gitStatus(isRemote) {
+    let cmd = 'git status --porcelain -b'
+    let lines = isRemote
+        ? await runRemoteCommand(cmd)
+        : runCommand(cmd)
+    if (!lines || lines.length == 0 || !lines[0]) return null
     return parseGitStatus(lines)
 }
 
