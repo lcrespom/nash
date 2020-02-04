@@ -102,4 +102,4 @@
         search for other execFileSync invocations
     - [x] Refactor to use much more promises and async/await, less plain callbacks
 - [x] Hide the $P1=... text when user types ctrl+r
-- [ ] Independent history files for each host
+- [x] Independent history files for each host

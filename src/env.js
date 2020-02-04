@@ -4,6 +4,7 @@ const { execFileSync } = require('child_process')
 const fastGlob = require('fast-glob')
 
 const { memoize, removeAnsiCodes } = require('./utils')
+const history = require('./history')
 
 
 const NASH_MARK = '\x1E\x1E>'
@@ -36,12 +37,15 @@ function getUserStatus() {
 }
 
 function setUserStatus(ustat) {
+	let wasRemote = userStatus ? userStatus.isRemote : false
 	userStatus = ustat
 	userStatus.fqdn = ustat.hostname
 	userStatus.hostname = ustat.fqdn.split('.')[0]
 	userStatus.cwdfull = ustat.cwd
 	userStatus.cwd = pathFromHome(ustat.cwd)
 	userStatus.isRemote = userStatus.fqdn != os.hostname()
+	if (userStatus.isRemote != wasRemote)
+		history.initialize(userStatus.fqdn)
 }
 
 function chdir(dir) {

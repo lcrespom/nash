@@ -7,7 +7,11 @@ const doNothing = () => {}
 
 class History {
 
-    constructor(filename, maxSize = 1000) {
+    constructor(filename, maxSize) {
+        this.init(filename, maxSize)
+    }
+
+    init(filename, maxSize = 1000) {
         this.history = []
         this.index = 0
         this.maxSize = maxSize
@@ -118,7 +122,33 @@ class History {
 }
 
 
+let history
+let dirHistory
+
+function initialize(hostname) {
+    if (history) {
+        history.close()
+        history.init(hostname + '.history')
+    }
+    else {
+        history = new History(hostname + '.history')
+    }
+    history.load()
+    if (dirHistory) {
+        dirHistory.close()
+        dirHistory.init(hostname + '.dirHistory')
+    }
+    else {
+        dirHistory = new History(hostname + '.dirHistory')
+    }
+    dirHistory.load()
+}
+
+initialize(os.hostname())
+
+
 module.exports = {
-    history: new History('history'),
-    dirHistory: new History('dirhistory')
+    history,
+    dirHistory,
+    initialize
 }
