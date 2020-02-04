@@ -6,7 +6,7 @@
   "bin": "src/nash.js",
   "scripts": {
     "test": "jest --watch",
-    "start": "node src/nash.js"
+    "start": "node src/nash.js $(which bash)"
   },
   "repository": {
     "type": "git",

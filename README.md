@@ -55,6 +55,7 @@ Check the [ToDo](docs/TODO.md) for a list of features under development and plan
 
 
 ## Installation
+<!--
 The [releases](https://github.com/lcrespom/nash/releases) page contains binary packages for Linux and MacOS.
 You can download the appropriate `nash-[version]-[platform].tar.gz` file, then unpack it into a directory of your
 choice. For example:
@@ -71,7 +72,10 @@ You can of course copy the extracted files somewhere in your `$PATH`. An appropr
 you can simply launch it by typing `nash`.
 
 Or if you want to use the latest features, just clone the repo and type `npm install`.
-To open a shell, type `npm start`.
+-->
+Binary distributions for Linux and MacOS will be available in the near future.
+
+In the meantime, just clone the repo and type `npm install`. Then, to open a shell, type `npm start`.
 ```
 git clone https://github.com/lcrespom/nash.git
 npm install
