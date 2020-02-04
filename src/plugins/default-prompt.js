@@ -48,15 +48,16 @@ function makePath(cwd) {
 	return dirs.join('/')
 }
 
-function prompt({ cwd, username, hostname }) {
+function prompt({ cwd, username, hostname, isRemote }) {
 	let userAtHost = ''
 	if (promptConfig.showUserAtHost)
 		userAtHost = colorize(colors.userAtHost, username + '@' + hostname)
 	let path = ''
 	if (promptConfig.showDir)
 		path = colorize(colors.path, makePath(cwd))
-	let git = ''
-	if (promptConfig.showGit)
+	let git = '> '
+	//TODO update git-status plugin to run `git status` directly on bash
+	if (promptConfig.showGit && !isRemote)
 		git = gitSection() || '> '
 	return userAtHost + ' ' + path + git
 }

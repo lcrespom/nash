@@ -1,7 +1,7 @@
 const os = require('os')
 const fs = require('fs')
 const { execFileSync } = require('child_process')
-const fastglob = require('fast-glob')
+const fastGlob = require('fast-glob')
 
 const { memoize, removeAnsiCodes } = require('./utils')
 
@@ -70,19 +70,23 @@ function pathFromHome(cwd, home) {
 	return cwd
 }
 
+async function remoteGlob(path) {
+	let command = `ls -p1d ${path}; echo $?`
+	let out = await runHiddenCommand(command)
+	let files = removeAnsiCodes(out)
+		.split('\n')
+		.map(l => l.trim())
+		.filter(l => l.length > 0)
+	let rc = files.pop()
+	return rc === '0' ? files : []
+}
+
 async function glob(paths, options) {
-	if (getUserStatus().isRemote) {
+	if (getUserStatus().isRemote)
 		//TODO paths can be an array
-		let command = `ls -p1d ${paths}; echo $?`
-		let out = await runHiddenCommand(command)
-		let files = removeAnsiCodes(out)
-			.split('\n')
-			.map(l => l.trim())
-			.filter(l => l.length > 0)
-		let rc = files.pop()
-		return rc === '0' ? files : []
-	}
-	else return await fastglob(paths, options)
+		return await remoteGlob(paths)
+	else
+		return await fastGlob(paths, options)
 }
 
 function whichSlow(command) {
