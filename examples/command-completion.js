@@ -3,11 +3,6 @@ List of subcommands for common programs such as git, docker, etc.
 These lists are used by the command completion plugin, which activates
 when the user types "tab".
 */
-const path = require('path')
-
-const env = require(NASH_BASE + '/env')
-
-
 let git = ('add am archive bisect branch bundle checkout cherry citool clean ' +
     'clone commit describe diff fetch format gc gitk grep gui init log ' +
     'merge mv notes pull push range rebase reset revert rm shortlog show ' +
@@ -42,7 +37,7 @@ let npm = ('access adduser audit bin bugs c cache ci cit clean-install ' +
     'stars start stop t team test token tst un uninstall unpublish unstar ' +
     'up update v version view whoami').split(' ')
 
-    module.exports = {
+module.exports = {
     git,
     docker,
     'docker container': dockerContainer,

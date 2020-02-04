@@ -18,6 +18,7 @@
     - [ ] Youtube walkthrough
 
 ## Installation
+- [ ] Fix binary startup problems
 - [ ] Add the packaging script to the repository & binaries to .gitignore
 - [ ] Check that .nash/*.js scripts load correctly with binary distribution
 
