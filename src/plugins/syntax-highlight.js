@@ -4,7 +4,7 @@ const {
 } = require('../parser')
 const { getOption, setDefaultOptions } = require('../startup')
 const colors = require('../colors')
-const { which } = require('../env')
+const env = require('../env')
 
 
 function makeHL(type, loc) {
@@ -16,10 +16,9 @@ function makeHL(type, loc) {
 }
 
 function getCommandType(cmd) {
-    //TODO memoize this function, clean cache when line is empty
     if (builtins.includes(cmd))
         return NodeType.builtin
-    let whichOut = which(cmd)
+    let whichOut = env.which(cmd)
     if (!whichOut)
         return NodeType.commandError
     // This `which` output does not work in all bash environments ¯\_(ツ)_/¯

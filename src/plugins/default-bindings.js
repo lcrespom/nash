@@ -178,8 +178,10 @@ function acceptLine(line) {
 	if (cmd.trim().length > 0)
 		history.push(cmd)
 	editor.onKeyPressed(key => {
-		if (key.name == 'ctrl-r')
+		if (key.name == 'ctrl-r') {
+			process.stdout.write('\x1b[30m')
 			runner.write("\x05\x15PS1=$'\\x1E\\x1E>'\n")
+		}
 		else
 			runner.write(key.ch || key.sequence)
 	})

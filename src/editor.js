@@ -39,7 +39,6 @@ function unknownKey(key) {
 }
 
 function applyBindings(key) {
-	//TODO re-document key binding API
 	let bindings = getKeyBindings(key.name)
 	if (!bindings || bindings.length == 0)
 		return unknownKey(key)

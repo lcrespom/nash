@@ -71,7 +71,6 @@ function getWordAndType(line) {
         else if (type == NodeType.unknown)
             return ['', type]
         else
-            //TODO get the full word by also accounting for line.right
             return [line.left.substr(loc.start.char), type]
     }
     catch (err) {

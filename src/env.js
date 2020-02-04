@@ -83,7 +83,7 @@ async function remoteGlob(path) {
 
 async function glob(paths, options) {
 	if (getUserStatus().isRemote)
-		//TODO paths can be an array
+		//TODO paths can be an array - test command completion in remote
 		return await remoteGlob(paths)
 	else
 		return await fastGlob(paths, options)
