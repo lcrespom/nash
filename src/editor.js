@@ -52,17 +52,29 @@ function applyBindings(key) {
 	return newLine
 }
 
+function checkLineOverflow(cursor, line) {
+	if (cursor.x == 0) return
+	let len = line.left.length + line.right.length
+	if (cursor.x + len < process.stdout.columns - 3) return
+	process.stdout.clearScreenDown()
+	process.stdout.write('\n')
+	if (cursor.y < process.stdout.rows) cursor.y++
+	cursor.x = 0
+	putCursorAtPrompt(0)
+}
+
 function writeLine(newLine) {
 	newLine.left = newLine.left || ''
 	newLine.right = newLine.right || ''
 	let fullLine = decorateLine(newLine)
 	hideCursor()	// Hide cursor to avoid glitches
 	putCursorAtPrompt(0)
+	let cursor = getPromptPosition()
+	checkLineOverflow(cursor, newLine)
 	process.stdout.write(fullLine +  ' ')
 	process.stdout.clearLine(1)
 	putCursorAtPrompt(newLine.left.length)
 	let { h } = lineEndPosition(removeAnsiColorCodes(fullLine).length)
-	let cursor = getPromptPosition()
 	if (h > 0 && cursor.y + h >= process.stdout.rows)
 		cursor.y = process.stdout.rows - h - 1
 	showCursor()

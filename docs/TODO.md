@@ -23,8 +23,8 @@
 
 ## Line editing
 - [x] Refactor editor.js async handling code, make kb bindings use promises
+- [x] Move line under prompt when line overflows
 - [ ] Remove old duplicates from history/dirHistory
-- [ ] Move line under prompt when line overflows
 - [ ] Catch exceptions in bindings to avoid breaking the shell
 - [ ] Improve support for multi-line prompt (agnoster), e.g. in
     completion.tooManyWords and in directory history.
