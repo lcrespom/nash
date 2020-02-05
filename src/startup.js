@@ -63,7 +63,7 @@ function createNashDirIfRequired() {
 	// Check if ~/.nash exists
 	if (fs.existsSync(nashDir)) return	// Nash is already installed
 	// Perform initial installation - check if examples dir exists
-	let exdir = path.join(path.dirname(process.argv[1]), 'examples')
+	let exdir = path.join(process.cwd(), 'examples')
 	if (!fs.existsSync(exdir))
 		throw new Error(
 			'Nash installation error: could not find examples directory at\n' +
