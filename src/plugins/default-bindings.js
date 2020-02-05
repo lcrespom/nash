@@ -173,15 +173,18 @@ function downLineOrHistory(line) {
 
 //--------------- Keys that break the editing process ---------------
 
+function enterRemoteMode() {
+	process.stdout.write('\x1b[30m')
+	runner.write("\x05\x15PS1=$'\\x1E\\x1E>'\n")
+}
+
 function acceptLine(line) {
 	let cmd = line.left + line.right
 	if (cmd.trim().length > 0)
 		history.push(cmd)
 	editor.onKeyPressed(key => {
-		if (key.name == 'ctrl-r') {
-			process.stdout.write('\x1b[30m')
-			runner.write("\x05\x15PS1=$'\\x1E\\x1E>'\n")
-		}
+		if (key.name == 'ctrl-r')
+			enterRemoteMode()
 		else
 			runner.write(key.ch || key.sequence)
 	})

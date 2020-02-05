@@ -156,8 +156,10 @@ function onKeyPressed(kl) {
 }
 
 function handleKeypress(ch, key) {
-	if (promptOwnsInput()) return
 	key = analyzeKey(ch, key)
+	if (key.name == 'meta-shift-q')
+		process.exit(0)
+	if (promptOwnsInput()) return
 	keyListener(key)
 }
 

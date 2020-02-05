@@ -89,14 +89,13 @@
 - [x] Slow/remote terminal
 
 ## Support remote bash
-- [x] Just type `PS1=$'\x1E\x1E>'` on a remote shell to activate nash line editor
+- [x] Just type `ctrl+r` on a remote shell to activate nash line editor
 - [x] Avoid reading local files and rely on piping `ls -1ap` (e.g. tab-completion)
 - [x] Get hostname from runner status
 - [x] Don't do chdir in remote sessions
 - [x] Get all environment data from bash, e.g. don't use process.cwd.
     Create specific `env` module with cwd, chdir, ls, homedir, which, etc.
-    - [ ] The `which` command is used on every keystroke - either disable or maximize
-        memoization
+    - [x] Implement remote which by listing programs in path
     - [x] Detect when bash is remote (e.g. env.hostname != os.hostname)
     - [x] Adapt git-status plugin / move runCommand function to env /
         search for other execFileSync invocations

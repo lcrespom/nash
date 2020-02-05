@@ -44,8 +44,10 @@ function setUserStatus(ustat) {
 	userStatus.cwdfull = ustat.cwd
 	userStatus.cwd = pathFromHome(ustat.cwd)
 	userStatus.isRemote = userStatus.fqdn != os.hostname()
-	if (userStatus.isRemote != wasRemote)
+	if (userStatus.isRemote != wasRemote) {
 		history.initialize(userStatus.fqdn)
+		if (userStatus.isRemote) initWhichRemote()
+	}
 }
 
 function chdir(dir) {
@@ -74,15 +76,20 @@ function pathFromHome(cwd, home) {
 	return cwd
 }
 
-async function remoteGlob(path) {
-	let command = `ls -p1d ${path}; echo $?`
-	let out = await runHiddenCommand(command)
-	let files = removeAnsiCodes(out)
+function commandOut2Array(out) {
+	let arr = removeAnsiCodes(out)
+		.trim()
 		.split('\n')
 		.map(l => l.trim())
 		.filter(l => l.length > 0)
-	let rc = files.pop()
-	return rc === '0' ? files : []
+	let rc = arr.pop()
+	return rc === '0' ? arr : []
+}
+
+async function remoteGlob(path) {
+	let command = `ls -p1d ${path}; echo $?`
+	let out = await runHiddenCommand(command)
+	return commandOut2Array(out)
 }
 
 async function glob(paths, options) {
@@ -93,7 +100,13 @@ async function glob(paths, options) {
 		return await fastGlob(paths, options)
 }
 
-function whichSlow(command) {
+
+//------------------------- Which -------------------------
+
+let whichLocal
+let remoteCommands
+
+function whichLocalSlow(command) {
 	try {
 		return execFileSync('/usr/bin/which', [ command ]).toString().trim()
 	}
@@ -102,16 +115,46 @@ function whichSlow(command) {
 	}
 }
 
-let which
-
 function refreshWhich() {
-	which = memoize(whichSlow)
+	whichLocal = memoize(whichLocalSlow)
 }
+
+function whichRemote(command) {
+	if (!remoteCommands) return 'yes'
+	return remoteCommands.has(command) ? 'yes' : ''
+}
+
+async function sleep(delay) {
+	return new Promise(resolve => setTimeout(resolve, delay))
+}
+
+async function initWhichRemote() {
+	await sleep(500)
+	let path = await runHiddenCommand('echo $PATH')
+	path = path.trim().replace(/:/g, ' ')
+	let dircmd = `ls -1F ${path}; echo $?`
+	await sleep(500)
+	let out = await runHiddenCommand(dircmd)
+	let dirs = commandOut2Array(out)
+		.filter(l => l.match(/[*@]$/))
+		.map(l => l.replace(/[*@]$/, ''))
+	if (dirs.length > 0)
+		remoteCommands = new Set(dirs)
+	else
+		remoteCommands = null
+}
+
+
+function which(command) {
+	if (getUserStatus().isRemote)
+		return whichRemote(command)
+	else
+		return whichLocal(command)
+}
+
 
 refreshWhich()
 
-//TODO implement process.env...
-//function getEnvVar(name) {}
 
 module.exports = {
     NASH_MARK,
