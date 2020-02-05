@@ -34,9 +34,10 @@ function start() {
     'Accept line suggestion')
 
     registerLineDecorator((plainLine, decoratedLine, line) => {
-        if (line && line.decorateHint == 'no suggestions')
-            return decoratedLine
-        lastSuggestion = getSuggestion(plainLine)
+        let suggestion = getSuggestion(plainLine)
+        if (suggestion.length < lastSuggestion.length)
+            process.stdout.clearScreenDown()
+        lastSuggestion = suggestion
         return decoratedLine + colorize(colors.scol, lastSuggestion)
     })
 

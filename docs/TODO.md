@@ -30,9 +30,9 @@
     completion.tooManyWords and in directory history.
 
 ## Bugs
+- [x] If suggestion text overflows to next line, it is not cleared
 - [ ] Typing while non-interactive command is running can make
     `runner.checkPromptAndWrite(...)` fail
-- [ ] If suggestion text overflows to next line, it is not cleared
 - [ ] Aliases are not detected by the which command
 
 ## History navigation
