@@ -211,6 +211,20 @@ Some examples of valid color configuration strings are the following:
 > Text coloring in `nash` is supported via the great [chalk](https://github.com/chalk/chalk) library.
 
 
+## Starting `nash`
+When `nash` starts, it tries to locate `bash` with the following rules:
+- First, it checks if the name of the shell is passed as a parameter, e.g. `nash bash`.
+- If a command-line parameter is not present, it looks for the value of the `$TERM` environment
+    variable.
+- If none of the above are present, it simply assumes `bash` is the name.
+
+Most of the time you won't need to worry and just call `nash`. However, if you are launching
+it from a shell other than `bash`, such as `fish` or `zsh`, then you `$TERM` may not be
+properly set, and you should add `bash` as a parameter when launching `nash`.
+
+In summary: in case something does not work as expected, try running `nash bash`.
+
+
 ## Support for remote connections
 Because `nash` is just a UI wrapper around `bash`, it can be used in a remote
 connection **even if `nash` is not installed in the remote system**: only `bash`

@@ -7,8 +7,8 @@
 - [x] Copy examples to `~/.nash` upon first startup
 - [x] Usage
     - [x] Remote mode
+    - [x] How to execute `nash` to ensure `bash` is located
     - [ ] Record videos with https://asciinema.org/
-    - [ ] How to execute `nash` to ensure `bash` is located
 - [ ] Customization / Extension API
     - [ ] Writing your own plugin (start/stop, etc)
 - [ ] Contribution guide
@@ -18,19 +18,19 @@
     - [ ] Youtube walkthrough
 
 ## Installation
-- [ ] Fix binary startup problems
+- [x] Check that .nash/*.js scripts load correctly with binary distribution
 - [ ] Add the packaging script to the repository & binaries to .gitignore
-- [ ] Check that .nash/*.js scripts load correctly with binary distribution
 
 ## Line editing
 - [x] Refactor editor.js async handling code, make kb bindings use promises
+- [ ] Remove old duplicates from history/dirHistory
 - [ ] Move line under prompt when line overflows
 - [ ] Catch exceptions in bindings to avoid breaking the shell
 - [ ] Improve support for multi-line prompt (agnoster), e.g. in
     completion.tooManyWords and in directory history.
 
 ## Bugs
-- [ ] Typing while non-interactive command is running makes
+- [ ] Typing while non-interactive command is running can make
     `runner.checkPromptAndWrite(...)` fail
 - [ ] If suggestion text overflows to next line, it is not cleared
 - [ ] Aliases are not detected by the which command
@@ -44,11 +44,9 @@
 
 ## Prompt plugin
 - [x] Config options to personalize what to show on prompt
-- [ ] Separate user + at + host
-- [ ] Identify remote sessions
+- [x] Separate user + at + host
+- [x] Identify remote sessions
 - [x] Optional agnoster-style prompt
-    - [ ] Use config options from default prompt plugin
-    - [ ] Move reusable code from `default-prompt.js` to `prompt.js`
 - [x] Document agnoster prompt & place in examples dir
 
 ## Completion

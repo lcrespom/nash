@@ -75,9 +75,11 @@ somewhere in your `$PATH`. An appropriate place is `/usr/local/bin`:
 ```bash
 $ sudo cp nash pty.node /usr/local/bin
 ```
-Then you can simply launch it by typing `nash`.
+From then on, you can simply launch it by typing `nash`.
 
-Or if you want to use the latest features, just clone the repo and type `npm install`. Then, to open a shell, type `npm start`.
+> See [Starting `nash`](docs/manual.md#starting-nash) if you experience any problems when running it.
+
+If you want to run it from the source code (and maybe help with development), just clone the repo and type `npm install`. Then, to open a shell, type `npm start`.
 ```
 $ git clone https://github.com/lcrespom/nash.git
 $ npm install
