@@ -77,7 +77,7 @@ $ sudo cp nash pty.node /usr/local/bin
 ```
 From then on, you can simply launch it by typing `nash`.
 
-> See [Starting `nash`](docs/manual.md#starting-nash) if you experience any problems when running it.
+> See [Starting nash](docs/manual.md#starting-nash) if you experience any problems when running it.
 
 If you want to run it from the source code (and maybe help with development), just clone the repo and type `npm install`. Then, to open a shell, type `npm start`.
 ```

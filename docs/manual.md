@@ -251,7 +251,7 @@ to this technique is knowing when is `bash` showing the prompt and
 waiting for the user to enter the next command, and when is it running a command
 from the user. To detect when `bash` is showing the prompt, `nash` sets `$PS1`
 (the main prompt variable) to display a very specific sequence of characters.
-In this case, the sequence `'\x1E\x1E>` is used, but any other weird prompt
+In this case, the sequence `'\x1E\x1E>'` is used, but any other weird prompt
 sequence would be fine, as long as it does not appear in the normal output from
 a command - and the fact that `\x1E` is a non-displayable character ensures that.
 
