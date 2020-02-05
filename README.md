@@ -59,16 +59,23 @@ The [releases](https://github.com/lcrespom/nash/releases) page contains binary p
 You can download the appropriate `nash-[version]-[platform].tar.gz` file, then unpack it into a directory of your
 choice. For example:
 ```bash
-$ mkdir -p ~/bin/nash
-$ cd ~/bin/nash
-$ tar -xzf ~/Downloads/nash-1.3.1-linux.tar.gz
+$ mkdir ~/nash-inst
+$ cd ~/nash-inst
+$ # Use the appropirate link for nash-[version]-[platform].tar.gz
+$ curl -OL https://github.com/lcrespom/nash/releases/download/1.3.1/nash-1.3.1-linux.tar.gz
+$ tar -xzf nash-1.3.1-linux.tar.gz
 ```
 Finally, to run nash:
 ```bash
-$ ~/bin/nash/nash
+$ ./nash
 ```
-You can of course copy the extracted files somewhere in your `$PATH`. An appropriate place is `/usr/local/bin`. Then
-you can simply launch it by typing `nash`.
+It is important that the first time `nash` is executed from the directory where the `.tar.gz` file is
+extracted, so it can copy the example code to `~/.nash`. After that, you can copy the extracted files
+somewhere in your `$PATH`. An appropriate place is `/usr/local/bin`:
+```bash
+$ sudo cp nash pty.node /usr/local/bin
+```
+Then you can simply launch it by typing `nash`.
 
 Or if you want to use the latest features, just clone the repo and type `npm install`. Then, to open a shell, type `npm start`.
 ```
