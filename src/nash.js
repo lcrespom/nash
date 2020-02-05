@@ -22,9 +22,15 @@ function checkInteractive() {
 
 function main() {
 	checkInteractive()
-	startup.nashStartup()
-	editor.initialize()
-	runner.startShell()
+	try {
+		startup.nashStartup()
+		editor.initialize()
+		runner.startShell()
+	}
+	catch (err) {
+		console.error(err.message)
+		process.exit(2)
+	}
 	listenKeyboard()
 }
 

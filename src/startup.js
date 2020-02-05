@@ -1,8 +1,10 @@
 const fs = require('fs')
 const os = require('os')
+const path = require('path')
 
 const { getProp, setProp } = require('./utils')
 
+const NASH_DIR = '.nash'
 
 //------------------------------ RC files ------------------------------
 
@@ -11,7 +13,7 @@ function getLsOptions() {
 	else return '--color=auto'
 }
 
-function createRC() {
+function createRC(rcname) {
 	const NASH_RC = `# nash init file
 # Place here any bash initialization commands
 
@@ -22,21 +24,15 @@ HISTCONTROL="ignorespace"
 # Enable colors in ls command
 alias ls="ls ${getLsOptions()}"
 `
-	let rcname = os.homedir() + '/.nash/nashrc'
-	if (fs.existsSync(rcname)) return
 	fs.writeFileSync(rcname, NASH_RC)
 }
 
-function copy2home(source, target) {
-	let targetPath = os.homedir() + '/.nash/' + target
-	if (fs.existsSync(targetPath)) return
-	let content = fs.readFileSync(require.resolve(source))
-	fs.writeFileSync(targetPath, content)
-}
-
-function copyExamples(examples) {
-	for (let example of examples)
-		copy2home('../examples/' + example, example)
+function copyFiles(fromDir, toDir) {
+	let files = fs.readdirSync(fromDir)
+	for (let file of files) {
+		let content = fs.readFileSync(path.join(fromDir, file))
+		fs.writeFileSync(path.join(toDir, file), content)
+	}
 }
 
 
@@ -63,12 +59,19 @@ function setDefaultOptions(name, defaultOptions) {
 }
 
 function createNashDirIfRequired() {
-    let nashDir = os.homedir() + '/.nash'
-    if (!fs.existsSync(nashDir))
-	    fs.mkdirSync(nashDir)
-	createRC()
-	copyExamples(['nashrc.js', 'agnoster-prompt.js',
-		'command-completion.js', 'custom-keys.js'])
+	let nashDir = path.join(os.homedir(), NASH_DIR)
+	// Check if ~/.nash exists
+	if (fs.existsSync(nashDir)) return	// Nash is already installed
+	// Perform initial installation - check if examples dir exists
+	let exdir = path.join(path.dirname(process.argv[1]), 'examples')
+	if (!fs.existsSync(exdir))
+		throw new Error(
+			'Nash installation error: could not find examples directory at\n' +
+			'    ' + exdir + '\n')
+	// Everything is ready for installation
+	fs.mkdirSync(nashDir)
+	createRC(path.join(nashDir, 'nashrc'))
+	copyFiles(exdir, nashDir)
 }
 
 function loadPlugin(pname) {
@@ -76,16 +79,12 @@ function loadPlugin(pname) {
 }
 
 function loadNashRCJS() {
-	let rcname = os.homedir() + '/.nash/nashrc.js'
-	if (!fs.existsSync(rcname)) {
-		console.error('Error: ~/.nash/nashrc.js not found')
-		process.exit(2)
-	}
+	let rcname = path.join(os.homedir(), NASH_DIR, 'nashrc.js')
+	if (!fs.existsSync(rcname))
+		throw new Error('Error: ~/.nash/nashrc.js not found')
 	let rcexports = loadPlugin(rcname)
-	if (!rcexports.plugins) {
-		console.error('Error: ~/.nash/nashrc.js should export a `plugins` array')
-		process.exit(3)
-	}
+	if (!rcexports.plugins)
+		throw new Error('Error: ~/.nash/nashrc.js should export a `plugins` array')
 	return rcexports
 }
 
@@ -95,7 +94,7 @@ function loadPlugins(plugins) {
 	let modules = []
 	for (let plugin of plugins) {
 		if (plugin.startsWith('.'))
-			plugin = os.homedir() + '/.nash/' + plugin
+			plugin = path.join(os.homedir(), NASH_DIR, plugin)
 		else
 			plugin = './plugins/' + plugin
 		modules.push(loadPlugin(plugin))
