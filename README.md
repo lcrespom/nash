@@ -79,9 +79,9 @@ Then you can simply launch it by typing `nash`.
 
 Or if you want to use the latest features, just clone the repo and type `npm install`. Then, to open a shell, type `npm start`.
 ```
-git clone https://github.com/lcrespom/nash.git
-npm install
-npm start
+$ git clone https://github.com/lcrespom/nash.git
+$ npm install
+$ npm start
 ```
 
 ### Windows
