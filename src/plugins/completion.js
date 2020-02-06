@@ -259,6 +259,7 @@ function showAllWords(line, word, words) {
         }
         else {
             process.stdout.write('\n')
+            if (key.name == 'ctrl-c') key.name = 'escape'
             if (key.name == 'escape' || items.length > 0)
                 menu.keyHandler(key.ch, key)
             editor.writeLine(line)

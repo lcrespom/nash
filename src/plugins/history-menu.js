@@ -72,9 +72,11 @@ function showHistoryMenu(line, items,
     editor.onKeyPressed(key => {
         if (key.ch || key.name == 'backspace')
             items = updateMenu(menu, key, line, initialItems, initialLen, filter)
-        else if (items.length > 0) {
+        else {
             process.stdout.write('\n')
-            menu.keyHandler(key.ch, key)
+            if (key.name == 'ctrl-c') key.name = 'escape'
+            if (key.name == 'escape' || items.length > 0)
+                menu.keyHandler(key.ch, key)
             editor.writeLine(line)
         }
     })
