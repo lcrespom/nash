@@ -31,9 +31,10 @@
 
 ## Bugs
 - [x] If suggestion text overflows to next line, it is not cleared
-- [ ] Test & fix command completion
+- [x] Test & fix command completion
     - [x] Local commands, e.g. `./my-script.sh`
-    - [ ] Command completion in remote environments
+    - [x] Command completion in remote environments
+- [ ] Completion goes back one dir if target is empty
 - [ ] Aliases are not detected by the which command
 
 ## History navigation

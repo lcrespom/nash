@@ -86,15 +86,20 @@ function commandOut2Array(out) {
 	return rc === '0' ? arr : []
 }
 
-async function remoteGlob(path) {
-	let command = `ls -p1d ${path}; echo $?`
-	let out = await runHiddenCommand(command)
-	return commandOut2Array(out)
+async function remoteGlob(paths) {
+	if (!Array.isArray(paths))
+		paths = [paths]
+	let result = []
+	for (let path of paths) {
+		let command = `ls -p1d ${path}; echo $?`
+		let out = await runHiddenCommand(command)
+		result = result.concat(commandOut2Array(out))
+	}
+	return result
 }
 
 async function glob(paths, options) {
 	if (getUserStatus().isRemote)
-		//TODO paths can be an array - test command completion in remote
 		return await remoteGlob(paths)
 	else
 		return await fastGlob(paths, options)
@@ -129,11 +134,11 @@ async function sleep(delay) {
 }
 
 async function initWhichRemote() {
-	await sleep(500)
+	await sleep(200)
 	let path = await runHiddenCommand('echo $PATH')
 	path = path.trim().replace(/:/g, ' ')
 	let dircmd = `ls -1F ${path}; echo $?`
-	await sleep(500)
+	await sleep(200)
 	let out = await runHiddenCommand(dircmd)
 	let dirs = commandOut2Array(out)
 		.filter(l => l.match(/[*@]$/))
