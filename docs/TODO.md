@@ -32,7 +32,7 @@
 ## Bugs
 - [x] If suggestion text overflows to next line, it is not cleared
 - [ ] Test & fix command completion
-    - [ ] Local commands, e.g. `./my-script.sh`
+    - [x] Local commands, e.g. `./my-script.sh`
     - [ ] Command completion in remote environments
 - [ ] Aliases are not detected by the which command
 

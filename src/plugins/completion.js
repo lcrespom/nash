@@ -114,6 +114,22 @@ function getSubcommandCompletions(word, line) {
         return subCommands.filter(sc => startsWithCaseInsensitive(sc, word))
 }
 
+function prependParentDir(dirs, word) {
+    if (!word.endsWith('*'))
+        return dirs
+    let parent = word.slice(0, -1)    // remove *
+    if (parent.length == 0)
+        return ['../'].concat(dirs)
+    if (!parent.endsWith('/'))
+        return dirs
+    let d = env.getUserStatus().cwd
+    d = d.replace(/^~/, env.homedir())
+    d = path.normalize(path.join(d, parent))
+    if (d == '/')
+        return dirs
+    return [parent + '../'].concat(dirs)
+}
+
 async function getMatchingDirsAndFiles(word, homedir, line) {
     let dirsAndFiles = await safeGlob(word, {
         onlyFiles: false,
@@ -123,6 +139,7 @@ async function getMatchingDirsAndFiles(word, homedir, line) {
     dirsAndFiles = dirsAndFiles.map(p => env.pathFromHome(p, homedir))
     // Put directories first, then files
     let dirs = dirsAndFiles.filter(p => p.endsWith('/'))
+    dirs = prependParentDir(dirs, word)
     if (line.left.match(/^cd [^;&]*$/))
         return dirs
     let files = dirsAndFiles.filter(p => !p.endsWith('/'))
@@ -187,12 +204,17 @@ function colorizePath(filename) {
     return filename
 }
 
-function replaceWordWithMatch(left, cutLen, match) {
+function replaceWordWithMatch(left, word, match) {
+    let cutLen = word.length
+    match = path.normalize(match)
     // Quote blanks in file names
     let qmatch = match.replace(/(\s)/g, '\\$1')
     // Add a space unless it's a directory
     if (!qmatch.endsWith('/'))
         qmatch += ' '
+    // Preserve ./
+    if (word.startsWith('./'))
+        cutLen -= 2
     return cutLastChars(left, cutLen) + qmatch
 }
 
@@ -247,7 +269,7 @@ function showAllWords(line, word, words) {
         line.left = line.left.substr(0, initialLen)
         process.stdout.clearScreenDown()
         if (sel >= 0)
-            line.left = replaceWordWithMatch(line.left, word.length, items[sel].from)
+            line.left = replaceWordWithMatch(line.left, word, items[sel].from)
         menuDone({...line, showPrompt: false })
     })
     if (!menu)
@@ -321,7 +343,7 @@ async function completeWord(line) {
     if (words.length == 1) {
         // Exactly one match: update line
         return {
-            left: replaceWordWithMatch(line.left, word.length, words[0]),
+            left: replaceWordWithMatch(line.left, word, words[0]),
             right: line.right,
             showPrompt: false
         }
