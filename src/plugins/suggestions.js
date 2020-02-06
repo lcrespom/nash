@@ -5,7 +5,7 @@ const { getOption, setDefaultOptions } = require('../startup')
 const { colorize } = require('../colors')
 
 
-let lastSuggestion = ''
+let suggestion = ''
 
 function getSuggestion(line) {
     if (line.length == 0) return ''
@@ -18,10 +18,10 @@ function acceptSuggestion(line, key) {
     // If 'rigth' key pressed accept only at end of line
     if (key.name == 'right' && line.right) return line
     // If no suggestion available, do nothing
-    if (lastSuggestion == '') return line
+    if (suggestion == '') return line
     // Apply suggestion
     return {
-        left: line.left + line.right + lastSuggestion,
+        left: line.left + line.right + suggestion,
         right: ''
     }
 }
@@ -34,11 +34,9 @@ function start() {
     'Accept line suggestion')
 
     registerLineDecorator((plainLine, decoratedLine, line) => {
-        let suggestion = getSuggestion(plainLine)
-        if (suggestion.length < lastSuggestion.length)
-            process.stdout.clearScreenDown()
-        lastSuggestion = suggestion
-        return decoratedLine + colorize(colors.scol, lastSuggestion)
+        let lsLen = suggestion.length
+        suggestion = getSuggestion(plainLine)
+        return decoratedLine + colorize(colors.scol, suggestion.padEnd(lsLen))
     })
 
     setDefaultOptions('colors.suggestion', { scol: '#606060'})
