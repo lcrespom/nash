@@ -115,7 +115,7 @@ function getSubcommandCompletions(word, line) {
 }
 
 function prependParentDir(dirs, word) {
-    if (!word.endsWith('*'))
+    if (dirs.length == 0 || !word.endsWith('*'))
         return dirs
     let parent = word.slice(0, -1)    // remove *
     if (parent.length == 0)

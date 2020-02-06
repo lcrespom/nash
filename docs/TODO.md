@@ -34,7 +34,7 @@
 - [x] Test & fix command completion
     - [x] Local commands, e.g. `./my-script.sh`
     - [x] Command completion in remote environments
-- [ ] Completion goes back one dir if target is empty
+- [x] Completion goes back one dir if target is empty
 - [ ] Aliases are not detected by the which command
 
 ## History navigation
@@ -54,7 +54,8 @@
 ## Completion
 - [ ] Optional background color for menus (table and list)
 - [ ] Selecting a directory (using space) opens menu with directory contents
-- [ ] Add `..` to the directory list for `cd`.
+- [x] Add `../` to the directory list for `cd`.
+    - [ ] Replace this with `backspace` => ../
 - [x] Customizable (e.g. git command list, etc.)
     - [ ] Optional subcommand description - if available, show under menu
     - [ ] Parse man pages to generate descrpitons
@@ -85,7 +86,7 @@
 - [ ] Mouse support for all menus (keypress module supports it)
 
 ## Compatibility / Portability
-- [ ] GitBash support
+- [ ] GitBash support (...very long term)
 - [ ] Docker instructions for Windows
 - [x] More linux testing
 - [x] Slow/remote terminal
