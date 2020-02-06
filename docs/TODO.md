@@ -52,13 +52,16 @@
 - [x] Document agnoster prompt & place in examples dir
 
 ## Completion
-- [ ] Optional background color for menus (table and list)
+- [ ] Mega-refactor to:
+    - Reduce complexity and code handling edge cases
+    - Allow for new features such as continuous navigation
 - [ ] Selecting a directory (using space) opens menu with directory contents
 - [x] Add `../` to the directory list for `cd`.
     - [ ] Replace this with `backspace` => ../
 - [x] Customizable (e.g. git command list, etc.)
     - [ ] Optional subcommand description - if available, show under menu
     - [ ] Parse man pages to generate descrpitons
+- [ ] Optional background color for menus (table and list)
 
 ## History suggestions
 - [x] Remove suggestion decoration when the user presses enter

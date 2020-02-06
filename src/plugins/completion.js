@@ -256,6 +256,23 @@ function updateMenu(menu, key, line, initialItems, initialLen) {
     return items
 }
 
+function handleMenuKey(menu, key, line, items, initialItems, initialLen) {
+    if (key.ch || key.name == 'backspace') {
+        items = updateMenu(menu, key, line, initialItems, initialLen)
+    }
+    else if (key.name == 'space') {
+        //TODO
+    }
+    else {
+        process.stdout.write('\n')
+        if (key.name == 'ctrl-c') key.name = 'escape'
+        if (key.name == 'escape' || items.length > 0)
+            menu.keyHandler(key.ch, key)
+        editor.writeLine(line)
+    }
+    return items
+}
+
 function showAllWords(line, word, words) {
     let menuDone = () => {}
     let items = words
@@ -276,16 +293,7 @@ function showAllWords(line, word, words) {
         return null     // Too many items to show interactive menu
     editor.writeLine(line)
     editor.onKeyPressed(key => {
-        if (key.ch || key.name == 'backspace') {
-            items = updateMenu(menu, key, line, initialItems, initialLen)
-        }
-        else {
-            process.stdout.write('\n')
-            if (key.name == 'ctrl-c') key.name = 'escape'
-            if (key.name == 'escape' || items.length > 0)
-                menu.keyHandler(key.ch, key)
-            editor.writeLine(line)
-        }
+        items = handleMenuKey(menu, key, line, items, initialItems, initialLen)
     })
     return new Promise(resolve => menuDone = resolve)
 }
