@@ -204,14 +204,21 @@ function colorizePath(filename) {
     return filename
 }
 
+function shortenPath(p, isDir) {
+    if (p.startsWith('/'))
+        return path.normalize(p)
+    let cwd = env.getUserStatus().cwd.replace(/^~/, env.homedir())
+    p = path.relative(cwd, p)
+    if (isDir && p.length > 0 && !p.endsWith('/'))
+        p += '/'
+    return p
+}
+
 function replaceWordWithMatch(left, word, match) {
     let cutLen = word.length
     // Normalize and simplify path
     let isDir = match.endsWith('/')
-    let cwd = env.getUserStatus().cwd.replace(/^~/, env.homedir())
-    match = path.relative(cwd, match)
-    if (isDir && match.length > 0 && !match.endsWith('/'))
-        match += '/'
+    match = shortenPath(match, isDir)
     // Quote blanks in file names
     let qmatch = match.replace(/(\s)/g, '\\$1')
     // Add a space unless it's a directory
