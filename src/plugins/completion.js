@@ -220,14 +220,19 @@ function replaceWordWithMatch(left, word, match) {
 
 //------------------------- Key binding -------------------------
 
-function showTableMenu(items, done, interactive = true) {
+function showTableMenu(items, done) {
     process.stdout.write('\n')
-    let { rows, columns, columnWidth } = computeTableLayout(items)
-    if (interactive && rows > process.stdout.rows - 5)
-        return null
-    if (interactive)
-        adjustPromptPosition(rows + 1)
-    return tableMenu({ items, columns, columnWidth, done })
+    let { rows, columns, columnWidth } =
+        computeTableLayout(items, undefined, process.stdout.columns - 3)
+    let height = rows, scrollBarCol = undefined
+    if (rows > process.stdout.rows - 5) {
+        height = process.stdout.rows - 5
+        scrollBarCol = process.stdout.columns - 1
+    }
+    adjustPromptPosition(height + 1)
+    return tableMenu({
+        items, columns, columnWidth, done, height, scrollBarCol
+    })
 }
 
 function updateMenu(menu, key, line, initialItems, initialLen) {
@@ -289,36 +294,11 @@ function showAllWords(line, word, words) {
             line.left = replaceWordWithMatch(line.left, word, items[sel].from)
         menuDone({...line, showPrompt: false })
     })
-    if (!menu)
-        return null     // Too many items to show interactive menu
     editor.writeLine(line)
     editor.onKeyPressed(key => {
         items = handleMenuKey(menu, key, line, items, initialItems, initialLen)
     })
     return new Promise(resolve => menuDone = resolve)
-}
-
-function tooManyWords(line, words) {
-    process.stdout.write(`Do you wish to see all ${words.length} matches? `)
-    return new Promise(resolve => {
-        editor.onKeyPressed(key => {
-            if (key.ch == 'y' || key.ch == 'Y')
-                showTableMenu(words, null, false)
-            else {
-                let cp = getPromptPosition()
-                process.stdout.cursorTo(0, cp.y)
-                process.stdout.clearScreenDown()
-            }
-            resolve(line)
-        })
-    })
-}
-
-function completeWords(line, word, words) {
-    let newLine = showAllWords(line, word, words)
-    if (newLine)
-        return newLine
-    return tooManyWords(line, words)
 }
 
 function completeCD() {
@@ -358,7 +338,7 @@ async function completeWord(line) {
     }
     else {
         // Multiple matches: interactive navigation
-        return completeWords(line, word, words)
+        return showAllWords(line, word, words)
     }
 }
 
