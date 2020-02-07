@@ -53,8 +53,8 @@
 
 ## Completion
 - [x] Selecting a directory (using space) opens menu with directory contents
-    - [ ] Entering an empty directory ends continuous navigation.
-        It should either display just `../` or been and not enter.
+    - [x] Entering an empty directory ends continuous navigation.
+        It should display just `../`.
 - [x] Add `../` to the directory list for `cd`.
     - [x] Detect ../../../back/to/cwd and merge
 - [x] Customizable (e.g. git command list, etc.)

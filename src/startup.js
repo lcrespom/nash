@@ -113,7 +113,9 @@ function startPlugins(plugins) {
 }
 
 function getWelcomeMessage() {
-	let defaultMsg = 'Welcome to nash (https://github.com/lcrespom/nash)\n' +
+	let { version } = require('../package.json')
+	let defaultMsg = `Welcome to nash ${version} ` +
+		'(https://github.com/lcrespom/nash)\n' +
 		'Press F1 for help on keyboard commands'
 	let greeting = getOption('greeting')
 	if (greeting === undefined) greeting = defaultMsg

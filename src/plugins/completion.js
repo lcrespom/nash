@@ -269,7 +269,9 @@ function updateMenu(menu, key, line, initialItems, initialLen) {
 function handleMenuKey(menu, key, line, items, initialItems, initialLen) {
     if (key.name == 'space') {
         editor.pressKey({ name: 'return' })
-        setTimeout(() => editor.pressKey({ name: 'tab' }), 100)
+        setTimeout(
+            () => editor.pressKey({ name: 'tab', navigating: true })
+        , 100)
     }
     else if (key.ch || key.name == 'backspace') {
         items = updateMenu(menu, key, line, initialItems, initialLen)
@@ -326,18 +328,18 @@ function completeCD() {
 
 //------------------------- Key binding -------------------------
 
-async function completeWord(line) {
+async function completeWord(line, key) {
     if (line.left + line.right == '')
         return completeCD()
     let [word, type] = getWordAndType(line)
     if (type == NodeType.unknown && line.left.endsWith('$'))
         [word, type] = ['$', NodeType.environment]
     let words = await getCompletions(word, type, line)
-    if (words.length == 0) {
+    if (words.length == 0 && key && !key.navigating) {
         // No match: do nothing
         return { ...line, showPrompt: false }
     }
-    if (words.length == 1) {
+    else if (words.length == 1) {
         // Exactly one match: update line
         return {
             left: replaceWordWithMatch(line.left, word, words[0]),
@@ -347,6 +349,8 @@ async function completeWord(line) {
     }
     else {
         // Multiple matches: interactive navigation
+        if (words.length == 0)
+            words.push(word + '../')
         return showAllWords(line, word, words)
     }
 }
