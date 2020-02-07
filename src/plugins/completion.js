@@ -151,7 +151,7 @@ async function getParameterCompletions(word, line) {
     let subCommands = getSubcommandCompletions(word, line)
     if (subCommands)
         return subCommands
-    // Accomodate word to glob
+        // Accomodate word to glob
     let homedir = env.homedir()
     word = word.replace(/\\ /g, ' ')
     if (word.startsWith('~/'))
@@ -218,7 +218,7 @@ function replaceWordWithMatch(left, word, match) {
     return cutLastChars(left, cutLen) + qmatch
 }
 
-//------------------------- Key binding -------------------------
+//------------------------- Menu rendering -------------------------
 
 function showTableMenu(items, done) {
     process.stdout.write('\n')
@@ -316,6 +316,9 @@ function completeCD() {
         return noEmptyCD(line)
     }
 }
+
+
+//------------------------- Key binding -------------------------
 
 async function completeWord(line) {
     if (line.left + line.right == '')
