@@ -134,7 +134,8 @@ async function getMatchingDirsAndFiles(word, homedir, line) {
     let dirsAndFiles = await safeGlob(word, {
         onlyFiles: false,
         markDirectories: true,
-        caseSensitiveMatch: false
+        caseSensitiveMatch: false,
+        followSymbolicLinks: false
     })
     dirsAndFiles = dirsAndFiles.map(p => env.pathFromHome(p, homedir))
     // Put directories first, then files

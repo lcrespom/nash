@@ -102,7 +102,7 @@ async function glob(paths, options) {
 	if (getUserStatus().isRemote)
 		return await remoteGlob(paths)
 	else
-		return await fastGlob(paths, options)
+		return fastGlob.sync(paths, options)
 }
 
 
