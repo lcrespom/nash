@@ -54,7 +54,7 @@
 ## Completion
 - [x] Selecting a directory (using space) opens menu with directory contents
 - [x] Add `../` to the directory list for `cd`.
-    - [ ] Replace this with `<` => ../
+    - [ ] Detect ../../../back/to/cwd and merge
 - [x] Customizable (e.g. git command list, etc.)
     - [ ] Optional subcommand description - if available, show under menu
     - [ ] Parse man pages to generate descrpitons

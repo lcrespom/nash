@@ -111,20 +111,23 @@ It has different working modes:
     the left of the cursor.
 - When the cursor is after a command, the user is trying to type a command parameter, quite probably a file
     name. Typing `tab` at this point displays a menu with all matching files in the current directory.
-- When the cursor at the very beginning of a line or the command is `cd`, typing `tab` displays a menu with
-    all matching subdiretories of the current directory. In this case and the case above, after selecting a
-    directory from the menu, typing `tab` again will display the content of the selected subdirectory.
-    The user can continue pressing `tab` and selecting subdirectires as long as required.
+- When the line is empty or the command is `cd`, typing `tab` displays a menu with all matching subdirectories
+    of the current directory. In this case and the case above, after selecting a directory from the menu,
+    typing `tab` again will display the content of the selected subdirectory. The user can continue
+    pressing `tab` and selecting subdirectires as long as required.
 - When the cursor is right next to a word starting with `$`, the user is trying to type an environment variable.
     Typing `tab` at this point displays a menu with the list of environment variables known by `nash`.
     Notice that `nash` cannot capture all the variables available in the current session, so there can be
     more variables not listed in the menu, which will have to be typed by hand.
 
 In all working modes, when the menu is displayed, the search can be narrowed down by typing further characters, 
-thus filtering out the items that do not start with word at the left of the cursor.
+thus filtering out the items that do not start with the word at the left of the cursor.
 
-The menu is navigated by using the cursor keys. The `return` key accepts the selected item
-and adds it to the command line, and the `escape` key closes the menu without updating the command line.
+The menu supports the following keys:
+- Cursors and `page-up` / `page-down`: navigate through the menu.
+- `Return`: accept the selected item and add it to the current line.
+- `Escape`: close the menu without updating the command line.
+- `Space`: if the selected item is a directory, open its contents and keep navigating the menu.
 
 The completion plugin can be configured via the **completion.commands** option. The sample file
 `~/.nash/command-completion.js` defines the list of parameters that are expected by `git`, `docker`, `npm` and `kubectl`, and more can be easily added - just check the source code to see how the lists are configured.
