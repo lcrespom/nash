@@ -45,7 +45,9 @@ module.exports = {
 		// History menu (activated with page-up)
 		'history-menu',
 		// Custom keyboard bindings
-		'./custom-keys'
+		'./custom-keys',
+		// Warn on long git commit messages
+		'./git-commit-len'
 	],
 	options: {
 		colors: {

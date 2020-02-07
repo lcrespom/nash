@@ -66,11 +66,8 @@
 ## History suggestions
 - [x] Remove suggestion decoration when the user presses enter
 - [x] Ctrl-space accepts suggestion anywhere in the line
+- [ ] Remove duplicates upon startup
  
-## Configuration
-- [x] Load all plugins from nashrc.js
-- [x] start()/stop() function in all plugins to control lifecycle
-
 ## Inline JavaScript
 - [ ] Highlight JavaScript (and avoid bash parser error)
 - [ ] Get shell environment variables before executing JS
