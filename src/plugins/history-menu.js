@@ -7,6 +7,7 @@ const { history, dirHistory } = require('../history')
 const { highlight, colorize } = require('./syntax-highlight')
 const { runCommand } = require('../runner')
 const editor = require('../editor')
+const env = require('../env')
 
 
 function highlightCommand(cmd) {
@@ -114,8 +115,9 @@ function dirHistoryMenu(line) {
     let items = dirHistory.matchLines(line.left, includes)
     // Ensure items are chronological and unique
     items = removeRepeatedItems(items.reverse()).reverse()
-    // If no filtering text, remove current directory
-    if (line.left == '') items.splice(-1, 1)
+    let cwd = env.getUserStatus().cwd
+    // Remove current directory from list (user is already there)
+    items = items.filter(i => i != cwd)
     let decorate = (o, sel) => {
         if (!o.endsWith('/')) o += '/'
         return sel ? inverse(o) : white(o)
