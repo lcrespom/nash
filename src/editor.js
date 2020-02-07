@@ -163,6 +163,10 @@ function handleKeypress(ch, key) {
 	keyListener(key)
 }
 
+function pressKey(key) {
+	process.nextTick(_ => keyListener(key))
+}
+
 function initialize() {
 	putPrompt().then(_ => writeLine({ left: '', right: '' }))
 }
@@ -171,6 +175,7 @@ module.exports = {
 	handleKeypress,
 	registerLineDecorator,
 	onKeyPressed,
+	pressKey,
 	writeLine,
 	initialize
 }

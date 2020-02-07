@@ -262,11 +262,12 @@ function updateMenu(menu, key, line, initialItems, initialLen) {
 }
 
 function handleMenuKey(menu, key, line, items, initialItems, initialLen) {
-    if (key.ch || key.name == 'backspace') {
-        items = updateMenu(menu, key, line, initialItems, initialLen)
+    if (key.name == 'space') {
+        editor.pressKey({ name: 'return' })
+        setTimeout(() => editor.pressKey({ name: 'tab' }), 100)
     }
-    else if (key.name == 'space') {
-        //TODO
+    else if (key.ch || key.name == 'backspace') {
+        items = updateMenu(menu, key, line, initialItems, initialLen)
     }
     else {
         process.stdout.write('\n')
