@@ -1,4 +1,9 @@
-const { NodeType, getWordAndType } = require('../src/plugins/completion')
+const {
+    NodeType, getWordAndType, getCompletions
+} = require('../src/plugins/completion')
+
+
+//------------------------- getWordAndType -------------------------
 
 test('Simple param', () => {
     let line = { left: 'echo abc', right: 'de' }
@@ -75,5 +80,51 @@ test('Right after command', () => {
     let [word, type] = getWordAndType(line)
     expect(type).toBe(NodeType.parameter)
     expect(word).toBe('co')
+})
+
+
+//------------------------- getCompletions -------------------------
+
+async function getWords(left) {
+    let line = { left, right: '' }
+    let [word, type] = getWordAndType(line)
+    if (type == NodeType.unknown && line.left.endsWith('$'))
+        [word, type] = ['$', NodeType.environment]
+    return await getCompletions(word, type, line)
+}
+
+test('cd /', async done => {
+    let words = await getWords('cd /')
+    //TODO why does glob fail here?
+    expect(words).toContain(['/usr'])
+    done()
+})
+
+test('ls', async done => {
+    let words = await getWords('ls ')
+    expect(words).toContain('../')
+    expect(words).toContain('package.json')
+    expect(words).toContain('src/')
+    done()
+})
+
+test('cd', async done => {
+    let words = await getWords('cd ')
+    expect(words).toContain('../')
+    expect(words).toContain('src/')
+    expect(words).not.toContain('package.json')
+    done()
+})
+
+test('cd src/', async done => {
+    let words = await getWords('cd src/')
+    expect(words).toEqual(['src/../', 'src/plugins/'])
+    done()
+})
+
+test('cd src/plugins/comp', async done => {
+    let words = await getWords('cd src/plugins/comp')
+    expect(words).toEqual(['src/plugins/completion/'])
+    done()
 })
 

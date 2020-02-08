@@ -6,7 +6,7 @@ const {
 } = require('../../parser')
 const env = require('../../env')
 
-let customCommands
+let customCommands = {}
 
 
 //------------------------- AST Searching -------------------------

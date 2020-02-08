@@ -222,8 +222,8 @@ function start() {
 
 
 module.exports = {
-    completeWord,
     getWordAndType,
+    getCompletions,
     NodeType,
     start
 }
