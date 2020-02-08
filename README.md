@@ -46,8 +46,12 @@ Pressing F1 at any time displays a list of all keyboard shoutcuts and their corr
 	configuration and extensions are provided in the `~/.nash` directory, which is populated when
 	`nash` is started for the first time. For instance:
 	- Color settings are configured via JSON - you can make your terminal use the same color palette
-		as your code editor.
-	- Keyboard shortcuts are reassigned using the `bindKey` API.
+		as your code editor. Most terminals support 16 million colors, and although this feature is
+		initially disabled in `~/.nash/nashrc.js` to ensure compatibility, it is really worth trying
+		enabling it by uncommenting the line containing `trueColor: true` near the end of the file.
+	- Keyboard shortcuts are reassigned using the `bindKey` API - the example in `~/.nash/custom-keys.js`
+		illustrates how to do it. The `F1` key displays the list of keyboard shortcuts, and `ctrl-k`
+		displays the name of any key combination.
 	- Completion helpers for known commands (git, docker, npm, etc.) are configured via JSON settings.
 - An extensible plugin system which facilitates the addition of features.
 

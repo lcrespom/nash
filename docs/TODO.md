@@ -58,10 +58,10 @@
     - [ ] Fine-tune/fix bugs, e.g. when near /
 - [x] Add `../` to the directory list for `cd`.
     - [x] Detect ../../../back/to/cwd and merge
+- [x] Color configuration
 - [x] Customizable (e.g. git command list, etc.)
     - [ ] Optional subcommand description - if available, show under menu
     - [ ] Parse man pages to generate descrpitons
-- [ ] Color configuration: file/dir foreground/background
 
 ## History suggestions
 - [x] Remove suggestion decoration when the user presses enter
