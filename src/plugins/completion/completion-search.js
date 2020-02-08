@@ -114,13 +114,21 @@ function getSubcommandCompletions(word, line) {
 }
 
 function prependParentDir(dirs, word) {
+    // User is typing the pattern
     if (!word.endsWith('*'))
         return dirs
-    let parent = word.slice(0, -1)    // remove *
+    // Root directory
+    if (word.startsWith('/') && word.split('/').length <= 2)
+        return dirs
+    // Remove the trailing '*'
+    let parent = word.slice(0, -1)
+    // Current directory
     if (parent.length == 0)
         return ['../'].concat(dirs)
+    // Not a directory name
     if (!parent.endsWith('/'))
         return dirs
+    // Remove redundant ../
     let d = env.getUserStatus().cwd
     d = d.replace(/^~/, env.homedir())
     d = path.normalize(path.join(d, parent))

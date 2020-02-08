@@ -30,6 +30,8 @@
     completion.tooManyWords and in directory history.
 
 ## Bugs
+- [ ] If suggestion text overflows to next line, it will cover the
+    first line of the completion table menu
 - [x] If suggestion text overflows to next line, it is not cleared
 - [x] Test & fix command completion
     - [x] Local commands, e.g. `./my-script.sh`
