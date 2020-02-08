@@ -14,6 +14,7 @@ function gitWarn(plainLine, decoratedLine) {
     return decoratedLine.replace(m[1], (m1) => {
         let oktxt = m1.substr(0, MAX_MSG_LEN)
         // Add some warning background on the overflow text
+        // NOTICE: this is only visible if trueColor is enabled at nashrc.js
         let warntxt = colorize('/#606', m1.substr(MAX_MSG_LEN))
         return `${oktxt}${warntxt}`
     })
