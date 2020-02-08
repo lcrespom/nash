@@ -1,10 +1,10 @@
 const path = require('path')
 
-const { startsWithCaseInsensitive, cutLastChars } = require('../utils')
+const { startsWithCaseInsensitive, cutLastChars } = require('../../utils')
 const {
     parseBash, traverseAST, NodeType, builtins
-} = require('../parser')
-const env = require('../env')
+} = require('../../parser')
+const env = require('../../env')
 
 let customCommands
 

@@ -2,16 +2,17 @@ const path = require('path')
 
 const { computeTableLayout, tableMenu } = require('node-terminal-menu')
 
-const env = require('../env')
-const { bindKey } = require('../key-bindings')
+const requireNash = m => require('../../' + m)
+const env = requireNash('env')
+const { bindKey } = requireNash('key-bindings')
 const {
     startsWithCaseInsensitive, cutLastChars, removeAnsiColorCodes
-} = require('../utils')
-const { NodeType } = require('../parser')
-const { adjustPromptPosition } = require('../prompt')
-const { getOption, setDefaultOptions } = require('../startup')
-const editor = require('../editor')
-const { colorize, colorizer } = require('../colors')
+} = requireNash('utils')
+const { NodeType } = requireNash('parser')
+const { adjustPromptPosition } = requireNash('prompt')
+const { getOption, setDefaultOptions } = requireNash('startup')
+const editor = requireNash('editor')
+const { colorize, colorizer } = requireNash('colors')
 const {
     getWordAndType, getCompletions, setCustomCommands
 } = require('./completion-search')
