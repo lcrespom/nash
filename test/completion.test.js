@@ -94,11 +94,10 @@ async function getWords(left) {
     return await getCompletions(word, type, line)
 }
 
-test('cd /', async done => {
-    let words = await getWords('cd /')
-    //TODO why does glob fail here?
+test('ls ../', async done => {
+    let words = await getWords('ls ../')
     words = words.map(w => path.normalize(w))
-    expect(words).toContain('/usr/')
+    expect(words).toContain(['nash/'])
     done()
 })
 
@@ -130,3 +129,18 @@ test('cd src/plugins/comp', async done => {
     done()
 })
 
+test('cd /', async done => {
+    let words = await getWords('cd /')
+    words = words.map(w => path.normalize(w))
+    expect(words).toContain('/usr/')
+    expect(words).toContain('/bin/')
+    expect(words).not.toContain('../')
+    done()
+})
+
+test('ls src/e', async done => {
+    let words = await getWords('ls src/e')
+    words = words.map(w => path.normalize(w))
+    expect(words).toEqual(['src/editor.js', 'src/env.js'])
+    done()
+})

@@ -76,7 +76,13 @@ function getWordAndType(line) {
 
 async function safeGlob(paths, options) {
     try {
-        return await env.glob(paths, options)
+        if (!Array.isArray(paths))
+		paths = [paths]
+    	let result = []
+	    for (let path of paths) {
+            result = result.concat(await env.glob(path, options))
+        }
+        return result
     }
     catch (err) {
         return []
@@ -124,12 +130,7 @@ function prependParentDir(dirs, word) {
 }
 
 async function getMatchingDirsAndFiles(word, homedir, line) {
-    let dirsAndFiles = await safeGlob(word, {
-        onlyFiles: false,
-        markDirectories: true,
-        caseSensitiveMatch: false,
-        followSymbolicLinks: false
-    })
+    let dirsAndFiles = await safeGlob(word)
     dirsAndFiles = dirsAndFiles.map(p => env.pathFromHome(p, homedir))
     // Put directories first, then files
     let dirs = dirsAndFiles.filter(p => p.endsWith('/'))

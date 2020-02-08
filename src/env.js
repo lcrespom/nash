@@ -1,7 +1,7 @@
 const os = require('os')
-const fs = require('fs')
+const path = require('path')
 const { execFileSync } = require('child_process')
-const fastGlob = require('fast-glob')
+const localGlob = require('glob')
 
 const { memoize, removeAnsiCodes } = require('./utils')
 const history = require('./history')
@@ -86,26 +86,19 @@ function commandOut2Array(out) {
 	return rc === '0' ? arr : []
 }
 
-async function remoteGlob(paths) {
-	if (!Array.isArray(paths))
-		paths = [paths]
-	let result = []
-	for (let path of paths) {
-		let command = `ls -p1d ${path}; echo $?`
-		let out = await runHiddenCommand(command)
-		result = result.concat(commandOut2Array(out))
-	}
-	return result
+async function remoteGlob(path) {
+	let command = `ls -p1d ${path}; echo $?`
+	let out = await runHiddenCommand(command)
+	return commandOut2Array(out)
 }
 
-async function glob(paths, options) {
-	if (getUserStatus().isRemote) {
-		return await remoteGlob(paths)
-	}
+async function glob(pth) {
+	if (getUserStatus().isRemote)
+		return await remoteGlob(pth)
 	else {
-		if (paths.startsWith('/'))
-			paths = '/dummy/..' + paths
-		return fastGlob.sync(paths, options)
+		if (pth.startsWith('.'))
+			pth = path.join(process.cwd(), pth)
+		return localGlob.sync(pth, { mark: true, nocase: true })
 	}
 }
 
