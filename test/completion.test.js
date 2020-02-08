@@ -84,6 +84,7 @@ test('Right after command', () => {
 
 
 //------------------------- getCompletions -------------------------
+const path = require('path')
 
 async function getWords(left) {
     let line = { left, right: '' }
@@ -96,7 +97,8 @@ async function getWords(left) {
 test('cd /', async done => {
     let words = await getWords('cd /')
     //TODO why does glob fail here?
-    expect(words).toContain(['/usr'])
+    words = words.map(w => path.normalize(w))
+    expect(words).toContain('/usr/')
     done()
 })
 

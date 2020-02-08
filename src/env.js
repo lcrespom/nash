@@ -99,10 +99,14 @@ async function remoteGlob(paths) {
 }
 
 async function glob(paths, options) {
-	if (getUserStatus().isRemote)
+	if (getUserStatus().isRemote) {
 		return await remoteGlob(paths)
-	else
+	}
+	else {
+		if (paths.startsWith('/'))
+			paths = '/dummy/..' + paths
 		return fastGlob.sync(paths, options)
+	}
 }
 
 
