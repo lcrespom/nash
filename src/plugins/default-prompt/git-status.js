@@ -1,5 +1,5 @@
 const { execFileSync } = require('child_process')
-const runner = require('../runner')
+const runner = require('../../runner')
 
 function runCommand(cmd) {
     try {
