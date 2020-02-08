@@ -16,9 +16,9 @@ function getChalk() {
     return chalk
 }
 
-function colorize(cname, str) {
+function colorizer(cname) {
+    if (!cname) return str => str
     let chalk = getChalk()
-    if (str == '') return str
     let colors = cname.trim().split(' ')
     let colorfunc = chalk
     for (let color of colors) {
@@ -36,10 +36,17 @@ function colorize(cname, str) {
                 colorfunc = colorfunc[color]
         }
     }
+    return colorfunc
+}
+
+function colorize(cname, str) {
+    if (str == ''|| cname == '') return str
+    let colorfunc = colorizer(cname)
     return colorfunc(str)
 }
 
 
 module.exports = {
+    colorizer,
     colorize
 }

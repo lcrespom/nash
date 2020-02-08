@@ -1,5 +1,4 @@
 const path = require('path')
-const chalk = require('chalk')
 
 const { computeTableLayout, tableMenu } = require('node-terminal-menu')
 
@@ -11,9 +10,10 @@ const {
 const {
     parseBash, traverseAST, NodeType, builtins
 } = require('../parser')
-const { getPromptPosition, adjustPromptPosition } = require('../prompt')
-const { getOption } = require('../startup')
+const { adjustPromptPosition } = require('../prompt')
+const { getOption, setDefaultOptions } = require('../startup')
 const editor = require('../editor')
+const { colorize, colorizer } = require('../colors')
 
 
 //------------------------- AST Searching -------------------------
@@ -201,8 +201,8 @@ function basename(filename) {
 
 function colorizePath(filename) {
     if (filename.endsWith('/'))
-        return chalk.bold(filename)
-    return filename
+        return colorize(colors.dirs, filename)
+    return colorize(colors.files, filename)
 }
 
 function shortenPath(p, isDir) {
@@ -240,11 +240,14 @@ function showTableMenu(items, done) {
     let height = rows, scrollBarCol = undefined
     if (rows > process.stdout.rows - 5) {
         height = process.stdout.rows - 5
-        scrollBarCol = process.stdout.columns - 1
+        scrollBarCol = columns * columnWidth + 1
     }
     adjustPromptPosition(height + 1)
     return tableMenu({
-        items, columns, columnWidth, done, height, scrollBarCol
+        items,
+        columns, columnWidth, height, scrollBarCol,
+        done,
+        colors: menuColors
     })
 }
 
@@ -364,8 +367,28 @@ async function completeWord(line, key) {
 
 
 let customCommands
+let colors
+let menuColors
+
+function setDefaults() {
+    let defaultColors = {
+		dirs: 'yellowBright',
+		files: 'cyan',
+		items: '/#272822',
+		scrollArea: '/#272822',
+        scrollBar: 'whiteBright'
+    }
+    setDefaultOptions('colors.completion', defaultColors)
+    colors = getOption('colors.completion')
+    menuColors = {
+        item: colorizer(colors.items),
+        scrollArea: colorizer(colors.scrollArea),
+        scrollBar: colorizer(colors.scrollBar)
+    }
+}
 
 function start() {
+    setDefaults()
     bindKey('tab', completeWord, 'Complete word under cursor')
     customCommands = getOption('completion.commands')
 }
