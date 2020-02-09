@@ -63,7 +63,8 @@ function replaceWordWithMatch(left, word, match) {
 //------------------------- Menu rendering -------------------------
 
 function cursorToMenu(line) {
-    process.stdout.write('\n'.repeat(line.h + 1))
+    let h = line.h === undefined ? 0 : line.h
+    process.stdout.write('\n'.repeat(h + 1))
 }
 
 function showTableMenu(line, items, done) {
