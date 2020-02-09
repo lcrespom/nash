@@ -125,23 +125,21 @@ class History {
 let history
 let dirHistory
 
+function initHistory(hist, hostname, ext) {
+    if (hist) {
+        hist.close()
+        hist.init(hostname + ext)
+    }
+    else {
+        hist = new History(hostname + ext)
+    }
+    hist.load()
+    return hist
+}
+
 function initialize(hostname) {
-    if (history) {
-        history.close()
-        history.init(hostname + '.history')
-    }
-    else {
-        history = new History(hostname + '.history')
-    }
-    history.load()
-    if (dirHistory) {
-        dirHistory.close()
-        dirHistory.init(hostname + '.dirHistory')
-    }
-    else {
-        dirHistory = new History(hostname + '.dirHistory')
-    }
-    dirHistory.load()
+    history = initHistory(history, hostname, '.history')
+    dirHistory = initHistory(dirHistory, hostname, '.dirHistory')
 }
 
 initialize(os.hostname())
