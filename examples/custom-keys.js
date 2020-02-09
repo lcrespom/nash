@@ -1,3 +1,18 @@
+/* This example plugin illustrates key binding API. When the editor is reading
+    user input and some key combination is pressed, it checks for a registered
+    function to handle the keyboard shortcut.
+
+    This plugin registers 4 shortcut handlers:
+    - The deleteWordToLeft shortcut handler is a simple, synchronous function
+        that just updates the line being edited
+    - The cdParent and cdBack shortcut handlers are asynchronous functions
+        that execute commands (illustrating the runCommand API) and
+        navigate the directory history (illustrating the history API).
+    - The meta-h (alt-h) shortcut handler illustrates how to use the key binding
+        API to reassign an existing shortcut handler to a different key
+        combination.
+*/
+
 const { bindKey, getKeyBindingByFunction } = require(NASH_BASE + '/key-bindings')
 const { runCommand } = require(NASH_BASE + '/runner')
 const env = require(NASH_BASE + '/env')

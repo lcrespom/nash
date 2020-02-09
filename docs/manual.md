@@ -31,6 +31,8 @@
         section for more details.
     - **pagedown**: shows a menu with matching directory history. See the [History menu](#history-menu)
         section for more details.
+    - **shift-up**: changes to the parent directory.
+    - **shift-down**: moves one directory back in history.
 - Completion
     - **tab**: completes the word at the left of the cursor. See the [Tab completion](#tab-completion) section for a detailed description.
 - Help

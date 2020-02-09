@@ -8,7 +8,7 @@
 - [x] Usage
     - [x] Remote mode
     - [x] How to execute `nash` to ensure `bash` is located
-    - [ ] Document *panic* key
+    - [x] Document *panic* key
     - [ ] Record videos with https://asciinema.org/
 - [ ] Customization / Extension API
     - [ ] Writing your own plugin (start/stop, etc)
