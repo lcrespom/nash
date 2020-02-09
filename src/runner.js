@@ -115,7 +115,7 @@ function getShellNameAndParams() {
 function startShell() {
     let [shell, params] = getShellNameAndParams()
     let term = process.env.TERM || 'xterm-256color'
-	let dir = env.cwd() || process.env.HOME
+	let dir = process.cwd() || process.env.HOME
 	process.env.PS1 = env.NASH_MARK
     ptyProcess = pty.spawn(shell, params, {
         name: term,
@@ -183,7 +183,7 @@ async function runCommand(line) {
 	let ustatus = parseUserStatus(output)
 	env.setUserStatus(ustatus)
 	dirHistory.push(ustatus.cwd)
-	if (env.cwd() != ustatus.cwdfull)
+	if (process.cwd() != ustatus.cwdfull)
 		chdirOrWarn(ustatus.cwdfull)
 }
 

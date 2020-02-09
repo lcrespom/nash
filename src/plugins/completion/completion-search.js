@@ -129,7 +129,7 @@ function prependParentDir(dirs, word) {
     if (!parent.endsWith('/'))
         return dirs
     // Remove redundant ../
-    let d = env.getUserStatus().cwd
+    let d = env.cwd()
     d = d.replace(/^~/, env.homedir())
     d = path.normalize(path.join(d, parent))
     if (d == '/')

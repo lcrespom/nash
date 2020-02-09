@@ -115,7 +115,7 @@ function dirHistoryMenu(line) {
     let items = dirHistory.matchLines(line.left, includes)
     // Ensure items are chronological and unique
     items = removeRepeatedItems(items.reverse()).reverse()
-    let cwd = env.getUserStatus().cwd
+    let cwd = env.cwd()
     // Remove current directory from list (user is already there)
     items = items.filter(i => i != cwd)
     let decorate = (o, sel) => {

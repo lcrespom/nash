@@ -36,7 +36,7 @@ function colorizePath(filename) {
 function shortenPath(word, p, isDir) {
     if (p.startsWith('/') || word.startsWith('~/'))
         return path.normalize(p)
-    let cwd = env.getUserStatus().cwd.replace(/^~/, env.homedir())
+    let cwd = env.cwd().replace(/^~/, env.homedir())
     p = p.replace(/^~/, env.homedir())
     p = path.relative(cwd, p)
     if (isDir && p.length > 0 && !p.endsWith('/'))
