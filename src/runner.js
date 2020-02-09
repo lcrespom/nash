@@ -173,7 +173,7 @@ function parseUserStatus(output) {
 	}
 }
 
-async function runCommand(line) {
+async function runCommand(line, { pushDir = true } = {}) {
 	env.refreshWhich()	// Clear which cache
 	grabOutput = false
 	let cmd = expandJS(line.trim())
@@ -182,7 +182,8 @@ async function runCommand(line) {
 	let output = await runHiddenCommand(statusCmd)
 	let ustatus = parseUserStatus(output)
 	env.setUserStatus(ustatus)
-	dirHistory.push(ustatus.cwd)
+	if (pushDir)
+		dirHistory.push(ustatus.cwd)
 	if (process.cwd() != ustatus.cwdfull)
 		chdirOrWarn(ustatus.cwdfull)
 }
