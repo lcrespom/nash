@@ -71,7 +71,7 @@
 - [ ] Delete key removes line from history
 
 ## Bindings
-- [ ] shift-up/down => cd .. / dir history back
+- [x] shift-up/down => cd .. / dir history back
 
 ## Compatibility / Portability
 - [ ] GitBash support (...very long term)
