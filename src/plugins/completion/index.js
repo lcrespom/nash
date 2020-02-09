@@ -33,8 +33,8 @@ function colorizePath(filename) {
     return colorize(colors.files, filename)
 }
 
-function shortenPath(p, isDir) {
-    if (p.startsWith('/'))
+function shortenPath(word, p, isDir) {
+    if (p.startsWith('/') || word.startsWith('~/'))
         return path.normalize(p)
     let cwd = env.getUserStatus().cwd.replace(/^~/, env.homedir())
     p = p.replace(/^~/, env.homedir())
@@ -48,7 +48,7 @@ function replaceWordWithMatch(left, word, match) {
     let cutLen = word.length
     // Normalize and simplify path
     let isDir = match.endsWith('/')
-    match = shortenPath(match, isDir)
+    match = shortenPath(word, match, isDir)
     // Quote blanks in file names
     let qmatch = match.replace(/(\s)/g, '\\$1')
     // Add a space unless it's a directory

@@ -97,7 +97,8 @@ async function getWords(left) {
 test('ls ../', async done => {
     let words = await getWords('ls ../')
     words = words.map(w => path.normalize(w))
-    expect(words).toContain(['nash/'])
+    expect(words).toContain('../../')
+    expect(words.map(w => path.basename(w))).toContain('nash')
     done()
 })
 
@@ -144,3 +145,10 @@ test('ls src/e', async done => {
     expect(words).toEqual(['src/editor.js', 'src/env.js'])
     done()
 })
+
+test('ls ~/.nas', async done => {
+    let words = await getWords('ls ~/.nas')
+    expect(words).toEqual(['~/.nash/'])
+    done()
+})
+
