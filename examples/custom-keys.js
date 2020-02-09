@@ -22,8 +22,9 @@ async function cdBack(line) {
     let dir = dirHistory.back()
     if (dir == env.cwd())
         dir = dirHistory.back()
-    if (dir)
-        await runCommand('cd ' +  dir, { pushDir: false })
+    if (!dir)
+        return { ...line, showPrompt: false }
+    await runCommand('cd ' +  dir, { pushDir: false })
     return { left: line.left, right: line.right }
 }
 
