@@ -62,8 +62,12 @@ function replaceWordWithMatch(left, word, match) {
 
 //------------------------- Menu rendering -------------------------
 
-function showTableMenu(items, done) {
-    process.stdout.write('\n')
+function cursorToMenu(line) {
+    process.stdout.write('\n'.repeat(line.h + 1))
+}
+
+function showTableMenu(line, items, done) {
+    cursorToMenu(line)
     let { rows, columns, columnWidth } =
         computeTableLayout(items, undefined, process.stdout.columns - 3)
     let height = rows, scrollBarCol = undefined
@@ -89,7 +93,7 @@ function updateMenu(menu, key, line, initialItems, initialLen) {
         line.left = line.left.slice(0, -1)
         line.word = line.word.slice(0, -1)
     }
-    process.stdout.write('\n')
+    cursorToMenu(line)
     let wordEnd = line.word.split('/').pop()
     let startsWith = (
         i => startsWithCaseInsensitive(removeAnsiColorCodes(i), wordEnd))
@@ -117,7 +121,7 @@ function handleMenuKey(menu, key, line, items, initialItems, initialLen) {
         items = updateMenu(menu, key, line, initialItems, initialLen)
     }
     else {
-        process.stdout.write('\n')
+        cursorToMenu(line)
         if (key.name == 'ctrl-c') key.name = 'escape'
         if (key.name == 'escape' || items.length > 0)
             menu.keyHandler(key.ch, key)
@@ -135,7 +139,7 @@ function showAllWords(line, word, words) {
     let initialItems = items
     let initialLen = line.left.length
     line.word = word
-    let menu = showTableMenu(items, sel => {
+    let menu = showTableMenu(line, items, sel => {
         line.left = line.left.substr(0, initialLen)
         process.stdout.clearScreenDown()
         if (sel >= 0)

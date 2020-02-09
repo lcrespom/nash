@@ -271,3 +271,9 @@ to the local environment is required, for example in order to show a menu with
 the files in the current directory. In such cases, `nash` knows that it is on a
 remote environment and then issues a *hidden* `ls` command, gathering the output
 and building the menu from it.
+
+As the reader may have concluded at this point, all this involves some level
+of hacking, which means that there is a risk that something unexpected sets
+`nash` in an invalid state. This risk is relatively low, but in case the
+terminal becomes unresponsive, the `shift-meta-q` key combination immediately
+quits `nash`, returning to the parent shell.

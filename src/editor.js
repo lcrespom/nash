@@ -66,12 +66,12 @@ function checkLineOverflow(cursor, line) {
 function writeLine(newLine) {
 	newLine.left = newLine.left || ''
 	newLine.right = newLine.right || ''
-	let decoratedLine = decorateLine(newLine)
+	let decoratedLine = decorateLine(newLine) + ' '
 	hideCursor()	// Hide cursor to avoid glitches
 	putCursorAtPrompt(0)
 	let cursor = getPromptPosition()
 	checkLineOverflow(cursor, newLine)
-	process.stdout.write(decoratedLine +  ' ')
+	process.stdout.write(decoratedLine)
 	process.stdout.clearLine(1)
 	putCursorAtPrompt(newLine.left.length)
 	let { h } = lineEndPosition(removeAnsiColorCodes(decoratedLine).length)
@@ -80,7 +80,8 @@ function writeLine(newLine) {
 	showCursor()
 	line = {
 		left: newLine.left,
-		right: newLine.right
+		right: newLine.right,
+		h
 	}
 }
 
@@ -89,6 +90,7 @@ function doNothingKeyListener(key) {}
 async function handlePromise(promise) {
 	if (keyListener == editorKeyListener)
 		keyListener = doNothingKeyListener
+	//TODO change into "(await promise) || {}" and test
 	let newLine = await promise || {}
 	keyListener = editorKeyListener
 	if (newLine.showPrompt !== false)
