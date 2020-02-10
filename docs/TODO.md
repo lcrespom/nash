@@ -20,7 +20,7 @@
 
 ## Installation
 - [x] Check that .nash/*.js scripts load correctly with binary distribution
-- [ ] Add the packaging script to the repository & binaries to .gitignore
+- [x] Add the packaging script to the repository & binaries to .gitignore
 
 ## Configuration
 - [ ] Interactive options editor (triggered by e.g. F4)
