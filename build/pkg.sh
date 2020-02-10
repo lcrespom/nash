@@ -21,6 +21,7 @@ fi
 VERSION=$1
 # Build
 echo "Building binary distribution (warnings are expected)"
+mkdir -p dist
 npx pkg --targets linux,macos .
 mv nash-linux build/linux/nash
 mv nash-macos build/mac/nash
