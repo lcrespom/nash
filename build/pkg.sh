@@ -21,10 +21,9 @@ fi
 VERSION=$1
 # Build
 echo "Building binary distribution (warnings are expected)"
-npx pkg .
+npx pkg --targets linux,macos .
 mv nash-linux build/linux/nash
 mv nash-macos build/mac/nash
-rm -f *.exe
 # Package linux version
 echo "Packaging linux version..."
 cd build/linux
