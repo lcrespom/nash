@@ -45,7 +45,7 @@
 
 ## Completion
 - [ ] Bug: remote completion mixes with local directories because path.relative
-    looks into the local directory structure.
+    uses process.cwd().
 - [x] Customizable (e.g. git command list, etc.)
     - [ ] Super-powerful git completion
         - [ ] git checkout => show tags, branches, recent commits...
