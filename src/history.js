@@ -100,6 +100,11 @@ class History {
         })
     }
 
+    _removePastDuplicates(cb) {
+        let lines = [...new Set(this.history.slice().reverse())].reverse()
+        fs.writeFile(this.historyPath, lines.join('\n') + '\n', cb)
+    }
+
     load() {
         if (!fs.existsSync(this.historyPath)) {
             this._openForAppend()
@@ -111,7 +116,7 @@ class History {
             if (this.history.length > this.maxSize)
                 this.history = this.history.slice(-this.maxSize)
             this.index = this.history.length
-            this._openForAppend()
+            this._removePastDuplicates(_ => this._openForAppend())
         })
     }
     

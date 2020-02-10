@@ -28,7 +28,7 @@
     - [ ] Read and write `~/nash/options.js`
 
 ## Line editing
-- [ ] Remove old duplicates from history/dirHistory
+- [x] Remove old duplicates from history/dirHistory
     (upon startup - cannot do on the fly)
 - [ ] Catch exceptions in bindings to avoid breaking the shell
 - [ ] Improve support for multi-line prompt (agnoster), e.g. in
