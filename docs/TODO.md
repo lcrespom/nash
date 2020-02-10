@@ -22,6 +22,11 @@
 - [x] Check that .nash/*.js scripts load correctly with binary distribution
 - [ ] Add the packaging script to the repository & binaries to .gitignore
 
+## Configuration
+- [ ] Interactive options editor (triggered by e.g. F4)
+    - [ ] Color picker / property type support
+    - [ ] Read and write `~/nash/options.js`
+
 ## Line editing
 - [ ] Remove old duplicates from history/dirHistory
     (upon startup - cannot do on the fly)
@@ -30,8 +35,8 @@
     completion.tooManyWords and in directory history.
 
 ## Bugs
-- [ ] Shift+Fn key combinations not recognized
-    (ctrl-k reports "shift-undefined"). Probably a bug in `keypress`
+- [ ] Shift+F1 to shift+F5 key combinations not recognized
+    (ctrl-k reports "shift-undefined"). Probably a bug in `keypress`.
 
 ## History navigation
 - [x] Menu (pageup)
@@ -43,14 +48,10 @@
 - [ ] Make agnoster use features from default prompt
 
 ## Completion
-- [x] Selecting a directory (using space) opens menu with directory contents
-    - [x] Entering an empty directory ends continuous navigation.
-        It should display just `../`.
-    - [x] Fine-tune/fix bugs
-- [x] Add `../` to the directory list for `cd`.
-    - [x] Detect ../../../back/to/cwd and merge
-- [x] Color configuration
 - [x] Customizable (e.g. git command list, etc.)
+    - [ ] Super-powerful git completion
+        - [ ] git checkout => show tags, branches, recent commits...
+        - [ ] Investigate completion for other git commands 
     - [ ] Optional subcommand description - if available, show under menu
     - [ ] Parse man pages to generate descrpitons
 - [ ] Mouse support (keypress module supports it)
@@ -69,9 +70,6 @@
 
 ## History menu
 - [ ] Delete key removes line from history
-
-## Bindings
-- [x] shift-up/down => cd .. / dir history back
 
 ## Compatibility / Portability
 - [ ] GitBash support (...very long term)
