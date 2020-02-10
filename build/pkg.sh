@@ -1,4 +1,18 @@
 #!/usr/bin/env bash
+
+function nash_package() {
+    PLATFORM=$1
+    rm -f *.tar *.gz
+    rm -rf examples
+    mkdir examples
+    cp ../../examples/* examples
+    tar -cf nash-$VERSION-$PLATFORM.tar *
+    gzip nash-$VERSION-$PLATFORM.tar
+    mv nash-$VERSION-$PLATFORM.tar.gz ../../dist
+    rm -rf examples
+    rm nash
+}
+
 if [ -z "$1" ];
 then
     echo "Missing version parameter"
@@ -14,25 +28,9 @@ rm -f *.exe
 # Package linux version
 echo "Packaging linux version..."
 cd build/linux
-rm -f *.tar *.gz
-rm -rf examples
-mkdir examples
-cp ../../examples/* examples
-tar -cf nash-$VERSION-linux.tar *
-gzip nash-$VERSION-linux.tar
-mv nash-$VERSION-linux.tar.gz ../../dist
-rm -rf examples
-rm nash
+nash_package linux
 # Package linux version
 echo "Packaging mac version..."
 cd ../mac
-rm -f *.tar *.gz
-rm -rf examples
-mkdir examples
-cp ../../examples/* examples
-tar -cf nash-$VERSION-mac.tar *
-gzip nash-$VERSION-mac.tar
-mv nash-$VERSION-mac.tar.gz ../../dist
-rm -rf examples
-rm nash
+nash_package mac
 echo "Done."
