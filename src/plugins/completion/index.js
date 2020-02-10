@@ -35,7 +35,7 @@ function colorizePath(filename) {
 
 function shortenPath(word, p, isDir) {
     p = path.normalize(p)
-    if (p.startsWith('/') || word.startsWith('~/'))
+    if (word.startsWith('/'))
         return p
     let cwd = env.cwd().replace(/^~/, env.homedir())
     p = p.replace(/^~/, env.homedir())
