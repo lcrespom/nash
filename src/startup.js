@@ -149,7 +149,6 @@ function nashShutdown() {
 
 
 module.exports = {
-	userConfig,
 	getOption,
 	setOption,
 	setDefaultOptions,

@@ -34,10 +34,6 @@
 - [ ] Improve support for multi-line prompt (agnoster), e.g. in
     completion.tooManyWords and in directory history.
 
-## Bugs
-- [ ] Shift+F1 to shift+F5 key combinations not recognized
-    (ctrl-k reports "shift-undefined"). Probably a bug in `keypress`.
-
 ## History navigation
 - [x] Menu (pageup)
     - [x] Cut lines longer than process.stdout.columns
@@ -48,16 +44,19 @@
 - [ ] Make agnoster use features from default prompt
 
 ## Completion
+- [ ] Bug: remote completion mixes with local directories because path.relative
+    looks into the local directory structure.
 - [x] Customizable (e.g. git command list, etc.)
     - [ ] Super-powerful git completion
         - [ ] git checkout => show tags, branches, recent commits...
         - [ ] Investigate completion for other git commands 
     - [ ] Optional subcommand description - if available, show under menu
     - [ ] Parse man pages to generate descrpitons
-- [ ] Mouse support (keypress module supports it)
+- [ ] Mouse support (keypress module supports it) (**next**)
 
 ## Syntax highlight
-- [ ] Aliases are not detected by the which command
+- [ ] Aliases are not detected by the which command => implement
+    via runHiddenCommand at startup
 
 ## History suggestions
 - [x] Remove suggestion decoration when the user presses enter
