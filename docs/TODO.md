@@ -5,6 +5,7 @@
 - [x] Features
 - [x] Examples directory with documented customizations
 - [x] Copy examples to `~/.nash` upon first startup
+- [ ] Recommended prerequisites
 - [x] Usage
     - [x] Remote mode
     - [x] How to execute `nash` to ensure `bash` is located
@@ -44,6 +45,7 @@
 - [ ] Make agnoster use features from default prompt
 
 ## Completion
+- [ ] File completion for file redirects (echo hello > a.txt)
 - [x] Bug: remote completion mixes with local directories because path.relative
     uses process.cwd().
 - [x] Customizable (e.g. git command list, etc.)

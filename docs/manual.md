@@ -87,11 +87,14 @@ The prompt plugin supports the following configuration options:
     - **gitDirty**: color of the Git segment, when the repository is *dirty*, i.e., it has some uncommited files.
     - **gitClean**: color of the Git segment, when the repository is clean.
 - **prompt**:
-    - **showUser**: boolean specifying whether to show the user name or not.
-    - **showAt**: boolean specifying whether to show `@` or not.
-    - **showHost**: boolean specifying whether to show the host name or not.
-    - **showPath**: boolean specifying whether to show the directory segment or not.
-    - **showGit**: boolean specifying whether to show the Git status segment or not.
+    - **showUser**: boolean specifying whether to show the user name or not - defaults to true.
+    - **showAt**: boolean specifying whether to show `@` or not - defaults to true.
+    - **showHost**: boolean specifying whether to show the host name or not - defaults to true.
+    - **showPath**: boolean specifying whether to show the directory segment or not - defaults to true.
+    - **showGit**: boolean specifying whether to show the Git status segment or not - defaults to true.
+    - **powerFont**: boolean specifying whether the current font is a *powerline* font, i.e., supports
+        fancy symbols - defaults to false.
+        See the [recommended prerequisites](../README.md#recommended-prerequisites) section for more details.
     - **maxDirs**: number - if present, limits the number of directory levels to show in the directory segment.
         This option is used to abbreviate the display of potentially long working directories.
     - **parentDirMaxLen**: number - if present, limits the length of each directory in the directory segment,

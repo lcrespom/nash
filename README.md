@@ -66,8 +66,8 @@ choice. For example:
 $ mkdir ~/nash-inst
 $ cd ~/nash-inst
 $ # Use the appropirate link for nash-[version]-[platform].tar.gz
-$ curl -OL https://github.com/lcrespom/nash/releases/download/1.3.1/nash-1.3.1-linux.tar.gz
-$ tar -xzf nash-1.3.1-linux.tar.gz
+$ curl -OL https://github.com/lcrespom/nash/releases/download/1.6.1/nash-1.6.1-linux.tar.gz
+$ tar -xzf nash-1.6.1-linux.tar.gz
 ```
 Finally, to run nash:
 ```bash
@@ -93,6 +93,26 @@ $ npm start
 ### Windows
 There is no direct Windows support, but an Ubuntu terminal can be installed in windows very easily through the Microsoft Store. See instructions [here](https://tutorials.ubuntu.com/tutorial/tutorial-ubuntu-on-windows).
 
+## Recommended prerequisites
+In order to get the best experience from `nash`, the following prerequisites are recommended, depending on
+the end user environment.
+
+### Powerline fonts
+A collection of fonts that are optimized for the terminal and contain useful symbol characters,
+e.g. for displaying a fancy prompt, git repository symbol, etc.
+They can be downloaded form [here](https://github.com/powerline/fonts).
+
+### A good terminal app
+The default terminal application that comes preinstalled with the OS is usually quite limited, and may
+even cause defective output or glitches when `nash` tries to generate colorful output. The recommended
+alternatives are the following:
+- **Mac**: [iTerm2](https://iterm2.com/).
+- **Windows**:
+	- [Windows Terminal](https://github.com/Microsoft/Terminal). The GitHub page contains
+	instructions for different installation methods, but at the very beginning of the README.md there
+	is a link to the app in the Microsoft Store, which is the easiest installation method.
+	- The terminal provided by the Ubuntu WSL app is also quite decent.
+- **Linux**: most Linux distributions come with a powerful terminal by default.
 
 ## Related projects
 If you are thinking about using JavaScript to implement your shell scripts, check out [ShellJS](https://github.com/shelljs/shelljs).
