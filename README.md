@@ -94,8 +94,7 @@ $ npm start
 There is no direct Windows support, but an Ubuntu terminal can be installed in windows very easily through the Microsoft Store. See instructions [here](https://tutorials.ubuntu.com/tutorial/tutorial-ubuntu-on-windows).
 
 ## Recommended prerequisites
-In order to get the best experience from `nash`, the following prerequisites are recommended, depending on
-the end user environment.
+In order to get the best experience from `nash`, the following prerequisites are recommended:
 
 ### Powerline fonts
 A collection of fonts that are optimized for the terminal and contain useful symbol characters,
