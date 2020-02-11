@@ -91,14 +91,14 @@ async function gitStatus(isRemote) {
     return parseGitStatus(lines)
 }
 
-function gitStatusFlags(status) {
+function gitStatusFlags(status, { unicode = true } = {}) {
     if (!status) return ''
     let flags = ''
-    if (status.ahead) flags += '↑'
-    if (status.behind) flags += '↓'
-    if (status.tree.total) flags += '●'
-    if (status.index.total) flags += '✚'
-    if (status.conflicts) flags += '✖'
+    if (status.ahead) flags += unicode ? '↑' : '^'
+    if (status.behind) flags += unicode ? '↓' : 'v'
+    if (status.tree.total) flags += unicode ? '●' : '*'
+    if (status.index.total) flags += unicode ? '✚' : '+'
+    if (status.conflicts) flags += unicode ? '✖' : 'x'
     return flags
 } 
 

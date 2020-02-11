@@ -12,10 +12,11 @@ const GIT_SYMBOL = '\ue0a0'
 async function gitSection(isRemote) {
 	let gstatus = await gitStatus(isRemote)
 	if (!gstatus) return ''
-	let flags = gitStatusFlags(gstatus)
+	let flags = gitStatusFlags(gstatus, { unicode: promptConfig.powerFont })
 	if (flags) flags = ' ' + flags
 	let gitColor = gstatus.dirty ? colors.gitDirty : colors.gitClean
-	let status = ' (' + GIT_SYMBOL + ' ' + gstatus.branch + flags + ') '
+	let gitSymbol = promptConfig.powerFont ? GIT_SYMBOL + ' ' : ''
+	let status = ' (' + gitSymbol + gstatus.branch + flags + ') '
 	return colorize(gitColor, status)
 }
 
@@ -87,6 +88,7 @@ function setDefaults() {
 		showHost: true,
 		showPath: true,
 		showGit: true,
+		powerFont: false
 		//parentDirMaxLen: 1,
 		//parentDirEllipsis: '\u2026',
 		//maxDirs: 4,
