@@ -36,7 +36,12 @@ function getLocAndType(node, pos) {
         return [node.loc, NodeType.unknown]
     for (let s of node.suffix) {
         if (insideLoc(s.loc, pos)) {
-            if (s.text[0] == '$')
+            if (s.type == 'Redirect') {
+                if (s.file && insideLoc(s.file.loc, pos))
+                    return [s.file.loc, NodeType.redirect]
+                else return s.loc
+            }
+            else if (s.text[0] == '$')
                 return [s.loc, NodeType.environment]
             else if (s.text[0] == '-')
                 return [s.loc, NodeType.option]
@@ -53,14 +58,23 @@ function isEmptyParameter(line) {
         && line.right == ''
 }
 
+function isEmptyRedirect(line) {
+    let l = line.left.trim()
+    return l.endsWith('<') || l.endsWith('>') && line.right == ''
+}
+
 function getWordAndType(line) {
     let pos = line.left.length - 1
     try {
         let ast = parseBash(line.left + line.right)
         let node = getNodeInPosition(ast, pos)
         let [loc, type] = getLocAndType(node, pos)
-        if (loc == null && isEmptyParameter(line))
-            return ['', NodeType.parameter]
+        if (loc == null) {
+            if (isEmptyParameter(line))
+                return ['', NodeType.parameter]
+            else if (isEmptyRedirect(line))
+                return ['', NodeType.redirect]
+        }
         else if (type == NodeType.unknown)
             return ['', type]
         else
@@ -182,6 +196,7 @@ async function getCompletions(word, type, line) {
             return []
         case NodeType.command:
             return await getCommandCompletions(word, line)
+        case NodeType.redirect:
         case NodeType.parameter:
             return await getParameterCompletions(word, line)
         case NodeType.environment:

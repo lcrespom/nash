@@ -82,6 +82,27 @@ test('Right after command', () => {
     expect(word).toBe('co')
 })
 
+test('Redirect with blank', () => {
+    let line = { left: 'echo hello > a', right: '' }
+    let [word, type] = getWordAndType(line)
+    expect(type).toBe(NodeType.redirect)
+    expect(word).toBe('a')
+})
+
+test('Redirect no blank', () => {
+    let line = { left: 'echo hello >a', right: '' }
+    let [word, type] = getWordAndType(line)
+    expect(type).toBe(NodeType.redirect)
+    expect(word).toBe('a')
+})
+
+test('Redirect empty', () => {
+    let line = { left: 'echo hello >', right: '' }
+    debugger
+    let [word, type] = getWordAndType(line)
+    expect(type).toBe(NodeType.redirect)
+    expect(word).toBe('')
+})
 
 //------------------------- getCompletions -------------------------
 const path = require('path')
@@ -152,3 +173,16 @@ test('ls ~/.nas', async done => {
     done()
 })
 
+test('echo hello >', async done => {
+    let words = await getWords('echo hello >')
+    expect(words).toContain('../')
+    expect(words).toContain('package.json')
+    expect(words).toContain('src/')
+    done()
+})
+
+test('echo hello > READ', async done => {
+    let words = await getWords('echo hello >READ')
+    expect(words).toEqual(['README.md'])
+    done()
+})
