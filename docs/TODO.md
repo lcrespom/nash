@@ -44,7 +44,7 @@
 - [ ] Make agnoster use features from default prompt
 
 ## Completion
-- [ ] Bug: remote completion mixes with local directories because path.relative
+- [x] Bug: remote completion mixes with local directories because path.relative
     uses process.cwd().
 - [x] Customizable (e.g. git command list, etc.)
     - [ ] Super-powerful git completion
