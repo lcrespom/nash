@@ -66,8 +66,8 @@ choice. For example:
 $ mkdir ~/nash-inst
 $ cd ~/nash-inst
 $ # Use the appropirate link for nash-[version]-[platform].tar.gz
-$ curl -OL https://github.com/lcrespom/nash/releases/download/1.6.1/nash-1.6.1-linux.tar.gz
-$ tar -xzf nash-1.6.1-linux.tar.gz
+$ curl -OL https://github.com/lcrespom/nash/releases/download/1.6.2/nash-1.6.2-linux.tar.gz
+$ tar -xzf nash-1.6.2-linux.tar.gz
 ```
 Finally, to run nash:
 ```bash
