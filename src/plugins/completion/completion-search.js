@@ -197,13 +197,13 @@ function getCommandAndSubcommands(line) {
 }
 
 async function getOptionCompletions(word, line) {
-    //TODO provide general extension points for completion
     let cmd = getCommandAndSubcommands(line.left)
     let opts = optsCache[cmd]
     if (!opts) {
         opts = await docparser.parseOptions(cmd)
         optsCache[cmd] = opts
     }
+    //TODO filter by word
     return opts
 }
 

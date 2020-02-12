@@ -2,7 +2,6 @@ const {
     NodeType, getWordAndType, getCompletions
 } = require('../src/plugins/completion')
 
-
 //------------------------- getWordAndType -------------------------
 
 test('Simple param', () => {
@@ -184,5 +183,16 @@ test('echo hello >', async done => {
 test('echo hello > READ', async done => {
     let words = await getWords('echo hello >READ')
     expect(words).toEqual(['README.md'])
+    done()
+})
+
+
+//------------------------- Options -------------------------
+
+const docparser = require('../src/plugins/completion/doc-parser')
+
+test('git commit', async done => {
+    let words = await docparser.parseOptions('git commit')
+    console.log(words)
     done()
 })
