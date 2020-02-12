@@ -16,6 +16,7 @@ const { colorize, colorizer } = requireNash('colors')
 const {
     getWordAndType, getCompletions, setCustomCommands
 } = require('./completion-search')
+const docparser = require('./doc-parser')
 
 
 //------------------------- Utilities -------------------------
@@ -91,9 +92,10 @@ function showTableMenu(line, items, done) {
         scrollBarCol = columns * columnWidth + 1
     }
     adjustPromptPosition(height + 1)
+    let maxw = columns * columnWidth - 1 //process.stdout.columns - 3
+    let descs = items.map(i => docparser.wrap(i.desc, maxw, 3))
     return tableMenu({
-        items,
-        descs: items.map(i => i.desc),
+        items, descs,
         columns, columnWidth, height, scrollBarCol,
         done,
         colors: menuColors

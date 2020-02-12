@@ -81,12 +81,8 @@ function itemWithDesc(item, desc) {
 }
 
 async function parseOptions(cmd) {
-    // let out = await getManOut(cmd)
-    // return parseMan(out).map(opt => itemWithDesc(opt.name, opt.desc))
-    return [
-        itemWithDesc('--option-one', 'Description for option one'),
-        itemWithDesc('-o, --option-two', 'Line one of description for option two\n... and line two')
-    ]
+    let out = await getManOut(cmd)
+    return parseMan(out).map(opt => itemWithDesc(opt.name, opt.desc))
 }
 
 function wrap(str, w, maxLines) {
