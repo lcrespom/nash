@@ -31,64 +31,49 @@ function itemWithDesc(item, desc) {
     return result
 }
 
-async function getManPath() {
-    let mp = await runCommand('manpath')
-    if (!mp[0])
-        return ['/usr/share/man']
-    return mp[0].split(':')
+function getManOut(cmd) {
+    return runCommand('man ' + cmd.replace(/ /g, '-'))
 }
 
-async function getManSource(cmd) {
-    if (!manpath)
-        manpath = await getManPath()
-    for (let p of manpath) {
-        let fname = `${p}/man1/${cmd}.1`
-        let src = await runCommand(`cat ${fname} || gzip -cd ${fname}.gz`)
-        if (src.length > 0)
-            return src
+function removeBackChars(str) {
+    let result = ''
+    for (let i = 0; i < str.length; i++) {
+        let c = str.charAt(i)
+        if (i == 0 || c != '\b')
+            result += c
+        else
+            result = result.slice(0, -1)
     }
-    return null
+    return result
 }
 
-function parseManSource(src) {
-    // See https://linux.die.net/man/7/man
-    let doc = { sections: {} }
-    let section = null
-    let paragraph = null
-    for (let line of src) {
-        if (line.startsWith('.')) {
-            let command = line.split(' ')[0]
-            let param = line.substr(command.length + 1)
-            switch (command) {
-                case '.TH':
-                    doc.title = param
-                    break
-                case '.SH':
-                    section = param
-                    if (section.match(/^".+"$/))
-                        section = section.substr(1, -1)
-                    doc.sections[section] = []
-                    paragraph = ''
-                    break
-                case '.LP': case '.P': case '.PP':
-                    if (!section || !paragraph) break
-                    doc.sections[section].push(paragraph)
+function parseMan(lines) {
+    if (!lines || lines.length == 0) return []
+    let opts = []
+    let inOptions = false
+    for (let line of lines) {
+        line = removeBackChars(line)
+        if (!inOptions) {
+            if (line == 'OPTIONS') {
+                inOptions = true
+                continue
             }
         }
+        else {
+            if (line.length > 0 && line[0] != ' ') break
+            opts.push(line)
+        }
     }
+    return opts
 }
-
 
 async function parseOptions(cmd) {
     // return [
     //     itemWithDesc('--option-one', 'Description for option one'),
     //     itemWithDesc('-o, --option-two', 'Line one of description for option two\n... and line two')
     // ]
-    let source = await getManSource(cmd.replace(/ /g, '-'))
-    if (!source) return []
-    let man = parseManSource(source)
-    //console.log(source)
-    return []
+    let out = await getManOut(cmd)
+    return parseMan(out)
 }
 
 module.exports = {

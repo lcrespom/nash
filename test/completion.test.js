@@ -97,7 +97,6 @@ test('Redirect no blank', () => {
 
 test('Redirect empty', () => {
     let line = { left: 'echo hello >', right: '' }
-    debugger
     let [word, type] = getWordAndType(line)
     expect(type).toBe(NodeType.redirect)
     expect(word).toBe('')
