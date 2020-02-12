@@ -21,7 +21,7 @@ const {
 //------------------------- Utilities -------------------------
 
 function basename(filename) {
-    let result = path.basename(filename)
+    let result = path.basename(filename.toString())
     if (filename.endsWith('/'))
         result += '/'
     return result
@@ -30,7 +30,10 @@ function basename(filename) {
 function colorizePath(filename) {
     if (filename.endsWith('/'))
         return colorize(colors.dirs, filename)
-    return colorize(colors.files, filename)
+    else if (filename.startsWith('-'))
+        return colorize(colors.options, filename)
+    else
+        return colorize(colors.files, filename)
 }
 
 function shortenPath(word, p, isDir) {
@@ -90,6 +93,7 @@ function showTableMenu(line, items, done) {
     adjustPromptPosition(height + 1)
     return tableMenu({
         items,
+        descs: items.map(i => i.desc),
         columns, columnWidth, height, scrollBarCol,
         done,
         colors: menuColors
@@ -113,7 +117,7 @@ function updateMenu(menu, key, line, initialItems, initialLen) {
     if (items.length > 0) {
         if (menu.selection >= items.length)
             menu.selection = items.length - 1
-        menu.update({ items })
+        menu.update({ items, descs: items.map(i => i.desc) })
     }
     else {
         process.stdout.clearScreenDown()
@@ -147,7 +151,12 @@ function showAllWords(line, word, words) {
     let items = words
         .map(basename)
         .map(colorizePath)
-        .map((w, i) => { let s = new String(w); s.from = words[i]; return s })
+        .map((w, i) => {
+            let s = new String(w)
+            s.from = words[i]
+            s.desc = words[i].desc
+            return s
+        })
     let initialItems = items
     let initialLen = line.left.length
     line.word = word
@@ -217,17 +226,20 @@ let menuColors
 function setDefaults() {
     let defaultColors = {
 		dirs: 'yellowBright',
-		files: 'cyan',
+        files: 'cyan',
+        options: 'magentaBright',
 		items: '/#272822',
 		scrollArea: '/#272822',
-        scrollBar: 'whiteBright'
+        scrollBar: 'whiteBright',
+        desc: 'cyanBright /#223030'
     }
     setDefaultOptions('colors.completion', defaultColors)
     colors = getOption('colors.completion')
     menuColors = {
         item: colorizer(colors.items),
         scrollArea: colorizer(colors.scrollArea),
-        scrollBar: colorizer(colors.scrollBar)
+        scrollBar: colorizer(colors.scrollBar),
+        desc: colorizer(colors.desc)
     }
 }
 

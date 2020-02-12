@@ -5,6 +5,7 @@ const {
     parseBash, traverseAST, NodeType, builtins
 } = require('../../parser')
 const env = require('../../env')
+const docparser = require('./doc-parser')
 
 let customCommands = {}
 
@@ -185,9 +186,25 @@ function getEnvironmentCompletions(word) {
         .filter(w => startsWithCaseInsensitive(w, word))
 }
 
-function getOptionCompletions(word) {
+optsCache = {}
+
+function getCommandAndSubcommands(line) {
+    let cmds = line.split(' ')
+    let idx = cmds.findIndex(cmd => !cmd.match(/^[a-z][a-z\-]*$/))
+    if (idx == 0) return cmds[0]
+    if (idx > 0) cmds = cmds.slice(0, idx)
+    return cmds.join(' ')
+}
+
+async function getOptionCompletions(word, line) {
     //TODO provide general extension points for completion
-    return []
+    let cmd = getCommandAndSubcommands(line.left)
+    let opts = optsCache[cmd]
+    if (!opts) {
+        opts = await docparser.parseOptions(cmd)
+        optsCache[cmd] = opts
+    }
+    return opts
 }
 
 async function getCompletions(word, type, line) {
@@ -202,7 +219,7 @@ async function getCompletions(word, type, line) {
         case NodeType.environment:
             return getEnvironmentCompletions(word)
         case NodeType.option:
-            return getOptionCompletions(word)
+            return getOptionCompletions(word, line)
     }
 }
 
