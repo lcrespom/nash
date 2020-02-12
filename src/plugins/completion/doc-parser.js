@@ -48,8 +48,10 @@ function removeBackChars(str) {
 }
 
 function parseMan(lines) {
+    const cleanOpt = o => ({ name: o.name, desc: o.desc.trim() })
     if (!lines || lines.length == 0) return []
     let opts = []
+    let opt = null
     let inOptions = false
     for (let line of lines) {
         line = removeBackChars(line)
@@ -61,9 +63,20 @@ function parseMan(lines) {
         }
         else {
             if (line.length > 0 && line[0] != ' ') break
-            opts.push(line)
+            line = line.trim()
+            if (line.startsWith('-')) {
+                if (opt) opts.push(cleanOpt(opt))
+                opt = { name: line, desc: '' }
+            }
+            else if (opt) {
+                if (line.length == 0) {
+                    opt.done = true
+                }
+                else if (!opt.done) opt.desc += '\n' + line
+            }
         }
     }
+    if (opt) opts.push(cleanOpt(opt))
     return opts
 }
 

@@ -192,6 +192,6 @@ const docparser = require('../src/plugins/completion/doc-parser')
 
 test('git commit', async done => {
     let words = await docparser.parseOptions('git commit')
-    console.log(words)
+    for (let w of words) console.log(w)
     done()
 })
