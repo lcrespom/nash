@@ -42,11 +42,40 @@ async function getManSource(cmd) {
     if (!manpath)
         manpath = await getManPath()
     for (let p of manpath) {
-        let src = await runCommand(`cat ${p}/man1/${cmd}.1`)
+        let fname = `${p}/man1/${cmd}.1`
+        let src = await runCommand(`cat ${fname} || gzip -cd ${fname}.gz`)
         if (src.length > 0)
             return src
     }
     return null
+}
+
+function parseManSource(src) {
+    // See https://linux.die.net/man/7/man
+    let doc = { sections: {} }
+    let section = null
+    let paragraph = null
+    for (let line of src) {
+        if (line.startsWith('.')) {
+            let command = line.split(' ')[0]
+            let param = line.substr(command.length + 1)
+            switch (command) {
+                case '.TH':
+                    doc.title = param
+                    break
+                case '.SH':
+                    section = param
+                    if (section.match(/^".+"$/))
+                        section = section.substr(1, -1)
+                    doc.sections[section] = []
+                    paragraph = ''
+                    break
+                case '.LP': case '.P': case '.PP':
+                    if (!section || !paragraph) break
+                    doc.sections[section].push(paragraph)
+            }
+        }
+    }
 }
 
 
@@ -56,6 +85,8 @@ async function parseOptions(cmd) {
     //     itemWithDesc('-o, --option-two', 'Line one of description for option two\n... and line two')
     // ]
     let source = await getManSource(cmd.replace(/ /g, '-'))
+    if (!source) return []
+    let man = parseManSource(source)
     //console.log(source)
     return []
 }
