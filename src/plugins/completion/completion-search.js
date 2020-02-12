@@ -203,6 +203,7 @@ async function getOptionCompletions(word, line) {
         opts = await docparser.parseOptions(cmd)
         optsCache[cmd] = opts
     }
+    //console.log(opts)
     //TODO filter by word
     return opts
 }

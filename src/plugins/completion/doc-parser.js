@@ -25,12 +25,6 @@ function runCommand(cmd) {
 //     return commandOut2Array(out)
 // }
 
-function itemWithDesc(item, desc) {
-    let result = new String(item)
-    result.desc = desc
-    return result
-}
-
 function getManOut(cmd) {
     return runCommand('man ' + cmd.replace(/ /g, '-'))
 }
@@ -80,15 +74,34 @@ function parseMan(lines) {
     return opts
 }
 
+function itemWithDesc(item, desc) {
+    let result = new String(item)
+    result.desc = desc
+    return result
+}
+
 async function parseOptions(cmd) {
-    // return [
-    //     itemWithDesc('--option-one', 'Description for option one'),
-    //     itemWithDesc('-o, --option-two', 'Line one of description for option two\n... and line two')
-    // ]
-    let out = await getManOut(cmd)
-    return parseMan(out)
+    // let out = await getManOut(cmd)
+    // return parseMan(out).map(opt => itemWithDesc(opt.name, opt.desc))
+    return [
+        itemWithDesc('--option-one', 'Description for option one'),
+        itemWithDesc('-o, --option-two', 'Line one of description for option two\n... and line two')
+    ]
+}
+
+function wrap(str, w, maxLines) {
+    if (!str) return str
+    str = str.split('\n').join(' ')
+    let rexp = new RegExp(`(?![^\\n]{1,${w}}$)([^\\n]{1,${w}})\\s`, 'g')
+    let lines = str.replace(rexp, '$1\n').split('\n')
+    if (lines.length > maxLines) {
+        lines = lines.slice(0, maxLines)
+        lines[maxLines - 1] = lines[maxLines - 1].substr(0, w) + '...'
+    }
+    return lines.join('\n')
 }
 
 module.exports = {
-    parseOptions
+    parseOptions,
+    wrap
 }

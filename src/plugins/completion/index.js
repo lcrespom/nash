@@ -86,8 +86,8 @@ function showTableMenu(line, items, done) {
     let { rows, columns, columnWidth } =
         computeTableLayout(items, undefined, process.stdout.columns - 3)
     let height = rows, scrollBarCol = undefined
-    if (rows > process.stdout.rows - 5) {
-        height = process.stdout.rows - 5
+    if (rows > process.stdout.rows - 8) {
+        height = process.stdout.rows - 8
         scrollBarCol = columns * columnWidth + 1
     }
     adjustPromptPosition(height + 1)

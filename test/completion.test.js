@@ -192,6 +192,10 @@ const docparser = require('../src/plugins/completion/doc-parser')
 
 test('git commit', async done => {
     let words = await docparser.parseOptions('git commit')
+    words = words.map(w => {
+        w.desc = docparser.wrap(w.desc, 100, 3)
+        return w
+    })
     for (let w of words) console.log(w)
     done()
 })
