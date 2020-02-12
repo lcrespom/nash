@@ -47,6 +47,7 @@ function parseMan(lines) {
     let opts = []
     let opt = null
     let inOptions = false
+    let lastLine = ''
     for (let line of lines) {
         line = removeBackChars(line)
         if (!inOptions) {
@@ -58,7 +59,7 @@ function parseMan(lines) {
         else {
             if (line.length > 0 && line[0] != ' ') break
             line = line.trim()
-            if (line.startsWith('-')) {
+            if (line.startsWith('-') && lastLine.length == 0) {
                 if (opt) opts.push(cleanOpt(opt))
                 opt = { name: line, desc: '' }
             }
@@ -69,6 +70,7 @@ function parseMan(lines) {
                 else if (!opt.done) opt.desc += '\n' + line
             }
         }
+        lastLine = line
     }
     if (opt) opts.push(cleanOpt(opt))
     return opts
@@ -92,7 +94,7 @@ function wrap(str, w, maxLines) {
     let lines = str.replace(rexp, '$1\n').split('\n')
     if (lines.length > maxLines) {
         lines = lines.slice(0, maxLines)
-        lines[maxLines - 1] = lines[maxLines - 1].substr(0, w) + '...'
+        lines[maxLines - 1] = lines[maxLines - 1].substr(0, w - 3) + '...'
     }
     return lines.join('\n')
 }
