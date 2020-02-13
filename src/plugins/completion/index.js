@@ -22,7 +22,12 @@ const docparser = require('./doc-parser')
 //------------------------- Utilities -------------------------
 
 function basename(filename) {
-    let result = path.basename(filename.toString())
+    filename = filename.toString()
+    // Do not split options
+    if (filename.startsWith('-'))
+        return filename
+    // It's a path
+    let result = path.basename(filename)
     if (filename.endsWith('/'))
         result += '/'
     return result
@@ -38,6 +43,8 @@ function colorizePath(filename) {
 }
 
 function shortenPath(word, p, isDir) {
+    // Menu items are not string literals
+    p = p.toString()
     // Remove redundant ../
     p = path.normalize(p)
     // Absolute path should not be made relative
@@ -56,6 +63,11 @@ function shortenPath(word, p, isDir) {
     // Finally, add '/' if it's a directory
     if (isDir && p.length > 0 && !p.endsWith('/'))
         p += '/'
+    // If the path is shorter from ~, return it in that format
+    if (!path.isAbsolute(p)) {
+        let p2 = env.pathFromHome(path.normalize(path.join(cwd, p)), env.homedir())
+        if (p2.length < p.length) return p2
+    }
     return p
 }
 
