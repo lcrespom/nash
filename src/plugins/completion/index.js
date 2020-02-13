@@ -82,18 +82,30 @@ function cursorToMenu(line) {
     process.stdout.write('\n'.repeat(h + 1))
 }
 
+function adjustColumnWidth(columns, columnWidth, items) {
+    if (!items.some(item => item.desc))
+        return columnWidth
+    let w = columns * columnWidth
+    let cols = process.stdout.columns
+    if (w + 8 > cols)
+        return columnWidth
+    return Math.floor((cols - 2) / columns)
+}
+
 function showTableMenu(line, items, done) {
     cursorToMenu(line)
     let { rows, columns, columnWidth } =
         computeTableLayout(items, undefined, process.stdout.columns - 3)
+    columnWidth = adjustColumnWidth(columns, columnWidth, items)
+    let maxw = columns * columnWidth - 1
+    let descs = items.map(i => docparser.wrap(i.desc, maxw, 3))
     let height = rows, scrollBarCol = undefined
     if (rows > process.stdout.rows - 8) {
         height = process.stdout.rows - 8
         scrollBarCol = columns * columnWidth + 1
     }
+    // TODO height + "max number of lines in desc"
     adjustPromptPosition(height + 1)
-    let maxw = columns * columnWidth - 1 //process.stdout.columns - 3
-    let descs = items.map(i => docparser.wrap(i.desc, maxw, 3))
     return tableMenu({
         items, descs,
         columns, columnWidth, height, scrollBarCol,

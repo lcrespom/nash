@@ -189,6 +189,8 @@ function getEnvironmentCompletions(word) {
 optsCache = {}
 
 function getCommandAndSubcommands(line) {
+    // Handle multiple commands, e.g. with |, ;, ||, &&
+    line = line.split('|').pop().split(';').pop().split('&').pop().trim()
     let cmds = line.split(' ')
     let idx = cmds.findIndex(cmd => !cmd.match(/^[a-z][a-z\-]*$/))
     if (idx == 0) return cmds[0]
