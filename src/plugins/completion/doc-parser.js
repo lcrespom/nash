@@ -41,6 +41,12 @@ function removeBackChars(str) {
     return result
 }
 
+function isOptionsHeader(line) {
+    return line == 'OPTIONS' ||
+        line.trim() == 'The following options are available:' ||
+        line.trim() == 'The options are as follows:'
+}
+
 function parseMan(lines) {
     const cleanOpt = o => ({ name: o.name, desc: o.desc.trim() })
     if (!lines || lines.length == 0) return []
@@ -49,9 +55,10 @@ function parseMan(lines) {
     let inOptions = false
     let lastLine = ''
     for (let line of lines) {
+        // TODO refactor
         line = removeBackChars(line)
         if (!inOptions) {
-            if (line == 'OPTIONS') {
+            if (isOptionsHeader(line)) {
                 inOptions = true
                 continue
             }
@@ -61,7 +68,12 @@ function parseMan(lines) {
             line = line.trim()
             if (line.startsWith('-') && lastLine.length == 0) {
                 if (opt) opts.push(cleanOpt(opt))
+                let p = line.indexOf('    ')
                 opt = { name: line, desc: '' }
+                if (p > 0 && !line.substr(0, p).includes(' ')) {
+                    opt.name = line.substr(0, p)
+                    opt.desc = line.substr(p).trim()
+                }
             }
             else if (opt) {
                 if (line.length == 0) {
@@ -89,9 +101,12 @@ async function parseOptions(cmd) {
 
 function wrap(str, w, maxLines) {
     if (!str) return str
-    str = str.split('\n').join(' ')
+    // Remove hypthens and put everything in a single line
+    str = str.replace(/([a-z])-\n/g, '$1').split('\n').join(' ')
+    // Split in lines of maximum `w` characters
     let rexp = new RegExp(`(?![^\\n]{1,${w}}$)([^\\n]{1,${w}})\\s`, 'g')
     let lines = str.replace(rexp, '$1\n').split('\n')
+    // Limit to maximum maxLines, add ellipsis if more
     if (lines.length > maxLines) {
         lines = lines.slice(0, maxLines)
         lines[maxLines - 1] = lines[maxLines - 1].substr(0, w - 3) + '...'

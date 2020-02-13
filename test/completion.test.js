@@ -196,6 +196,8 @@ test('git commit', async done => {
         w.desc = docparser.wrap(w.desc, 100, 3)
         return w
     })
-    for (let w of words) console.log(w)
+    expect(words.length).toBeGreaterThan(20)
+    expect(words[0].toString()).toBe('-a, --all')
+    expect(words[0].desc.length).toBeGreaterThan(20)
     done()
 })
