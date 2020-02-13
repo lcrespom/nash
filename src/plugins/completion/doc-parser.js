@@ -36,15 +36,36 @@ function isOptionsHeader(line) {
         line.trim() == 'The options are as follows:'
 }
 
+function cleanOpt(opt) {
+    return { name: opt.name, desc: opt.desc.trim() }
+}
+
+function parseManLine(line, lastLine, opt, opts) {
+    if (line.startsWith('-') && lastLine.length == 0) {
+        if (opt) opts.push(cleanOpt(opt))
+        let p = line.indexOf('    ')
+        opt = { name: line, desc: '' }
+        if (p > 0 && !line.substr(0, p).includes(' ')) {
+            opt.name = line.substr(0, p)
+            opt.desc = line.substr(p).trim()
+        }
+    }
+    else if (opt) {
+        if (line.length == 0) {
+            opt.done = true
+        }
+        else if (!opt.done) opt.desc += '\n' + line
+    }
+    return opt
+}
+
 function parseMan(lines) {
-    const cleanOpt = o => ({ name: o.name, desc: o.desc.trim() })
     if (!lines || lines.length == 0) return []
     let opts = []
     let opt = null
     let inOptions = false
     let lastLine = ''
     for (let line of lines) {
-        // TODO refactor
         line = removeBackChars(line)
         if (!inOptions) {
             if (isOptionsHeader(line)) {
@@ -55,21 +76,7 @@ function parseMan(lines) {
         else {
             if (line.length > 0 && line[0] != ' ') break
             line = line.trim()
-            if (line.startsWith('-') && lastLine.length == 0) {
-                if (opt) opts.push(cleanOpt(opt))
-                let p = line.indexOf('    ')
-                opt = { name: line, desc: '' }
-                if (p > 0 && !line.substr(0, p).includes(' ')) {
-                    opt.name = line.substr(0, p)
-                    opt.desc = line.substr(p).trim()
-                }
-            }
-            else if (opt) {
-                if (line.length == 0) {
-                    opt.done = true
-                }
-                else if (!opt.done) opt.desc += '\n' + line
-            }
+            opt = parseManLine(line, lastLine, opt, opts)
         }
         lastLine = line
     }

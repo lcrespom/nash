@@ -5,7 +5,7 @@
 - [x] Features
 - [x] Examples directory with documented customizations
 - [x] Copy examples to `~/.nash` upon first startup
-- [ ] Recommended prerequisites
+- [x] Recommended prerequisites
 - [x] Usage
     - [x] Remote mode
     - [x] How to execute `nash` to ensure `bash` is located
@@ -45,7 +45,7 @@
 - [ ] Make agnoster use features from default prompt
 
 ## Completion
-- [ ] File completion for file redirects (echo hello > a.txt)
+- [x] File completion for file redirects (echo hello > a.txt)
 - [x] Bug: remote completion mixes with local directories because path.relative
     uses process.cwd().
 - [x] Customizable (e.g. git command list, etc.)
@@ -53,7 +53,7 @@
         - [ ] git checkout => show tags, branches, recent commits...
         - [ ] Investigate completion for other git commands 
     - [ ] Optional subcommand description - if available, show under menu
-    - [ ] Parse man pages to generate descrpitons
+    - [x] Parse man pages to generate descrpitons
 - [ ] Mouse support (keypress module supports it) (**next**)
 
 ## Syntax highlight

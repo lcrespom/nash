@@ -205,7 +205,6 @@ async function getOptionCompletions(word, line) {
         opts = await docparser.parseOptions(cmd)
         optsCache[cmd] = opts
     }
-    //TODO filter by word
     return opts.filter(w => startsWithCaseInsensitive(w, word))
 }
 
