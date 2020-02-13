@@ -33,7 +33,7 @@
     "glob": "^7.1.6",
     "keypress": "^0.2.1",
     "node-pty": "^0.9.0",
-    "node-terminal-menu": "^3.3.0"
+    "node-terminal-menu": "^3.3.2"
   },
   "pkg": {
     "scripts": "src/plugins/**/*.js"

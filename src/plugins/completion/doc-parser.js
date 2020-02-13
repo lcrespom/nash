@@ -1,4 +1,4 @@
-//const { runHiddenCommand } = require('../../runner')
+const { runHiddenCommand } = require('../../runner')
 
 let manpath = null
 
@@ -9,21 +9,10 @@ function commandOut2Array(out) {
 	return rc === '0' ? arr : []
 }
 
-//TODO replace with runHiddenCommand after testing
-const { exec } = require('child_process')
-function runCommand(cmd) {
-    return new Promise((resolve, reject) => {
-        exec(cmd, (err, out, stderr) => {
-            if (err) resolve([])
-            resolve(out.toString().trim().split('\n'))
-        })
-    })
+async function runCommand(cmd) {
+    let out = await runHiddenCommand(`${cmd} | cat; echo $?`)
+    return commandOut2Array(out)
 }
-
-// function runCommand(cmd) {
-//     let out = await runHiddenCommand(`${cmd} | cat; echo $?`)
-//     return commandOut2Array(out)
-// }
 
 function getManOut(cmd) {
     return runCommand('man ' + cmd.replace(/ /g, '-'))
@@ -96,6 +85,7 @@ function itemWithDesc(item, desc) {
 
 async function parseOptions(cmd) {
     let out = await getManOut(cmd)
+    out = out.map(l => l.trimRight())
     return parseMan(out).map(opt => itemWithDesc(opt.name, opt.desc))
 }
 

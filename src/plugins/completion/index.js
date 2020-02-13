@@ -97,21 +97,24 @@ function showTableMenu(line, items, done) {
     let { rows, columns, columnWidth } =
         computeTableLayout(items, undefined, process.stdout.columns - 3)
     columnWidth = adjustColumnWidth(columns, columnWidth, items)
-    let maxw = columns * columnWidth - 1
-    let descs = items.map(i => docparser.wrap(i.desc, maxw, 3))
+    let width = columns * columnWidth
+    let descs = items.map(i => docparser.wrap(i.desc, width - 1, 3))
     let height = rows, scrollBarCol = undefined
     if (rows > process.stdout.rows - 8) {
         height = process.stdout.rows - 8
         scrollBarCol = columns * columnWidth + 1
     }
-    // TODO height + "max number of lines in desc"
-    adjustPromptPosition(height + 1)
-    return tableMenu({
-        items, descs,
+    let descRows = 0
+    if (descs.some(d => d)) descRows = 3
+    adjustPromptPosition(height + 1 + descRows)
+    let menu = tableMenu({
+        items, descs, descRows,
         columns, columnWidth, height, scrollBarCol,
         done,
         colors: menuColors
     })
+    menu.width = width
+    return menu
 }
 
 function updateMenu(menu, key, line, initialItems, initialLen) {
@@ -129,9 +132,10 @@ function updateMenu(menu, key, line, initialItems, initialLen) {
         i => startsWithCaseInsensitive(removeAnsiColorCodes(i), wordEnd))
     let items = initialItems.filter(startsWith)
     if (items.length > 0) {
+        let descs = items.map(i => docparser.wrap(i.desc, menu.width - 1, 3))
         if (menu.selection >= items.length)
             menu.selection = items.length - 1
-        menu.update({ items, descs: items.map(i => i.desc) })
+        menu.update({ items, descs })
     }
     else {
         process.stdout.clearScreenDown()

@@ -206,7 +206,7 @@ async function getOptionCompletions(word, line) {
         optsCache[cmd] = opts
     }
     //TODO filter by word
-    return opts
+    return opts.filter(w => startsWithCaseInsensitive(w, word))
 }
 
 async function getCompletions(word, type, line) {
