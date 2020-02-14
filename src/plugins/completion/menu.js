@@ -106,6 +106,7 @@ class EditableMenu {
             })
         this.initialItems = this.items
         this.initialLen = this.line.left.length
+        this.search = this.word
         this.menu = this.showTableMenu(sel => {
             this.line.left = this.line.left.substr(0, this.initialLen)
             process.stdout.clearScreenDown()
@@ -166,14 +167,14 @@ class EditableMenu {
     updateMenu(key) {
         if (key.ch) {
             this.line.left += key.ch
-            this.line.word += key.ch
+            this.search += key.ch
         }
         else if (this.line.left.length > this.initialLen) {
             this.line.left = this.line.left.slice(0, -1)
-            this.line.word = this.line.word.slice(0, -1)
+            this.search = this.search.slice(0, -1)
         }
         this.cursorToMenu()
-        let wordEnd = this.line.word.split('/').pop()
+        let wordEnd = this.search.split('/').pop()
         let startsWith =
             i => startsWithCaseInsensitive(removeAnsiColorCodes(i), wordEnd)
         this.items = this.initialItems.filter(startsWith)
