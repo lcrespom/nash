@@ -174,8 +174,8 @@ class EditableMenu {
         }
         this.cursorToMenu()
         let wordEnd = this.line.word.split('/').pop()
-        let startsWith = (
-            i => startsWithCaseInsensitive(removeAnsiColorCodes(i), wordEnd))
+        let startsWith =
+            i => startsWithCaseInsensitive(removeAnsiColorCodes(i), wordEnd)
         this.items = this.initialItems.filter(startsWith)
         if (this.items.length > 0) {
             let descs = this.items.map(
