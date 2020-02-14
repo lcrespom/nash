@@ -3,6 +3,9 @@ List of subcommands for common programs such as git, docker, etc.
 These lists are used by the command completion plugin, which activates
 when the user types "tab".
 */
+
+//------------------------------ git ------------------------------
+
 let git = `add##Add file contents to the index.
 am##Apply a series of patches from a mailbox.
 annotate##Annotate file lines with commit information.
@@ -80,25 +83,161 @@ verify-tag##Check the GPG signature of tags.
 whatchanged##Show logs with difference each commit introduces.
 worktree##Manage multiple working trees.`.split('\n')
 
-let docker = ('builder config container context image network node plugin ' +
-    'secret service stack swarm system trust volume' +
-    'attach build commit cp create deploy diff events exec export ' +
-    'history images import info inspect kill load login logout logs pause ' +
-    'port ps pull push rename restart rm rmi run save search start stats ' +
-    'stop tag top unpause update version wait').split(' ')
 
-let dockerContainer = ('attach commit cp create diff exec export inspect ' +
-    'kill logs ls pause port prune rename restart rm run start stats stop ' +
-    'top unpause update wait').split(' ')
+//------------------------------ docker ------------------------------
 
-let dockerImage = ('build history import inspect load ls prune ' +
-    'pull push rm save tag ').split(' ')
+let docker = `builder##Manage builds
+config##Manage Docker configs
+container##Manage containers
+context##Manage contexts
+image##Manage images
+network##Manage networks
+node##Manage Swarm nodes
+plugin##Manage plugins
+secret##Manage Docker secrets
+service##Manage services
+stack##Manage Docker stacks
+swarm##Manage Swarm
+system##Manage Docker
+trust##Manage trust on Docker images
+volume##Manage volumes
+attach##Attach local standard input, output, and error streams to a running container
+build##Build an image from a Dockerfile
+commit##Create a new image from a container's changes
+cp##Copy files/folders between a container and the local filesystem
+create##Create a new container
+diff##Inspect changes to files or directories on a container's filesystem
+events##Get real time events from the server
+exec##Run a command in a running container
+export##Export a container's filesystem as a tar archive
+history##Show the history of an image
+images##List images
+import##Import the contents from a tarball to create a filesystem image
+info##Display system-wide information
+inspect##Return low-level information on Docker objects
+kill##Kill one or more running containers
+load##Load an image from a tar archive or STDIN
+login##Log in to a Docker registry
+logout##Log out from a Docker registry
+logs##Fetch the logs of a container
+pause##Pause all processes within one or more containers
+port##List port mappings or a specific mapping for the container
+ps##List containers
+pull##Pull an image or a repository from a registry
+push##Push an image or a repository to a registry
+rename##Rename a container
+restart##Restart one or more containers
+rm##Remove one or more containers
+rmi##Remove one or more images
+run##Run a command in a new container
+save##Save one or more images to a tar archive (streamed to STDOUT by default)
+search##Search the Docker Hub for images
+start##Start one or more stopped containers
+stats##Display a live stream of container(s) resource usage statistics
+stop##Stop one or more running containers
+tag##Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+top##Display the running processes of a container
+unpause##Unpause all processes within one or more containers
+update##Update configuration of one or more containers
+version##Show the Docker version information
+wait##Block until one or more containers stop, then print their exit codes`
+.split('\n')
 
-let kubectl = ('create expose run set explain get edit delete rollout scale ' +
-    'autoscale certificate cluster top cordon uncordon drain taint describe ' +
-    'logs attach exec port proxy cp auth diff apply patch replace wait ' +
-    'convert kustomize label annotate completion api api config plugin ' +
-    'version ').split(' ')
+let dockerContainer = `attach##Attach local standard input, output, and error streams to a running container
+commit##Create a new image from a container's changes
+cp##Copy files/folders between a container and the local filesystem
+create##Create a new container
+diff##Inspect changes to files or directories on a container's filesystem
+exec##Run a command in a running container
+export##Export a container's filesystem as a tar archive
+inspect##Display detailed information on one or more containers
+kill##Kill one or more running containers
+logs##Fetch the logs of a container
+ls##List containers
+pause##Pause all processes within one or more containers
+port##List port mappings or a specific mapping for the container
+prune##Remove all stopped containers
+rename##Rename a container
+restart##Restart one or more containers
+rm##Remove one or more containers
+run##Run a command in a new container
+start##Start one or more stopped containers
+stats##Display a live stream of container(s) resource usage statistics
+stop##Stop one or more running containers
+top##Display the running processes of a container
+unpause##Unpause all processes within one or more containers
+update##Update configuration of one or more containers
+wait##Block until one or more containers stop, then print their exit codes`
+.split('\n')
+
+let dockerImage = `build##Build an image from a Dockerfile
+history##Show the history of an image
+import##Import the contents from a tarball to create a filesystem image
+inspect##Display detailed information on one or more images
+load##Load an image from a tar archive or STDIN
+ls##List images
+prune##Remove unused images
+pull##Pull an image or a repository from a registry
+push##Push an image or a repository to a registry
+rm##Remove one or more images
+save##Save one or more images to a tar archive (streamed to STDOUT by default)
+tag##Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE`.split('\n')
+
+let dockerNetwork = `connect##Connect a container to a network
+create##Create a network
+disconnect##Disconnect a container from a network
+inspect##Display detailed information on one or more networks
+ls##List networks
+prune##Remove all unused networks
+rm##Remove one or more networks`.split('\n')
+
+
+//------------------------------ kubectl ------------------------------
+
+let kubectl = `create##Create a resource from a file or from stdin.
+expose##Take a replication controller, service, deployment or pod and expose it as a new Kubernetes Service
+run##Run a particular image on the cluster
+set##Set specific features on objects
+explain##Documentation of resources
+get##Display one or many resources
+edit##Edit a resource on the server
+delete##Delete resources by filenames, stdin, resources and names, or by resources and label selector
+rollout##Manage the rollout of a resource
+scale##Set a new size for a Deployment, ReplicaSet, Replication Controller, or Job
+autoscale##Auto-scale a Deployment, ReplicaSet, or ReplicationController
+certificate##Modify certificate resources.
+cluster-info##Display cluster info
+top##Display Resource (CPU/Memory/Storage) usage.
+cordon##Mark node as unschedulable
+uncordon##Mark node as schedulable
+drain##Drain node in preparation for maintenance
+taint##Update the taints on one or more nodes
+describe##Show details of a specific resource or group of resources
+logs##Print the logs for a container in a pod
+attach##Attach to a running container
+exec##Execute a command in a container
+port-forward##Forward one or more local ports to a pod
+proxy##Run a proxy to the Kubernetes API server
+cp##Copy files and directories to and from containers.
+auth##Inspect authorization
+diff##Diff live version against would-be applied version
+apply##Apply a configuration to a resource by filename or stdin
+patch##Update field(s) of a resource using strategic merge patch
+replace##Replace a resource by filename or stdin
+wait##Experimental: Wait for a specific condition on one or many resources.
+convert##Convert config files between different API versions
+kustomize##Build a kustomization target from a directory or a remote url.
+label##Update the labels on a resource
+annotate##Update the annotations on a resource
+completion##Output shell completion code for the specified shell (bash or zsh)
+api-resources##Print the supported API resources on the server
+api-versions##Print the supported API versions on the server, in the form of "group/version"
+config##Modify kubeconfig files
+plugin##Provides utilities for interacting with plugins.
+version##Print the client and server version information`.split('\n')
+
+
+//------------------------------ npm ------------------------------
 
 let npm = ('access adduser audit bin bugs c cache ci cit clean-install ' +
     'clean-install-test completion config create ddp dedupe deprecate ' +
@@ -114,6 +253,7 @@ module.exports = {
     docker,
     'docker container': dockerContainer,
     'docker image': dockerImage,
+    'docker network': dockerNetwork,
     kubectl,
     npm
 }
