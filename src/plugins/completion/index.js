@@ -39,8 +39,9 @@ async function completeWord(line, key) {
     }
     else if (words.length == 1 && !navigating) {
         // Exactly one match: update line
+        let match = words[0].split('##')[0] // Remove description
         return {
-            left: replaceWordWithMatch(line.left, word, words[0]),
+            left: replaceWordWithMatch(line.left, word, match),
             right: line.right,
             showPrompt: false
         }

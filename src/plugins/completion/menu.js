@@ -103,7 +103,6 @@ class EditableMenu {
                 label: colorizePath(plainLabel, this.colors)
             }
         })
-        this.initialItems = this.items
         this.initialLen = this.line.left.length
         this.search = this.word
         this.menu = this.showTableMenu(sel => {
@@ -114,6 +113,7 @@ class EditableMenu {
                     this.line.left, this.word, this.items[sel].word)
             menuDone({...this.line, showPrompt: false })
         })
+        this.initialItems = this.items
         editor.writeLine(this.line)
         editor.onKeyPressed(key => this.handleMenuKey(key))
         return new Promise(resolve => menuDone = resolve)
@@ -168,7 +168,7 @@ class EditableMenu {
         }
     }
 
-    updateMenu(key) {
+    updateSearch(key) {
         if (key.ch) {
             this.line.left += key.ch
             this.search += key.ch
@@ -177,17 +177,23 @@ class EditableMenu {
             this.line.left = this.line.left.slice(0, -1)
             this.search = this.search.slice(0, -1)
         }
+    }
+
+    updateMenu(key) {
+        this.updateSearch(key)
         this.cursorToMenu()
         let wordEnd = this.search.split('/').pop()
         this.items = this.initialItems.filter(
             item => startsWithCaseInsensitive(item.plainLabel, wordEnd)
         )
         if (this.items.length > 0) {
-            let labels = this.items.map(item => item.label)
-            let descs = this.items.map(item => item.desc)
+            // Todo move this "if" inside the menu package
             if (this.menu.selection >= this.items.length)
                 this.menu.selection = this.items.length - 1
-            this.menu.update({ items: labels, descs })
+            this.menu.update({
+                items: this.items.map(item => item.label),
+                descs: this.items.map(item => item.desc)
+            })
         }
         else {
             process.stdout.clearScreenDown()
