@@ -97,7 +97,7 @@ class EditableMenu {
         let menuDone = () => {}
         this.items = this.words
             .map(basename)
-            .map(p => colorizePath(p, this.colors))
+            //.map(p => colorizePath(p, this.colors))
             .map((w, i) => {
                 let s = new String(w)
                 s.from = this.words[i]
