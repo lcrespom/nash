@@ -84,16 +84,10 @@ function parseMan(lines) {
     return opts
 }
 
-function itemWithDesc(item, desc) {
-    let result = new String(item)
-    result.desc = desc
-    return result
-}
-
 async function parseOptions(cmd) {
     let out = await getManOut(cmd)
     out = out.map(l => l.trimRight())
-    return parseMan(out).map(opt => itemWithDesc(opt.name, opt.desc))
+    return parseMan(out).map(opt => opt.name + '##' + opt.desc)
 }
 
 function wrap(str, w, maxLines) {

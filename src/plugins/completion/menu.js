@@ -93,12 +93,14 @@ class EditableMenu {
     open() {
         let menuDone = () => {}
         this.items = this.words.map(w => {
-            let plainLabel = basename(w.toString())
+            let [ word, ...desc ] = w.split('##')
+            desc = desc.length > 0 ? desc.join('##') : undefined
+            let plainLabel = basename(word)
             return {
-                word: w,
+                word,
+                desc,
                 plainLabel,
-                label: colorizePath(plainLabel, this.colors),
-                desc: w.desc
+                label: colorizePath(plainLabel, this.colors)
             }
         })
         this.initialItems = this.items
