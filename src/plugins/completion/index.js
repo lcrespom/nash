@@ -6,7 +6,7 @@ const { colorizer } = requireNash('colors')
 const {
     getWordAndType, getCompletions, setCustomCommands
 } = require('./completion-search')
-const { replaceWordWithMatch, showAllWords } = require('./menu')
+const { replaceWordWithMatch, EditableMenu } = require('./menu')
 
 
 function completeCD() {
@@ -47,7 +47,8 @@ async function completeWord(line, key) {
     }
     else {
         // Multiple matches: interactive navigation
-        return showAllWords(line, word, words, colors, menuColors)
+        let menu = new EditableMenu(line, word, words, colors, menuColors)
+        return menu.open()
     }
 }
 

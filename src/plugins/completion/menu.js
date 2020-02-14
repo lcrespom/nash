@@ -84,123 +84,132 @@ function replaceWordWithMatch(left, word, match) {
 
 //------------------------- Menu -------------------------
 
-function cursorToMenu(line) {
-    let h = line.h === undefined ? 0 : line.h
-    process.stdout.write('\n'.repeat(h + 1))
-}
+class EditableMenu {
+    constructor(line, word, words, colors, menuColors) {
+        this.line = line
+        this.word = word
+        this.words = words
+        this.colors = colors
+        this.menuColors = menuColors
+    }
 
-function adjustColumnWidth(columns, columnWidth, items) {
-    if (!items.some(item => item.desc))
-        return columnWidth
-    let w = columns * columnWidth
-    let cols = process.stdout.columns
-    if (w + 8 > cols)
-        return columnWidth
-    return Math.floor((cols - 2) / columns)
-}
-
-function showTableMenu(line, items, menuColors, done) {
-    cursorToMenu(line)
-    let { rows, columns, columnWidth } =
-        computeTableLayout(items, undefined, process.stdout.columns - 3)
-    columnWidth = adjustColumnWidth(columns, columnWidth, items)
-    let width = columns * columnWidth
-    let descs = items.map(i => docparser.wrap(i.desc, width - 1, 3))
-    let height = rows, scrollBarCol = undefined
-    if (rows > process.stdout.rows - 8) {
-        height = process.stdout.rows - 8
-        scrollBarCol = columns * columnWidth + 1
-    }
-    let descRows = 0
-    if (descs.some(d => d)) descRows = 3
-    adjustPromptPosition(height + 1 + descRows)
-    let menu = tableMenu({
-        items, descs, descRows,
-        columns, columnWidth, height, scrollBarCol,
-        done,
-        colors: menuColors
-    })
-    menu.width = width
-    return menu
-}
-
-function updateMenu(menu, key, line, initialItems, initialLen) {
-    if (key.ch) {
-        line.left += key.ch
-        line.word += key.ch
-    }
-    else if (line.left.length > initialLen) {
-        line.left = line.left.slice(0, -1)
-        line.word = line.word.slice(0, -1)
-    }
-    cursorToMenu(line)
-    let wordEnd = line.word.split('/').pop()
-    let startsWith = (
-        i => startsWithCaseInsensitive(removeAnsiColorCodes(i), wordEnd))
-    let items = initialItems.filter(startsWith)
-    if (items.length > 0) {
-        let descs = items.map(i => docparser.wrap(i.desc, menu.width - 1, 3))
-        if (menu.selection >= items.length)
-            menu.selection = items.length - 1
-        menu.update({ items, descs })
-    }
-    else {
-        process.stdout.clearScreenDown()
-    }
-    editor.writeLine(line)
-    return items
-}
-
-function handleMenuKey(menu, key, line, items, initialItems, initialLen) {
-    if (key.name == 'space') {
-        editor.pressKey({ name: 'return' })
-        setTimeout(
-            () => editor.pressKey({ name: 'tab', navigating: true })
-        , 100)
-    }
-    else if (key.ch || key.name == 'backspace') {
-        items = updateMenu(menu, key, line, initialItems, initialLen)
-    }
-    else {
-        cursorToMenu(line)
-        if (key.name == 'ctrl-c') key.name = 'escape'
-        if (key.name == 'escape' || items.length > 0)
-            menu.keyHandler(key.ch, key)
-        editor.writeLine(line)
-    }
-    return items
-}
-
-function showAllWords(line, word, words, colors, menuColors) {
-    let menuDone = () => {}
-    let items = words
-        .map(basename)
-        .map(p => colorizePath(p, colors))
-        .map((w, i) => {
-            let s = new String(w)
-            s.from = words[i]
-            s.desc = words[i].desc
-            return s
+    open() {
+        let menuDone = () => {}
+        this.items = this.words
+            .map(basename)
+            .map(p => colorizePath(p, this.colors))
+            .map((w, i) => {
+                let s = new String(w)
+                s.from = this.words[i]
+                s.desc = this.words[i].desc
+                return s
+            })
+        this.initialItems = this.items
+        this.initialLen = this.line.left.length
+        this.menu = this.showTableMenu(sel => {
+            this.line.left = this.line.left.substr(0, this.initialLen)
+            process.stdout.clearScreenDown()
+            if (sel >= 0)
+                this.line.left = replaceWordWithMatch(
+                    this.line.left, this.word, this.items[sel].from)
+            menuDone({...this.line, showPrompt: false })
         })
-    let initialItems = items
-    let initialLen = line.left.length
-    line.word = word
-    let menu = showTableMenu(line, items, menuColors, sel => {
-        line.left = line.left.substr(0, initialLen)
-        process.stdout.clearScreenDown()
-        if (sel >= 0)
-            line.left = replaceWordWithMatch(line.left, word, items[sel].from)
-        menuDone({...line, showPrompt: false })
-    })
-    editor.writeLine(line)
-    editor.onKeyPressed(key => {
-        items = handleMenuKey(menu, key, line, items, initialItems, initialLen)
-    })
-    return new Promise(resolve => menuDone = resolve)
+        editor.writeLine(this.line)
+        editor.onKeyPressed(key => this.handleMenuKey(key))
+        return new Promise(resolve => menuDone = resolve)
+    }
+
+    showTableMenu(done) {
+        this.cursorToMenu(this.line)
+        let { rows, columns, columnWidth } =
+            computeTableLayout(this.items, undefined, process.stdout.columns - 3)
+        columnWidth = this.adjustColumnWidth(columns, columnWidth)
+        let width = columns * columnWidth
+        let descs = this.items.map(i => docparser.wrap(i.desc, width - 1, 3))
+        let height = rows, scrollBarCol = undefined
+        if (rows > process.stdout.rows - 8) {
+            height = process.stdout.rows - 8
+            scrollBarCol = columns * columnWidth + 1
+        }
+        let descRows = 0
+        if (descs.some(d => d)) descRows = 3
+        adjustPromptPosition(height + 1 + descRows)
+        let menu = tableMenu({
+            items: this.items, descs, descRows,
+            columns, columnWidth, height, scrollBarCol,
+            done,
+            colors: this.menuColors
+        })
+        menu.width = width
+        return menu
+    }
+    
+    handleMenuKey(key) {
+        if (key.name == 'space') {
+            editor.pressKey({ name: 'return' })
+            setTimeout(
+                () => editor.pressKey({ name: 'tab', navigating: true })
+            , 100)
+        }
+        else if (key.ch || key.name == 'backspace') {
+            this.updateMenu(key)
+        }
+        else {
+            this.cursorToMenu()
+            if (key.name == 'ctrl-c') key.name = 'escape'
+            if (key.name == 'escape' || this.items.length > 0)
+                this.menu.keyHandler(key.ch, key)
+            editor.writeLine(this.line)
+        }
+    }
+
+    updateMenu(key) {
+        if (key.ch) {
+            this.line.left += key.ch
+            this.line.word += key.ch
+        }
+        else if (this.line.left.length > this.initialLen) {
+            this.line.left = this.line.left.slice(0, -1)
+            this.line.word = this.line.word.slice(0, -1)
+        }
+        this.cursorToMenu()
+        let wordEnd = this.line.word.split('/').pop()
+        let startsWith = (
+            i => startsWithCaseInsensitive(removeAnsiColorCodes(i), wordEnd))
+        this.items = this.initialItems.filter(startsWith)
+        if (this.items.length > 0) {
+            let descs = this.items.map(
+                i => docparser.wrap(i.desc, menu.width - 1, 3)
+            )
+            if (this.menu.selection >= this.items.length)
+                this.menu.selection = this.items.length - 1
+            this.menu.update({ items: this.items, descs })
+        }
+        else {
+            process.stdout.clearScreenDown()
+        }
+        editor.writeLine(this.line)
+    }
+
+    cursorToMenu() {
+        let h = this.line.h === undefined ? 0 : this.line.h
+        process.stdout.write('\n'.repeat(h + 1))
+    }
+
+    adjustColumnWidth(columns, columnWidth) {
+        if (!this.items.some(item => item.desc))
+            return columnWidth
+        let w = columns * columnWidth
+        let cols = process.stdout.columns
+        if (w + 8 > cols)
+            return columnWidth
+        return Math.floor((cols - 2) / columns)
+    }
+
 }
 
 
 module.exports = {
-    showAllWords,
-    replaceWordWithMatch
+    replaceWordWithMatch,
+    EditableMenu
 }
