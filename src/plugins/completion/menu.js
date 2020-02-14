@@ -4,9 +4,7 @@ const { computeTableLayout, tableMenu } = require('node-terminal-menu')
 
 const requireNash = m => require('../../' + m)
 const env = requireNash('env')
-const {
-    startsWithCaseInsensitive, cutLastChars, removeAnsiColorCodes
-} = requireNash('utils')
+const { startsWithCaseInsensitive, cutLastChars } = requireNash('utils')
 const { adjustPromptPosition } = requireNash('prompt')
 const editor = requireNash('editor')
 const { colorize } = requireNash('colors')
@@ -16,7 +14,6 @@ const docparser = require('./doc-parser')
 //------------------------- Utilities -------------------------
 
 function basename(filename) {
-    filename = filename.toString()
     // Do not split options
     if (filename.startsWith('-'))
         return filename
@@ -95,15 +92,15 @@ class EditableMenu {
 
     open() {
         let menuDone = () => {}
-        this.items = this.words
-            .map(basename)
-            .map(p => colorizePath(p, this.colors))
-            .map((w, i) => {
-                let s = new String(w)
-                s.from = this.words[i]
-                s.desc = this.words[i].desc
-                return s
-            })
+        this.items = this.words.map(w => {
+            let plainLabel = basename(w.toString())
+            return {
+                word: w,
+                plainLabel,
+                label: colorizePath(plainLabel, this.colors),
+                desc: w.desc
+            }
+        })
         this.initialItems = this.items
         this.initialLen = this.line.left.length
         this.search = this.word
@@ -112,7 +109,7 @@ class EditableMenu {
             process.stdout.clearScreenDown()
             if (sel >= 0)
                 this.line.left = replaceWordWithMatch(
-                    this.line.left, this.word, this.items[sel].from)
+                    this.line.left, this.word, this.items[sel].word)
             menuDone({...this.line, showPrompt: false })
         })
         editor.writeLine(this.line)
@@ -122,11 +119,16 @@ class EditableMenu {
 
     showTableMenu(done) {
         this.cursorToMenu(this.line)
+        let labels = this.items.map(item => item.label)
         let { rows, columns, columnWidth } =
-            computeTableLayout(this.items, undefined, process.stdout.columns - 3)
+            computeTableLayout(labels, undefined, process.stdout.columns - 3)
         columnWidth = this.adjustColumnWidth(columns, columnWidth)
         let width = columns * columnWidth
-        let descs = this.items.map(i => docparser.wrap(i.desc, width - 1, 3))
+        this.items = this.items.map(item => ({
+            ...item,
+            desc: docparser.wrap(item.desc, width - 1, 3)
+        }))
+        let descs = this.items.map(item => item.desc)
         let height = rows, scrollBarCol = undefined
         if (rows > process.stdout.rows - 8) {
             height = process.stdout.rows - 8
@@ -136,7 +138,7 @@ class EditableMenu {
         if (descs.some(d => d)) descRows = 3
         adjustPromptPosition(height + 1 + descRows)
         let menu = tableMenu({
-            items: this.items, descs, descRows,
+            items: labels, descs, descRows,
             columns, columnWidth, height, scrollBarCol,
             done,
             colors: this.menuColors
@@ -175,16 +177,15 @@ class EditableMenu {
         }
         this.cursorToMenu()
         let wordEnd = this.search.split('/').pop()
-        let startsWith =
-            i => startsWithCaseInsensitive(removeAnsiColorCodes(i), wordEnd)
-        this.items = this.initialItems.filter(startsWith)
+        this.items = this.initialItems.filter(
+            item => startsWithCaseInsensitive(item.plainLabel, wordEnd)
+        )
         if (this.items.length > 0) {
-            let descs = this.items.map(
-                i => docparser.wrap(i.desc, this.menu.width - 1, 3)
-            )
+            let labels = this.items.map(item => item.label)
+            let descs = this.items.map(item => item.desc)
             if (this.menu.selection >= this.items.length)
                 this.menu.selection = this.items.length - 1
-            this.menu.update({ items: this.items, descs })
+            this.menu.update({ items: labels, descs })
         }
         else {
             process.stdout.clearScreenDown()
