@@ -177,9 +177,11 @@ class EditableMenu {
         let startsWith =
             i => startsWithCaseInsensitive(removeAnsiColorCodes(i), wordEnd)
         this.items = this.initialItems.filter(startsWith)
+// process.stdout.cursorTo(0,0); process.stdout.clearScreenDown()
+// console.log(this.initialItems); console.log(this.items, wordEnd)
         if (this.items.length > 0) {
             let descs = this.items.map(
-                i => docparser.wrap(i.desc, menu.width - 1, 3)
+                i => docparser.wrap(i.desc, this.menu.width - 1, 3)
             )
             if (this.menu.selection >= this.items.length)
                 this.menu.selection = this.items.length - 1
