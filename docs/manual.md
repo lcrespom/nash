@@ -111,21 +111,26 @@ If multiple completions are available, a menu with all options is displayed, so 
 the correct one and continue typing.
 
 It has different working modes:
-- When the cursor is right next to the first word of the line, the user is trying to type a command.
+- When the cursor is right next to the first word of the line (or after a command separator such
+    as `;` or `&&`), the user is typing a command.
     Typing `tab` at this point displays a menu with the available commands that begin with the text at
     the left of the cursor.
-- When the cursor is after a command, the user is trying to type a command parameter, quite probably a file
+- When the cursor is after a command, the user is typing a command parameter, quite probably a file
     name. Typing `tab` at this point displays a menu with all matching files in the current directory.
 - When the line is empty or the command is `cd`, typing `tab` displays a menu with all matching subdirectories
     of the current directory. In this case and the case above, after selecting a directory from the menu,
     typing `tab` again will display the content of the selected subdirectory. The user can continue
     pressing `tab` and selecting subdirectires as long as required.
-- When the cursor is right next to a word starting with `$`, the user is trying to type an environment variable.
+- When the cursor is after a `-`, the user is typing a command option, e.g. the `-l` in `ls -l` to specify
+    that we want to list files in long format. Typing `tab` at this point makes `nash`search in the
+    `man` documentation for the current command and, if present, display all available options along with
+    their description.
+- When the cursor is right next to a word starting with `$`, the user is typing an environment variable.
     Typing `tab` at this point displays a menu with the list of environment variables known by `nash`.
     Notice that `nash` cannot capture all the variables available in the current session, so there can be
     more variables not listed in the menu, which will have to be typed by hand.
 
-In all working modes, when the menu is displayed, the search can be narrowed down by typing further characters, 
+In all modes, when the menu is displayed, the search can be narrowed down by typing further characters, 
 thus filtering out the items that do not start with the word at the left of the cursor.
 
 The menu supports the following keys:

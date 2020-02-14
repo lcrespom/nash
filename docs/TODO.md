@@ -48,13 +48,9 @@
 - [x] File completion for file redirects (echo hello > a.txt)
 - [x] Bug: remote completion mixes with local directories because path.relative
     uses process.cwd().
-- [x] Customizable (e.g. git command list, etc.)
-    - [ ] Super-powerful git completion
-        - [ ] git checkout => show tags, branches, recent commits...
-        - [ ] Investigate completion for other git commands 
-    - [ ] Optional subcommand description - if available, show under menu
-    - [x] Parse man pages to generate descrpitons
-- [ ] Mouse support (keypress module supports it) (**next**)
+- [x] Optional description - if available, show under menu
+- [x] Parse man pages to generate descrpitons
+- [ ] Mouse support (keypress module supports it)
 
 ## Syntax highlight
 - [ ] Aliases are not detected by the which command => implement
