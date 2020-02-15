@@ -77,7 +77,7 @@ function pathFromHome(cwd, home) {
 }
 
 function commandOut2Array(out) {
-	let arr = removeAnsiCodes(out)
+	let arr = out
 		.trim()
 		.split('\n')
 		.map(l => l.trim())
@@ -86,20 +86,29 @@ function commandOut2Array(out) {
 	return rc === '0' ? arr : []
 }
 
+function parseLSL(line) {
+	let m = line.match(/\d (\d\d:\d\d| \d\d\d\d) /)
+	let p = m.index + m[0].length
+	let name = line.substr(p)
+	let desc = line.substr(0, p - 1)
+	return name + '##' + desc
+}
+
 async function remoteGlob(path) {
-	let command = `ls -p1d ${path}; echo $?`
+	let command = `ls -plhd ${path.replace(/ /g, '\\ ')} | cat; echo $?`
 	let out = await runHiddenCommand(command)
-	return commandOut2Array(out)
+	return commandOut2Array(out).map(parseLSL)
 }
 
 async function glob(pth) {
-	if (getUserStatus().isRemote)
-		return await remoteGlob(pth)
-	else {
-		if (pth.startsWith('.'))
-			pth = path.join(process.cwd(), pth)
-		return localGlob.sync(pth, { mark: true, nocase: true })
-	}
+	return await remoteGlob(pth)
+	// if (getUserStatus().isRemote)
+	// 	return await remoteGlob(pth)
+	// else {
+	// 	if (pth.startsWith('.'))
+	// 		pth = path.join(process.cwd(), pth)
+	// 	return localGlob.sync(pth, { mark: true, nocase: true })
+	// }
 }
 
 
@@ -134,7 +143,7 @@ async function initWhichRemote() {
 	await sleep(200)
 	let path = await runHiddenCommand('echo $PATH')
 	path = path.trim().replace(/:/g, ' ')
-	let dircmd = `ls -1F ${path}; echo $?`
+	let dircmd = `ls -1F ${path} | cat; echo $?`
 	await sleep(200)
 	let out = await runHiddenCommand(dircmd)
 	let dirs = commandOut2Array(out)

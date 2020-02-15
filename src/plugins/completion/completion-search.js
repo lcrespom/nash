@@ -89,10 +89,13 @@ function getWordAndType(line) {
 
 //------------------------- Completion search -------------------------
 
+function filename(nameAndDesc) {
+    return nameAndDesc.split('##')[0]
+}
+
 async function safeGlob(paths, options) {
     try {
-        if (!Array.isArray(paths))
-		paths = [paths]
+        if (!Array.isArray(paths)) paths = [paths]
     	let result = []
 	    for (let path of paths) {
             result = result.concat(await env.glob(path, options))
@@ -112,7 +115,9 @@ async function getCommandCompletions(word, line) {
         .split(path.delimiter)
         .map(p => p + '/' + word + '*')
     let words = await safeGlob(paths)
-    return words.map(w => w.split('/').pop())
+    return words
+        .map(w => filename(w))
+        .map(w => w.split('/').pop())
         .concat(builtins.filter(w => w.startsWith(word)))
 }
 
@@ -154,13 +159,14 @@ function prependParentDir(dirs, word) {
 
 async function getMatchingDirsAndFiles(word, homedir, line) {
     let dirsAndFiles = await safeGlob(word)
+    //TODO colorize the description
     dirsAndFiles = dirsAndFiles.map(p => env.pathFromHome(p, homedir))
     // Put directories first, then files
-    let dirs = dirsAndFiles.filter(p => p.endsWith('/'))
+    let dirs = dirsAndFiles.filter(p => filename(p).endsWith('/'))
     dirs = prependParentDir(dirs, word)
     if (line.left.match(/^cd [^;&]*$/))
         return dirs
-    let files = dirsAndFiles.filter(p => !p.endsWith('/'))
+    let files = dirsAndFiles.filter(p => !filename(p).endsWith('/'))
     return dirs.concat(files)
 }
 
