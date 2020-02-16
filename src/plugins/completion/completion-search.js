@@ -76,6 +76,8 @@ function getWordAndType(line) {
                 return ['', NodeType.parameter]
             else if (isEmptyRedirect(line))
                 return ['', NodeType.redirect]
+            else
+                return ['', NodeType.unknown]
         }
         else if (type == NodeType.unknown)
             return ['', type]
