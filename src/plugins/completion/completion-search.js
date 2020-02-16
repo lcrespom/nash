@@ -110,10 +110,10 @@ async function safeGlob(paths, options) {
     }
 }
 
-async function getCommandCompletions(word, line, pathDescColors) {
+async function getCommandCompletions(word, line, colors) {
     if (word.includes('/'))
         // Should filter by executable attribute
-        return getParameterCompletions(word, line, pathDescColors)
+        return getParameterCompletions(word, line, colors)
     let paths = process.env.PATH
         .split(path.delimiter)
         .map(p => p + '/' + word + '*')
@@ -176,10 +176,10 @@ function colorizePathDesc(p, colrs) {
     return name + '##' + attrs + user + size + date
 }
 
-async function getMatchingDirsAndFiles(word, homedir, line, pathDescColors) {
+async function getMatchingDirsAndFiles(word, homedir, line, colors) {
     let dirsAndFiles = await safeGlob(word)
     dirsAndFiles = dirsAndFiles
-        .map(p => colorizePathDesc(p, pathDescColors))
+        .map(p => colorizePathDesc(p, colors))
     // Put directories first, then files
     let dirs = dirsAndFiles.filter(p => filename(p).endsWith('/'))
     dirs = prependParentDir(dirs, word)
@@ -189,7 +189,7 @@ async function getMatchingDirsAndFiles(word, homedir, line, pathDescColors) {
     return dirs.concat(files)
 }
 
-async function getParameterCompletions(word, line, pathDescColors) {
+async function getParameterCompletions(word, line, colors) {
     // Special case: configured subcommand
     let subCommands = getSubcommandCompletions(word, line)
     if (subCommands)
@@ -202,7 +202,7 @@ async function getParameterCompletions(word, line, pathDescColors) {
     if (!word.includes('*'))
         word += '*'
     // Perform glob
-    return await getMatchingDirsAndFiles(word, homedir, line, pathDescColors)
+    return await getMatchingDirsAndFiles(word, homedir, line, colors)
 }
 
 function getEnvironmentCompletions(word) {
@@ -233,15 +233,15 @@ async function getOptionCompletions(word, line) {
     return opts.filter(w => startsWithCaseInsensitive(w, word))
 }
 
-async function getCompletions(word, type, line, pathDescColors) {
+async function getCompletions(word, type, line, colors) {
     switch (type) {
         case NodeType.unknown:
             return []
         case NodeType.command:
-            return await getCommandCompletions(word, line, pathDescColors)
+            return await getCommandCompletions(word, line, colors)
         case NodeType.redirect:
         case NodeType.parameter:
-            return await getParameterCompletions(word, line, pathDescColors)
+            return await getParameterCompletions(word, line, colors)
         case NodeType.environment:
             return getEnvironmentCompletions(word)
         case NodeType.option:

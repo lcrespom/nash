@@ -31,7 +31,7 @@ async function completeWord(line, key) {
     let [word, type] = getWordAndType(line)
     if (type == NodeType.unknown && line.left.endsWith('$'))
         [word, type] = ['$', NodeType.environment]
-    let words = await getCompletions(word, type, line, pathDescColors)
+    let words = await getCompletions(word, type, line, colors)
     let navigating = key && key.navigating
     if (words.length == 0 && !navigating) {
         // No match: do nothing
@@ -56,17 +56,23 @@ async function completeWord(line, key) {
 
 let colors
 let menuColors
-let pathDescColors
 
 function setDefaults() {
+    let sh = getOption('colors.syntaxHighlight')
     let defaultColors = {
-		dirs: 'yellowBright',
-        files: 'cyan',
-        options: 'magentaBright',
+        file: sh.parameter,
+		dir: sh.environment,
+        link: sh.quote,
+        executable: sh.program,
+        option: sh.option,
 		items: '/#272822',
 		scrollArea: '/#272822',
         scrollBar: 'whiteBright',
-        desc: 'cyanBright /#223030'
+        desc: sh.quote + ' /#223030',
+        attrs: sh.commandError,
+        user: sh.program,
+        size: sh.quote,
+        date: sh.option
     }
     setDefaultOptions('colors.completion', defaultColors)
     colors = getOption('colors.completion')
@@ -75,13 +81,6 @@ function setDefaults() {
         scrollArea: colorizer(colors.scrollArea),
         scrollBar: colorizer(colors.scrollBar),
         desc: colorizer(colors.desc)
-    }
-    let sh = getOption('colors.syntaxHighlight')
-    pathDescColors = {
-        attrs: sh.commandError,
-        user: sh.program,
-        size: sh.quote,
-        date: sh.option
     }
 }
 

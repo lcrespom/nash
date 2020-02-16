@@ -4,7 +4,9 @@ const { computeTableLayout, tableMenu } = require('node-terminal-menu')
 
 const requireNash = m => require('../../' + m)
 const env = requireNash('env')
-const { startsWithCaseInsensitive, cutLastChars } = requireNash('utils')
+const {
+    startsWithCaseInsensitive, cutLastChars, removeAnsiCodes
+} = requireNash('utils')
 const { adjustPromptPosition } = requireNash('prompt')
 const editor = requireNash('editor')
 const { colorize } = requireNash('colors')
@@ -24,13 +26,22 @@ function basename(filename) {
     return result
 }
 
-function colorizePath(filename, colors) {
-    if (filename.endsWith('/'))
-        return colorize(colors.dirs, filename)
-    else if (filename.startsWith('-'))
-        return colorize(colors.options, filename)
-    else
-        return colorize(colors.files, filename)
+function colorizePath(filename, desc, colors) {
+    let col = colors.file
+    if (desc) desc = removeAnsiCodes(desc)
+    if (filename.startsWith('-'))
+        col = colors.option
+    else if (desc && desc.match(/^[a-z\-]{10}/)) {
+        if (desc[0] == 'd')
+            col = colors.dir
+        else if (desc[0] == 'l')
+            col = colors.link
+        else if (desc[3] == 'x' || desc[3] == 's')
+            col = colors.executable
+    }
+    else if (filename.endsWith('/'))
+        col = colors.dir
+    return colorize(col, filename)
 }
 
 function relativePath(cwd, p) {
@@ -97,7 +108,7 @@ class EditableMenu {
                 word,
                 desc,
                 plainLabel,
-                label: colorizePath(plainLabel, this.colors)
+                label: colorizePath(plainLabel, desc, this.colors)
             }
         })
         this.initialLen = this.line.left.length
