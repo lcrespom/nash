@@ -115,6 +115,7 @@ async function getCommandCompletions(word, line, pathDescColors) {
     let paths = process.env.PATH
         .split(path.delimiter)
         .map(p => p + '/' + word + '*')
+        .filter(p => !p.includes('/node-gyp-bin'))  // Mysterious bug
     let words = await safeGlob(paths)
     return words
         .map(w => filename(w))

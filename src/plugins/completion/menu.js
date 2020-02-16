@@ -53,13 +53,8 @@ function shortenPath(word, p, isDir) {
     let cwd = env.cwd().replace(/^~/, env.homedir())
     // Replace ~ with home absolute path, if present
     p = p.replace(/^~/, env.homedir())
-    // Make path relative to cwd, local version
+    // Make path relative to cwd
     p = relativePath(cwd, p)
-    // if (!env.getUserStatus().isRemote)
-    //     p = path.relative(cwd, p)
-    // // Make path relative to cwd, remote version
-    // else if (p.startsWith('./') || p.startsWith('../'))
-    //     p = path.normalize(path.join(cwd, p))
     // Finally, add '/' if it's a directory
     if (isDir && p.length > 0 && !p.endsWith('/'))
         p += '/'

@@ -48,7 +48,7 @@
 - [x] Parse man pages to generate descripitons
 - [x] File info in description line
     - [ ] Color config for file info
-- [ ] Bug in **command** completion
+- [x] Bug in **command** completion
 - [ ] Change `~/` in menu into proper directory name
 - [ ] Mouse support
     - Keypress module supports it

@@ -86,6 +86,7 @@ function commandOut2Array(out) {
 
 function parseLSL(line) {
 	let m = line.match(/\d (\d\d:\d\d| \d\d\d\d) /)
+	if (!m) return line
 	let p = m.index + m[0].length
 	let name = line.substr(p).split(' -> ')[0]
 	let desc = line.substr(0, p - 1)
@@ -95,7 +96,9 @@ function parseLSL(line) {
 async function glob(path) {
 	let command = `ls -plhd ${path.replace(/ /g, '\\ ')} | cat; echo $?`
 	let out = await runHiddenCommand(command)
-	return commandOut2Array(out).map(parseLSL)
+	return commandOut2Array(out)
+		.map(parseLSL)
+		.filter(f => f.includes('##'))
 }
 
 
