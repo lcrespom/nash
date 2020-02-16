@@ -80,8 +80,8 @@ function setDefaults() {
     pathDescColors = {
         attrs: sh.commandError,
         user: sh.program,
-        size: sh.environment,
-        date: sh.parameter
+        size: sh.quote,
+        date: sh.option
     }
 }
 

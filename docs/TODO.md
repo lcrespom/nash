@@ -32,8 +32,6 @@
 - [x] Remove old duplicates from history/dirHistory
     (upon startup - cannot do on the fly)
 - [ ] Catch exceptions in bindings to avoid breaking the shell
-- [ ] Improve support for multi-line prompt (agnoster), e.g. in
-    completion.tooManyWords and in directory history.
 
 ## History navigation
 - [x] Menu (pageup)
@@ -46,10 +44,10 @@
 
 ## Completion
 - [x] File completion for file redirects (echo hello > a.txt)
-- [x] Bug: remote completion mixes with local directories because path.relative
-    uses process.cwd().
 - [x] Optional description - if available, show under menu
-- [x] Parse man pages to generate descrpitons
+- [x] Parse man pages to generate descripitons
+- [x] File info in description line
+    - [ ] Color config for file info
 - [ ] Mouse support (keypress module supports it)
 
 ## Syntax highlight
