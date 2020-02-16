@@ -1,7 +1,5 @@
 const { runHiddenCommand } = require('../../runner')
 
-let manpath = null
-
 
 function commandOut2Array(out) {
 	let arr = out.trim().split('\n')
@@ -92,6 +90,7 @@ async function parseOptions(cmd) {
 
 function wrap(str, w, maxLines) {
     if (!str) return str
+    if (str.charCodeAt(0) < 32) return str  // Colorized, can't wrap
     // Remove hypthens and put everything in a single line
     str = str.replace(/([a-z])-\n/g, '$1').split('\n').join(' ')
     // Split in lines of maximum `w` characters

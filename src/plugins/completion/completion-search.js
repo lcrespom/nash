@@ -5,6 +5,7 @@ const {
     parseBash, traverseAST, NodeType, builtins
 } = require('../../parser')
 const env = require('../../env')
+const colors = require('../../colors')
 const docparser = require('./doc-parser')
 
 let customCommands = {}
@@ -157,10 +158,26 @@ function prependParentDir(dirs, word) {
     return [parent + '../'].concat(dirs)
 }
 
-async function getMatchingDirsAndFiles(word, homedir, line) {
+function colorizePathDesc(p, colrs) {
+    let [name, desc] = p.split('##')
+    if (!desc) return p
+    let regex = RegExp('[^ ]+','g')
+    let m, matches = []
+    // -rw-r--r--    1 luis  staff   1.1K Jan 26 08:12
+    while (m = regex.exec(desc)) matches.push(m)
+    let idx = matches.map(m => m.index)
+    let attrs = colors.colorize(colrs.attrs, desc.substring(0, idx[2]))
+    let user = colors.colorize(colrs.user, desc.substring(idx[2], idx[4]))
+    let size = colors.colorize(colrs.size, desc.substring(idx[4], idx[5]))
+    let date = colors.colorize(colrs.date, desc.substr(idx[5]))
+    return name + '##' + attrs + user + size + date
+}
+
+async function getMatchingDirsAndFiles(word, homedir, line, pathDescColors) {
     let dirsAndFiles = await safeGlob(word)
-    //TODO colorize the description
-    dirsAndFiles = dirsAndFiles.map(p => env.pathFromHome(p, homedir))
+    dirsAndFiles = dirsAndFiles
+        .map(p => env.pathFromHome(p, homedir))
+        .map(p => colorizePathDesc(p, pathDescColors))
     // Put directories first, then files
     let dirs = dirsAndFiles.filter(p => filename(p).endsWith('/'))
     dirs = prependParentDir(dirs, word)
@@ -170,7 +187,7 @@ async function getMatchingDirsAndFiles(word, homedir, line) {
     return dirs.concat(files)
 }
 
-async function getParameterCompletions(word, line) {
+async function getParameterCompletions(word, line, pathDescColors) {
     // Special case: configured subcommand
     let subCommands = getSubcommandCompletions(word, line)
     if (subCommands)
@@ -183,7 +200,7 @@ async function getParameterCompletions(word, line) {
     if (!word.includes('*'))
         word += '*'
     // Perform glob
-    return await getMatchingDirsAndFiles(word, homedir, line)
+    return await getMatchingDirsAndFiles(word, homedir, line, pathDescColors)
 }
 
 function getEnvironmentCompletions(word) {
@@ -214,7 +231,7 @@ async function getOptionCompletions(word, line) {
     return opts.filter(w => startsWithCaseInsensitive(w, word))
 }
 
-async function getCompletions(word, type, line) {
+async function getCompletions(word, type, line, pathDescColors) {
     switch (type) {
         case NodeType.unknown:
             return []
@@ -222,7 +239,7 @@ async function getCompletions(word, type, line) {
             return await getCommandCompletions(word, line)
         case NodeType.redirect:
         case NodeType.parameter:
-            return await getParameterCompletions(word, line)
+            return await getParameterCompletions(word, line, pathDescColors)
         case NodeType.environment:
             return getEnvironmentCompletions(word)
         case NodeType.option:

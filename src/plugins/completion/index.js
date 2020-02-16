@@ -31,7 +31,7 @@ async function completeWord(line, key) {
     let [word, type] = getWordAndType(line)
     if (type == NodeType.unknown && line.left.endsWith('$'))
         [word, type] = ['$', NodeType.environment]
-    let words = await getCompletions(word, type, line)
+    let words = await getCompletions(word, type, line, pathDescColors)
     let navigating = key && key.navigating
     if (words.length == 0 && !navigating) {
         // No match: do nothing
@@ -56,6 +56,7 @@ async function completeWord(line, key) {
 
 let colors
 let menuColors
+let pathDescColors
 
 function setDefaults() {
     let defaultColors = {
@@ -74,6 +75,13 @@ function setDefaults() {
         scrollArea: colorizer(colors.scrollArea),
         scrollBar: colorizer(colors.scrollBar),
         desc: colorizer(colors.desc)
+    }
+    let sh = getOption('colors.syntaxHighlight')
+    pathDescColors = {
+        attrs: sh.commandError,
+        user: sh.program,
+        size: sh.environment,
+        date: sh.parameter
     }
 }
 
