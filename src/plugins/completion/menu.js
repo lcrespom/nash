@@ -41,21 +41,14 @@ function relativePath(cwd, p) {
     return result
 }
 
-function shortenPath(word, p, isDir) {
-    // Menu items are not string literals
-    p = p.toString()
+function shortenPath(p, isDir) {
     // Remove redundant ../
     p = path.normalize(p)
-    // Absolute path should not be made relative
-    if (word.startsWith('/'))
-        return p
     // Get working directory absolute path
     let cwd = env.cwd().replace(/^~/, env.homedir())
-    // Replace ~ with home absolute path, if present
-    p = p.replace(/^~/, env.homedir())
     // Make path relative to cwd
     p = relativePath(cwd, p)
-    // Finally, add '/' if it's a directory
+    // Add '/' if it's a directory
     if (isDir && p.length > 0 && !p.endsWith('/'))
         p += '/'
     // If the path is shorter from ~, return it in that format
@@ -70,7 +63,7 @@ function replaceWordWithMatch(left, word, match) {
     let cutLen = word.length
     // Normalize and simplify path
     let isDir = match.endsWith('/')
-    match = shortenPath(word, match, isDir)
+    match = shortenPath(match, isDir)
     // Quote blanks in file names
     let qmatch = match.replace(/(\s)/g, '\\$1')
     // Add a space unless it's a directory

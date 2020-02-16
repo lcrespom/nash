@@ -177,7 +177,6 @@ function colorizePathDesc(p, colrs) {
 async function getMatchingDirsAndFiles(word, homedir, line, pathDescColors) {
     let dirsAndFiles = await safeGlob(word)
     dirsAndFiles = dirsAndFiles
-        .map(p => env.pathFromHome(p, homedir))
         .map(p => colorizePathDesc(p, pathDescColors))
     // Put directories first, then files
     let dirs = dirsAndFiles.filter(p => filename(p).endsWith('/'))
