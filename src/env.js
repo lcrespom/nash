@@ -1,9 +1,7 @@
 const os = require('os')
-const path = require('path')
 const { execFileSync } = require('child_process')
-const localGlob = require('glob')
 
-const { memoize, removeAnsiCodes } = require('./utils')
+const { memoize } = require('./utils')
 const history = require('./history')
 
 
@@ -94,21 +92,10 @@ function parseLSL(line) {
 	return name + '##' + desc
 }
 
-async function remoteGlob(path) {
+async function glob(path) {
 	let command = `ls -plhd ${path.replace(/ /g, '\\ ')} | cat; echo $?`
 	let out = await runHiddenCommand(command)
 	return commandOut2Array(out).map(parseLSL)
-}
-
-async function glob(pth) {
-	return await remoteGlob(pth)
-	// if (getUserStatus().isRemote)
-	// 	return await remoteGlob(pth)
-	// else {
-	// 	if (pth.startsWith('.'))
-	// 		pth = path.join(process.cwd(), pth)
-	// 	return localGlob.sync(pth, { mark: true, nocase: true })
-	// }
 }
 
 

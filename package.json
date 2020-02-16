@@ -30,7 +30,6 @@
   "dependencies": {
     "bash-parser": "^0.5.0",
     "chalk": "^3.0.0",
-    "glob": "^7.1.6",
     "keypress": "^0.2.1",
     "node-pty": "^0.9.0",
     "node-terminal-menu": "^3.3.2"
