@@ -87,7 +87,7 @@ function commandOut2Array(out) {
 function parseLSL(line) {
 	let m = line.match(/\d (\d\d:\d\d| \d\d\d\d) /)
 	let p = m.index + m[0].length
-	let name = line.substr(p)
+	let name = line.substr(p).split(' -> ')[0]
 	let desc = line.substr(0, p - 1)
 	return name + '##' + desc
 }

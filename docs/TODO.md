@@ -48,7 +48,12 @@
 - [x] Parse man pages to generate descripitons
 - [x] File info in description line
     - [ ] Color config for file info
-- [ ] Mouse support (keypress module supports it)
+- [ ] Bug in **command** completion
+- [ ] Change `~/` in menu into proper directory name
+- [ ] Mouse support
+    - Keypress module supports it
+    - Implement in menu module
+    - Send command '\x1b[?1005h' to enable mouse x > 95
 
 ## Syntax highlight
 - [ ] Aliases are not detected by the which command => implement

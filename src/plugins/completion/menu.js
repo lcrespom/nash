@@ -33,6 +33,14 @@ function colorizePath(filename, colors) {
         return colorize(colors.files, filename)
 }
 
+function relativePath(cwd, p) {
+    let oldcwd = process.cwd
+    process.cwd = _ => cwd  // Monkey-patch process.cwd()
+    let result = path.relative(cwd, p)
+    process.cwd = oldcwd
+    return result
+}
+
 function shortenPath(word, p, isDir) {
     // Menu items are not string literals
     p = p.toString()
@@ -46,11 +54,12 @@ function shortenPath(word, p, isDir) {
     // Replace ~ with home absolute path, if present
     p = p.replace(/^~/, env.homedir())
     // Make path relative to cwd, local version
-    if (!env.getUserStatus().isRemote)
-        p = path.relative(cwd, p)
-    // Make path relative to cwd, remote version
-    else if (p.startsWith('./') || p.startsWith('../'))
-        p = path.normalize(path.join(cwd, p))
+    p = relativePath(cwd, p)
+    // if (!env.getUserStatus().isRemote)
+    //     p = path.relative(cwd, p)
+    // // Make path relative to cwd, remote version
+    // else if (p.startsWith('./') || p.startsWith('../'))
+    //     p = path.normalize(path.join(cwd, p))
     // Finally, add '/' if it's a directory
     if (isDir && p.length > 0 && !p.endsWith('/'))
         p += '/'

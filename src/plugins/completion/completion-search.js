@@ -108,10 +108,10 @@ async function safeGlob(paths, options) {
     }
 }
 
-async function getCommandCompletions(word, line) {
+async function getCommandCompletions(word, line, pathDescColors) {
     if (word.includes('/'))
         // Should filter by executable attribute
-        return getParameterCompletions(word, line)
+        return getParameterCompletions(word, line, pathDescColors)
     let paths = process.env.PATH
         .split(path.delimiter)
         .map(p => p + '/' + word + '*')
@@ -236,7 +236,7 @@ async function getCompletions(word, type, line, pathDescColors) {
         case NodeType.unknown:
             return []
         case NodeType.command:
-            return await getCommandCompletions(word, line)
+            return await getCommandCompletions(word, line, pathDescColors)
         case NodeType.redirect:
         case NodeType.parameter:
             return await getParameterCompletions(word, line, pathDescColors)
