@@ -36,10 +36,10 @@ module.exports = {
 		//   prompt (but check agnoster-prompt source code before, as it has
 		//   some special requirements).
 		'default-prompt',
-		// Tab-completion of command-line
-		'completion',
 		// Syntax highlighting
 		'syntax-highlight',
+		// Tab-completion of command-line
+		'completion',
 		// Suggestion of previous command
 		'suggestions',
 		// History menu (activated with page-up)
