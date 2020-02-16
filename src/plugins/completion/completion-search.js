@@ -1,6 +1,8 @@
 const path = require('path')
 
-const { startsWithCaseInsensitive, cutLastChars } = require('../../utils')
+const {
+    startsWithCaseInsensitive, cutLastChars, removeAnsiCodes
+} = require('../../utils')
 const {
     parseBash, traverseAST, NodeType, builtins
 } = require('../../parser')
@@ -111,18 +113,25 @@ async function safeGlob(paths, options) {
 }
 
 async function getCommandCompletions(word, line, colors) {
-    if (word.includes('/'))
-        // Should filter by executable attribute
-        return getParameterCompletions(word, line, colors)
-    let paths = process.env.PATH
-        .split(path.delimiter)
-        .map(p => p + '/' + word + '*')
-        .filter(p => !p.includes('/node-gyp-bin'))  // Mysterious bug
-    let words = await safeGlob(paths)
-    return words
-        .map(w => filename(w))
-        .map(w => w.split('/').pop())
-        .concat(builtins.filter(w => w.startsWith(word)))
+    let words = []
+    if (word.includes('/')) {
+        words = await getParameterCompletions(word, line, colors)
+    }
+    else {
+        let paths = process.env.PATH
+            .split(path.delimiter)
+            .map(p => p + '/' + word + '*')
+            .filter(p => !p.includes('/node-gyp-bin/'))  // Mysterious bug
+        words = (await safeGlob(paths))
+            .map(p => colorizePathDesc(p, colors))
+            .concat(builtins.filter(w => w.startsWith(word)))
+    }
+    // Filter by dir or executable attribute
+    return words.filter(w => {
+        let desc = w.split('##')[1]
+        if (!desc) return true  // builtin
+        return removeAnsiCodes(desc).substr(0, 10).match(/[dlxs]/)
+    })
 }
 
 function getSubcommandCompletions(word, line) {
@@ -166,7 +175,7 @@ function colorizePathDesc(p, colrs) {
     if (!desc) return p
     let regex = RegExp('[^ ]+','g')
     let m, matches = []
-    // -rw-r--r--    1 luis  staff   1.1K Jan 26 08:12
+    // -rw-r--r--    1 user  group   1.1K Jan 26 08:12
     while (m = regex.exec(desc)) matches.push(m)
     let idx = matches.map(m => m.index)
     let attrs = colors.colorize(colrs.attrs, desc.substring(0, idx[2]))
@@ -176,7 +185,7 @@ function colorizePathDesc(p, colrs) {
     return name + '##' + attrs + user + size + date
 }
 
-async function getMatchingDirsAndFiles(word, homedir, line, colors) {
+async function getMatchingDirsAndFiles(word, line, colors) {
     let dirsAndFiles = await safeGlob(word)
     dirsAndFiles = dirsAndFiles
         .map(p => colorizePathDesc(p, colors))
@@ -202,7 +211,7 @@ async function getParameterCompletions(word, line, colors) {
     if (!word.includes('*'))
         word += '*'
     // Perform glob
-    return await getMatchingDirsAndFiles(word, homedir, line, colors)
+    return await getMatchingDirsAndFiles(word, line, colors)
 }
 
 function getEnvironmentCompletions(word) {

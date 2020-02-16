@@ -47,11 +47,10 @@
 - [x] Optional description - if available, show under menu
 - [x] Parse man pages to generate descripitons
 - [x] File info in description line
-    - [ ] Color config for file info
-- [x] Bug in command completion
+    - [ ] Color config for file info => update docs
 - [x] Change `~/` in menu into proper directory name
-- [ ] Show full file details in command list
-- [ ] Use a different color for executables / use the same as with syntax hl
+- [x] Use a different color for executables / use the same as with syntax hl
+- [x] Show full file details in command list
 - [ ] Mouse support
     - Keypress module supports it
     - Implement in menu module

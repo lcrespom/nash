@@ -60,15 +60,18 @@ let menuColors
 function setDefaults() {
     let sh = getOption('colors.syntaxHighlight')
     let defaultColors = {
+        // Item colors based on file type
         file: sh.parameter,
 		dir: sh.environment,
         link: sh.quote,
         executable: sh.program,
         option: sh.option,
+        // General colors and backgrounds
 		items: '/#272822',
 		scrollArea: '/#272822',
         scrollBar: 'whiteBright',
         desc: sh.quote + ' /#223030',
+        // File description (from ls -l) colors
         attrs: sh.commandError,
         user: sh.program,
         size: sh.quote,
