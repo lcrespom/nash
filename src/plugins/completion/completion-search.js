@@ -1,7 +1,8 @@
 const path = require('path')
 
 const {
-    startsWithCaseInsensitive, cutLastChars, removeAnsiCodes
+    startsWithCaseInsensitive, cutLastChars,
+    removeAnsiCodes, removeRepeatedItems
 } = require('../../utils')
 const {
     parseBash, traverseAST, NodeType, builtins
@@ -122,8 +123,9 @@ async function getCommandCompletions(word, line, colors) {
             .split(path.delimiter)
             .map(p => p + '/' + word + '*')
             .filter(p => !p.includes('/node-gyp-bin/'))  // Mysterious bug
+        paths = removeRepeatedItems(paths)
         words = (await safeGlob(paths))
-            .map(p => colorizePathDesc(p, colors))
+            .map(p => colorizePathDesc(p, colors) + '\n' + path.dirname(p))
             .concat(builtins
                 .filter(w => w.startsWith(word))
                 .map(w => w + '##Bash reserved word')
