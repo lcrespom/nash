@@ -2,7 +2,7 @@
 To write a custom `nash` plugin, the follwing steps are required:
 
 1. Create a standard node.js module and place it in `~/.nash`.
-2. Make that module export a `start` function. In that function, place any initialization
+2. Make that module export a `start` function. In there, place any initialization
     code, such as registering keyboard shortcut handlers, a custom prompt, line decorator, etc.
 3. Edit `~/.nash/nashrc.js` and add the plugin name as a relative path at the end of the
     exported `plugins` array.
@@ -52,22 +52,21 @@ current editor line, split in the `left` and `right` properties with the
 cursor in the middle.
 
 The binding function can either be synchronous or asynchronous:
+- If synchronous, it must return an object with a `left` and `right` string
+    properties, which will be used to update the editor line. The prompt is
+    not redisplayed for synchronous functions, unless the returned object
+    also contains the `showPrompt` property set to `true`.
 
-If synchronous, it must return an object with a `left` and `right` string
-properties, which will be used to update the editor line. The prompt is
-not redisplayed for synchronous functions, unless the returned object
-also contains the `showPrompt` property set to `true`.
+- If asynchronous, it must return a promise that will resolve when the bound
+    function has finished running. The resolved object will contain the new
+    line `left` and `right` properties. The prompt will be redisplayed upon
+    the promise completion, unless the resolved line object also contains the
+    `showPrompt` property set to `false`.
 
-If asynchronous, it must return a promise that will resolve when the bound
-function has finished running. The resolved object will contain the new
-line `left` and `right` properties. The prompt will be redisplayed upon
-the promise completion, unless the resolved line object also contains the
-`showPrompt` property set to `false`.
-
-Asynchronous bindings may need to handle keyboard input. Keyboard events
-can be obtained by calling the `onKeyPressed` function of the `editor`
-module and passing a listener function. The listener will be automatically
-discarded after the promise resolves.
+    Asynchronous bindings may need to handle keyboard input. Keyboard events
+    can be obtained by calling the `onKeyPressed` function of the `editor`
+    module and passing a listener function. The listener will be automatically
+    discarded after the promise resolves.
 
 #### `function unbindKey(kname, fname)`
 Unbinds a previously bound key handler.
@@ -146,9 +145,9 @@ The prompt function receives a single object parameter with relevant
 information about the environment, which can be optionally used by the
 prompt function in order to build the prompt string.
 The object properties are the following:
-- cwd: the current working directory
-- username: the current user name
-- hostname: the host name
-- fqdn: the fully qualified domain name of the host
-- retCode: the return code of the most recent command
-- isRemote: true if `nash` is acting on a remote connection
+- **cwd**: the current working directory
+- **username**: the current user name
+- **hostname**: the host name
+- **fqdn**: the fully qualified domain name of the host
+- **retCode**: the return code of the most recent command
+- **isRemote**: true if `nash` is acting on a remote connection
