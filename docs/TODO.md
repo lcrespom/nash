@@ -47,7 +47,6 @@
 - [x] Optional description - if available, show under menu
 - [x] Parse man pages to generate descripitons
 - [x] File info in description line
-    - [ ] Color config for file info => update docs
 - [x] Change `~/` in menu into proper directory name
 - [x] Use a different color for executables / use the same as with syntax hl
 - [x] Show full file details in command list

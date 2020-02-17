@@ -26,7 +26,9 @@ Pressing F1 at any time displays a list of all keyboard shoutcuts and their corr
 	text in the current line.
 - Interactive [tab-completion](docs/manual.md#tab-completion): pressing tab completes a file name,
 	but if multiple matching files are available, a menu is displayed, letting the user navigate
-	and select the file name.
+	and select the file name. Completion supports other elements such as directories, command
+	options and environment variables, and displays file information or option documentation
+	depending on the case.
 - All menus (command history, directory history and tab-completion) allow typing more characters
 	to narrow the search.
 - [Syntax highlight](docs/manual.md#syntax-highlight), clearly coloring the different parts of a command,

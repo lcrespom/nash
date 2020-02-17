@@ -122,13 +122,18 @@ It has different working modes:
     typing `tab` again will display the content of the selected subdirectory. The user can continue
     pressing `tab` and selecting subdirectires as long as required.
 - When the cursor is after a `-`, the user is typing a command option, e.g. the `-l` in `ls -l` to specify
-    that we want to list files in long format. Typing `tab` at this point makes `nash`search in the
+    that we want to list files in long format. Typing `tab` at this point makes `nash` search in the
     `man` documentation for the current command and, if present, display all available options along with
     their description.
 - When the cursor is right next to a word starting with `$`, the user is typing an environment variable.
     Typing `tab` at this point displays a menu with the list of environment variables known by `nash`.
     Notice that `nash` cannot capture all the variables available in the current session, so there can be
     more variables not listed in the menu, which will have to be typed by hand.
+
+Different colors are used to identify the different types of elements being displayed in the menu (e.g.
+files, commands, directories, options, etc). When a description for the selected element is available,
+it is displayed under the menu. In the case of file elements (including directories and commands),
+the description contains the file attributes, user, group, size and date, as provided by `ls -l`.
 
 In all modes, when the menu is displayed, the search can be narrowed down by typing further characters, 
 thus filtering out the items that do not start with the word at the left of the cursor.

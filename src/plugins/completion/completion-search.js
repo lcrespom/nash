@@ -124,7 +124,10 @@ async function getCommandCompletions(word, line, colors) {
             .filter(p => !p.includes('/node-gyp-bin/'))  // Mysterious bug
         words = (await safeGlob(paths))
             .map(p => colorizePathDesc(p, colors))
-            .concat(builtins.filter(w => w.startsWith(word)))
+            .concat(builtins
+                .filter(w => w.startsWith(word))
+                .map(w => w + '##Bash reserved word')
+            )
     }
     // Filter by dir or executable attribute
     return words.filter(w => {
@@ -216,8 +219,9 @@ async function getParameterCompletions(word, line, colors) {
 
 function getEnvironmentCompletions(word) {
     return Object.keys(process.env)
-        .map(w => '$' + w)
-        .filter(w => startsWithCaseInsensitive(w, word))
+        .filter(w => startsWithCaseInsensitive('$' + w, word))
+        .sort()
+        .map(w => '$' + w + '##' + process.env[w])
 }
 
 optsCache = {}

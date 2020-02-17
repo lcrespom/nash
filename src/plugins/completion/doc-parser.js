@@ -88,9 +88,13 @@ async function parseOptions(cmd) {
     return parseMan(out).map(opt => opt.name + '##' + opt.desc)
 }
 
+function removeUglyChars(str) {
+    return str.split('').filter(x => x == '\x1b' || x >= ' ').join('')
+}
+
 function wrap(str, w, maxLines) {
     if (!str) return str
-    if (str.charCodeAt(0) < 32) return str  // Colorized, can't wrap
+    if (str.charAt(0) == '\x1b') return str  // Colorized, shouldn't wrap
     // Remove hypthens and put everything in a single line
     str = str.replace(/([a-z])-\n/g, '$1').split('\n').join(' ')
     // Split in lines of maximum `w` characters
@@ -101,7 +105,9 @@ function wrap(str, w, maxLines) {
         lines = lines.slice(0, maxLines)
         lines[maxLines - 1] = lines[maxLines - 1].substr(0, w - 3) + '...'
     }
-    return lines.join('\n')
+    return lines
+        .map(l => removeUglyChars(l).substr(0, w))
+        .join('\n')
 }
 
 module.exports = {
