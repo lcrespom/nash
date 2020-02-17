@@ -122,8 +122,7 @@ async function getCommandCompletions(word, line, colors) {
         let paths = process.env.PATH
             .split(path.delimiter)
             .map(p => path.join(p, word + '*'))
-            // Mysterious bug
-            .filter(p => !(p.includes('/node_modules/') || p.includes(' ')))
+            .filter(p => !p.includes(' '))  // Mysterious bug
         paths = removeRepeatedItems(paths)
         words = (await safeGlob(paths))
             .map(p => colorizePathDesc(p, colors) + '\n' + path.dirname(p))
@@ -135,7 +134,7 @@ async function getCommandCompletions(word, line, colors) {
     // Filter by dir or executable attribute
     return words.filter(w => {
         let desc = w.split('##')[1]
-        if (!desc) return true  // builtin
+        if (!desc || desc.startsWith('Bash')) return true
         return removeAnsiCodes(desc).substr(0, 10).match(/[dlxs]/)
     })
 }

@@ -13,7 +13,7 @@ Nash is implemented in JavaScript and focuses on:
 
 Pressing F1 at any time displays a list of all keyboard shoutcuts and their corresponding actions.
 
-> Check the [user manual](docs/manual.md) for a detailed description of `nash` functions.
+> **Check the [user manual](docs/manual.md) for a detailed description of `nash` functions.**
 
 ## Main features
 - Flexible [prompt](docs/manual.md#prompt), configurable by settings and by JavaScript code.
@@ -85,11 +85,11 @@ From then on, you can simply launch it by typing `nash`.
 
 > See [Starting nash](docs/manual.md#starting-nash) if you experience any problems when running it.
 
-If you want to run it from the source code (and maybe help with development), just clone the repo and type `npm install`. Then, to open a shell, type `npm start`.
+If you want to run it from the source code (and maybe help with development), just clone the repo and type `npm install`. Then, to open a shell, type `node src/nash`.
 ```
 $ git clone https://github.com/lcrespom/nash.git
 $ npm install
-$ npm start
+$ node src/nash
 ```
 
 ### Windows
