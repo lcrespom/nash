@@ -22,6 +22,7 @@ let prompt = (pinfo) => 'nash> '
  *  - hostname: the host name
  *  - fqdn: the fully qualified domain name of the host
  *  - retCode: the return code of the most recent command
+ *  - isRemote: true if `nash` is acting on a remote connection
  */
 function setPrompt(promptFunction) {
 	prompt = promptFunction

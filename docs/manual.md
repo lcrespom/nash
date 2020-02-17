@@ -55,8 +55,8 @@ via the `module.exports` object:
     
     The default configuration exports all the default plugins from `nash`, which provide all the functionality
     documented below in the [Plugins](#plugins) section. Users can add their own plugins, or even replace
-    some of the default ones with an alternate implementation. Such is the case with the [Prompt](#prompt) plugin,
-    which is relatively simple to replace with a custom one.
+    some of the default ones with an alternate implementation. For information on how to write custom plugins,
+    check the [plugin howto](plugin-howto.md).
 
 - **options**: an object with the user settings, which the plugins will take into account accordingly.
     For example, the *colors* property is an object with color settings, used by the prompt, syntax highlight

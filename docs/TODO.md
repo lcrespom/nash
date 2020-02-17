@@ -11,8 +11,8 @@
     - [x] How to execute `nash` to ensure `bash` is located
     - [x] Document *panic* key
     - [ ] Record videos with https://asciinema.org/
-- [ ] Customization / Extension API
-    - [ ] Writing your own plugin (start/stop, etc)
+- [x] Customization / Extension API
+    - [x] Writing your own plugin (start/stop, etc)
 - [ ] Contribution guide
 - [ ] Make it visible
     - [ ] Twitter
