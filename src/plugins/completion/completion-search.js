@@ -121,8 +121,9 @@ async function getCommandCompletions(word, line, colors) {
     else {
         let paths = process.env.PATH
             .split(path.delimiter)
-            .map(p => p + '/' + word + '*')
-            .filter(p => !p.includes('/node-gyp-bin/'))  // Mysterious bug
+            .map(p => path.join(p, word + '*'))
+            // Mysterious bug
+            .filter(p => !(p.includes('/node_modules/') || p.includes(' ')))
         paths = removeRepeatedItems(paths)
         words = (await safeGlob(paths))
             .map(p => colorizePathDesc(p, colors) + '\n' + path.dirname(p))

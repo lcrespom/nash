@@ -93,8 +93,12 @@ function parseLSL(line) {
 	return name + '##' + desc
 }
 
+function escapeSpecialChars(str) {
+	return str.replace(/([\s\(\)])/g, '\\$1')
+}
+
 async function glob(path) {
-	let command = `ls -plhd ${path.replace(/ /g, '\\ ')} | cat; echo $?`
+	let command = `ls -plhd ${escapeSpecialChars(path)} | cat; echo $?`
 	let out = await runHiddenCommand(command)
 	return commandOut2Array(out)
 		.map(parseLSL)
