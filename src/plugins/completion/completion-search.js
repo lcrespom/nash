@@ -128,7 +128,7 @@ async function getCommandCompletions(word, line, colors) {
             .map(p => colorizePathDesc(p, colors) + '\n' + path.dirname(p))
             .concat(builtins
                 .filter(w => w.startsWith(word))
-                .map(w => w + '##Bash reserved word')
+                .map(w => w + '##Bash builtin command')
             )
     }
     // Filter by dir or executable attribute
