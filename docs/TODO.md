@@ -46,7 +46,9 @@
 - [ ] ...Or maybe just get rid of it
 
 ## Compatibility / Portability
-- [ ] GitBash support (...very long term)
+- [ ] Docker instructions for Windows
+- [ ] GitBash support
     - [ ] Just pty.spawn() the full commnand, then append the magic
         *get status* sequence at the end of the command.
-- [ ] Docker instructions for Windows
+        => Fail: GitBash eagerly controls the cursor
+    - [ ] Test: interpret the whole AST
