@@ -1,9 +1,10 @@
 const childproc = require('child_process')
 const pty = require('node-pty')
 
+const { nashShutdown } = require('../startup')
 const env = require('../env')
 
-let shellName
+let shellName, shellParams
 let ptyProcess = null
 
 
@@ -27,7 +28,7 @@ function createPTY(cmd) {
     let term = process.env.TERM || 'xterm-256color'
 	let dir = process.cwd() || process.env.HOME
     process.env.PS1 = env.NASH_MARK
-    let args = ['-c', cmd]
+    let args = shellParams.concat(['-i', '-c', cmd])
     return pty.spawn(shellName, args, {
         name: term,
         cols: process.stdout.columns,
@@ -39,6 +40,8 @@ function createPTY(cmd) {
 
 async function runCommand(cmd, { pushDir }) {
     process.stdout.write('\n')
+    if (cmd == 'exit')
+        return shutdown()
     ptyProcess = createPTY(cmd)
     process.stdout.on('resize', () => {
         ptyProcess.resize(process.stdout.columns, process.stdout.rows)
@@ -60,6 +63,11 @@ function write(txt) {
 
 //-------------------- Other non-pty stuff --------------------
 
+function shutdown() {
+    nashShutdown()
+    process.exit(0)
+}
+
 async function runHiddenCommand(cmd) {
     // No need to open a pseudo-terminal
     return new Promise((resolve, reject) => {
@@ -75,6 +83,7 @@ async function runHiddenCommand(cmd) {
 
 function startShell(shell, params) {
     shellName = shell
+    shellParams = params
 }
 
 
