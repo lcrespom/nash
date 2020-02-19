@@ -21,7 +21,7 @@
     "productivity"
   ],
   "author": "Luis Crespo <lcrespom@gmail.com> (https://github.com/lcrespom)",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/jest": "^24.9.1",
     "jest": "^24.9.0",
