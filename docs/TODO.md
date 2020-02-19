@@ -47,4 +47,6 @@
 
 ## Compatibility / Portability
 - [ ] GitBash support (...very long term)
+    - [ ] Just pty.spawn() the full commnand, then append the magic
+        *get status* sequence at the end of the command.
 - [ ] Docker instructions for Windows
