@@ -8,34 +8,6 @@ const env = require('../env')
 let ptyProcess = null
 
 
-//-------------------- Argument pre-processiong --------------------
-
-let jsError = false
-
-function runJS(jscode) {
-	let context = process.env
-	return function(txt) {
-		try {
-			return eval(txt)
-		}
-		catch (e) {
-			console.error('\nError evaluating JavaScript: ' + e)
-			jsError = true
-			return ''
-		}
-	}.call(context, jscode)
-}
-
-function expandJS(line) {
-	jsError = false
-	let replaced = line.replace(/\$\[([^\$]+)\$\]/g, (_, js) => runJS(js))
-	if (jsError)
-		return ''	// Do not execute command
-	else
-		return replaced
-}
-
-
 //-------------------- Terminal state machine --------------------
 
 let TermState = {
@@ -166,10 +138,9 @@ function parseUserStatus(output) {
 	}
 }
 
-async function runCommand(line, { pushDir = true } = {}) {
+async function runCommand(cmd, { pushDir }) {
 	env.refreshWhich()	// Clear which cache
 	grabOutput = false
-	let cmd = expandJS(line.trim())
 	await runCommandInternal(cmd)
 	let statusCmd = 'hostname;whoami;pwd;echo $HOME;echo $__rc'
 	let output = await runHiddenCommand(statusCmd)
