@@ -6,12 +6,33 @@ const env = require('../env')
 
 let shellName, shellParams
 let ptyProcess = null
+let pos = 0
 
 
 //-------------------- PTY --------------------
 
+function toHex(str) {
+    let hex = str.split('')
+        .map(ch => ch < ' '
+            ? '<' + ch.charCodeAt(0).toString(16) + '>'
+            : ch
+        )
+        .join('')
+    return hex + '\n---\n'
+}
+
+function clearEscapes(data) {
+    return data
+        .replace('\x1b[2J', '')
+        .replace('\x1b[H', '')
+}
+
 function dataFromShell(data) {
+    // process.stdout.write(toHex(data))
+    // Skip initial clear screen
+    if (pos == 0) data = clearEscapes(data)
     process.stdout.write(data)
+    pos += data.length
     // TODO detect and grab user status
     // let statusCmd = "__rc=$?;echo $'\x1E\x1E>';" +
     //     'hostname;whoami;pwd;echo $HOME;echo $__rc;$(exit $__rc)'
@@ -38,18 +59,22 @@ function createPTY(cmd) {
 	})
 }
 
+function resizePTY() {
+    ptyProcess.resize(process.stdout.columns, process.stdout.rows)
+}
+
 async function runCommand(cmd, { pushDir }) {
     process.stdout.write('\n')
     if (cmd == 'exit')
         return shutdown()
+    pos = 0
     ptyProcess = createPTY(cmd)
-    process.stdout.on('resize', () => {
-        ptyProcess.resize(process.stdout.columns, process.stdout.rows)
-    })
+    process.stdout.on('resize', resizePTY)
     ptyProcess.onData(dataFromShell)
     return new Promise(resolve => 
         ptyProcess.onExit(evt => {
             ptyProcess.kill(evt.signal)
+            process.stdout.off('resize', resizePTY)
             ptyProcess = null
             resolve()
         })

@@ -46,7 +46,20 @@
 - [ ] ...Or maybe just get rid of it
 
 ## Compatibility / Portability
-- [ ] GitBash support (...very long term)
+- [ ] GitBash support
     - [ ] Just pty.spawn() the full commnand, then append the magic
         *get status* sequence at the end of the command.
 - [ ] Docker instructions for Windows
+
+## Misc
+- [ ] Refactor all terminal escape codes in a separate module
+
+## GitBash support
+- [ ] Remove nasty clear screen at start of Git Bash
+- [ ] Implement user status gathering at end of runCommand
+- [ ] Improve startup code to locate bash in path or in default directory
+- [ ] Document how to launch it, in case bash.exe is not located
+- [ ] Properly parse PATH by accounting for ';' as the Windows path separator
+- [ ] Always display / instead of \
+    - [ ] In prompt
+    - [ ] While navigating through directories in completion menu
