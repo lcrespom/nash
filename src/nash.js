@@ -25,7 +25,7 @@ function main() {
 	try {
 		startup.nashStartup()
 		editor.initialize()
-		runner.startShell()
+		runner.start()
 	}
 	catch (err) {
 		console.error(err.message)

@@ -1,9 +1,9 @@
 const pty = require('node-pty')
 
-const { nashShutdown } = require('./startup')
-const { commonInitialChars } = require('./utils')
-const { dirHistory } = require('./history')
-const env = require('./env')
+const { nashShutdown } = require('../startup')
+const { commonInitialChars } = require('../utils')
+const { dirHistory } = require('../history')
+const env = require('../env')
 
 let ptyProcess = null
 
@@ -106,14 +106,7 @@ function dataFromShell(data) {
 
 //-------------------- Pseudo-terminal management --------------------
 
-function getShellNameAndParams() {
-	let shell = process.argv[2] || process.env.SHELL || 'bash'
-	params = shell.includes('bash') ? ['--rcfile', '~/.nash/nashrc'] : []
-	return [shell, params]
-}
-
-function startShell() {
-    let [shell, params] = getShellNameAndParams()
+function startShell(shell, params) {
     let term = process.env.TERM || 'xterm-256color'
 	let dir = process.cwd() || process.env.HOME
 	process.env.PS1 = env.NASH_MARK
