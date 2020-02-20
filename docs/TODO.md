@@ -47,8 +47,8 @@
 
 ## Compatibility / Portability
 - [ ] Docker instructions for Windows
-- [ ] GitBash support
-    - [ ] Just pty.spawn() the full commnand, then append the magic
-        *get status* sequence at the end of the command.
-        => Fail: GitBash eagerly controls the cursor
-    - [ ] Test: interpret the whole AST
+- [ ] GitBash support => unfeasible
+- [ ] Plain windows support from cmd/PowerShell. Options:
+    - Just pseudo-tty to CMD after minor translations, e.g. $EnvVar => %EnvVar%
+    - Interpret the bash AST tree, execute [ShellJS](https://github.com/shelljs/shelljs)
+        when available
