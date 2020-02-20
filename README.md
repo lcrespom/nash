@@ -103,17 +103,30 @@ A collection of fonts that are optimized for the terminal and contain useful sym
 e.g. for displaying a fancy prompt, git repository symbol, etc.
 They can be downloaded form [here](https://github.com/powerline/fonts).
 
+Once the terminal is configured to use a powerline font, add the following entry in the exported
+`options` of `.nash/nashrc.js`:
+```javascript
+   prompt: { powerFont: true }
+```
+This will tell the prompt plugin that it can use fancy symbol characters, e.g. for the git status.
+
 ### A good terminal app
 The default terminal application that comes preinstalled with the OS is usually quite limited, and may
 even cause defective output or glitches when `nash` tries to generate colorful output. The recommended
 alternatives are the following:
-- **Mac**: [iTerm2](https://iterm2.com/).
+- **Mac**: [iTerm2](https://iterm2.com/). Although the default terminal is quite powerful, it does not
+	support 16 million colorws (see below).
 - **Windows**:
 	- [Windows Terminal](https://github.com/Microsoft/Terminal). The GitHub page contains
-	instructions for different installation methods, but at the very beginning of the README.md there
+	instructions for different installation methods, and at the very beginning of the `README.md` there
 	is a link to the app in the Microsoft Store, which is the easiest installation method.
 	- The terminal provided by the Ubuntu WSL app is also quite decent.
 - **Linux**: most Linux distributions come with a powerful terminal by default.
+
+Once you are using a good terminal app, make sure you enable 16 million color support by uncommenting the
+line `trueColor: true` in the `options` of `.nash/nashrc.js`. Some pugins make use of this feature, but it is
+disabled by default because there is no safe way to detect 16 million color support, and attempting
+to use this feature on a terminal that does not support it results in unreadable output.
 
 ## Related projects
 If you are thinking about using JavaScript to implement your shell scripts, check out [ShellJS](https://github.com/shelljs/shelljs).

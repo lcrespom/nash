@@ -69,7 +69,7 @@ function createNashDirIfRequired() {
 			'Nash installation error: could not find examples directory at\n' +
 			'    ' + exdir + '\n')
 	// Everything is ready for installation
-	fs.mkdirSync(nashDir)
+	fs.mkdirSync(path.join(nashDir, 'history'), { recursive: true })
 	createRC(path.join(nashDir, 'nashrc'))
 	copyFiles(exdir, nashDir)
 }
