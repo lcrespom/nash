@@ -1,8 +1,6 @@
 const chalk = require('chalk')
-const {
-    removeAnsiColorCodes, substrWithColors,
-    getProp, setProp
-} = require('../src/utils')
+const { getProp, setProp } = require('../src/utils')
+const { removeAnsiColorCodes, substrWithColors } = require('../src/terminal')
 
 //------------------------- substrWithColors -------------------------
 

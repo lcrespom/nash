@@ -1,9 +1,9 @@
 const path = require('path')
 
 const {
-    startsWithCaseInsensitive, cutLastChars,
-    removeAnsiCodes, removeRepeatedItems
+    startsWithCaseInsensitive, cutLastChars, removeRepeatedItems
 } = require('../../utils')
+const { removeAnsiCodes } = require('../../terminal')
 const {
     parseBash, traverseAST, NodeType, builtins
 } = require('../../parser')

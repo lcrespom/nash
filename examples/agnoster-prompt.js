@@ -8,7 +8,8 @@
 
 const chalk = require(NODE_MODULES + '/chalk')
 
-const { setPrompt, setTerminalTitle } = require(NASH_BASE + '/prompt')
+const { setPrompt } = require(NASH_BASE + '/prompt')
+const { setTerminalTitle } = require(NASH_BASE + '/terminal')
 const { gitStatus, gitStatusFlags } = require(NASH_BASE + '/plugins/git-status')
 
 

@@ -4,9 +4,8 @@ const { computeTableLayout, tableMenu } = require('node-terminal-menu')
 
 const requireNash = m => require('../../' + m)
 const env = requireNash('env')
-const {
-    startsWithCaseInsensitive, cutLastChars, removeAnsiCodes
-} = requireNash('utils')
+const { startsWithCaseInsensitive, cutLastChars } = requireNash('utils')
+const { removeAnsiCodes } = requireNash('terminal')
 const { adjustPromptPosition } = requireNash('prompt')
 const editor = requireNash('editor')
 const { colorize } = requireNash('colors')

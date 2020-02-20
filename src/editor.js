@@ -4,7 +4,7 @@ const {
 	putPrompt, promptOwnsInput
 } = require('./prompt')
 const { getKeyBindings, setLastBinding } = require('./key-bindings')
-const { removeAnsiColorCodes } = require('./utils')
+const { removeAnsiColorCodes } = require('./terminal')
 
 
 let line = { left: '', right: '' }

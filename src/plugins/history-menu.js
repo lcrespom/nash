@@ -1,6 +1,6 @@
 const { verticalMenu } = require('node-terminal-menu')
 
-const { substrWithColors, memoize, removeRepeatedItems } = require('../utils')
+const { memoize, removeRepeatedItems } = require('../utils')
 const { bindKey } = require('../key-bindings')
 const { adjustPromptPosition } = require('../prompt')
 const { history, dirHistory } = require('../history')
@@ -8,20 +8,21 @@ const { highlight, colorize } = require('./syntax-highlight')
 const { runCommand } = require('../runner')
 const editor = require('../editor')
 const env = require('../env')
+const terminal = require('../terminal')
 
 
 function highlightCommand(cmd) {
     let hls = highlight(cmd)
     let colCmd = colorize(cmd, hls)
-    return substrWithColors(colCmd, 0, process.stdout.columns - 2)
+    return terminal.substrWithColors(colCmd, 0, process.stdout.columns - 2)
 }
 
 function inverse(str) {
-    return '\x1b[7m' + str + '\x1b[0m'
+    return terminal.INVERSE + str + terminal.NORMAL
 }
 
 function white(str) {
-    return '\x1b[97m' + str + '\x1b[0m'
+    return terminal.WHITE + str + terminal.NORMAL
 }
 
 function openVerticalMenu(items, decorate, done) {

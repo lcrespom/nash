@@ -1,8 +1,9 @@
 const { gitStatus, gitStatusFlags } = require('./git-status')
-const { setPrompt, setTerminalTitle } = require('../../prompt')
+const { setPrompt } = require('../../prompt')
 const { getOption, setDefaultOptions } = require('../../startup')
 const { colorize } = require('../../colors')
 const { ucfirst } = require('../../utils')
+const { setTerminalTitle } = require('../../terminal')
 
 
 let colors
