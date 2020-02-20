@@ -26,18 +26,20 @@
 - [ ] Test multi-line prompt with completion, dir history, long lines, etc.
 
 ## Completion
+- [ ] Option completion: parse option, remove extra chars (**next**)
 - [ ] Mouse support
     - Keypress module supports it
     - Implement in menu module
     - Send command '\x1b[?1005h' to enable mouse x > 95
 
 ## History menu
-- [ ] Discard vertical menu, use single-column table menu + scroll bar
+- [ ] Discard vertical menu, use single-column table menu /
+    scroll bar / cool background (**next**)
 - [ ] Delete key removes line from history
 
 ## Syntax highlight
 - [ ] Aliases are not detected by the which command => implement
-    via runHiddenCommand at startup
+    via runHiddenCommand at startup (**next**)
  
 ## Inline JavaScript
 - [ ] Highlight JavaScript (and avoid bash parser error)
@@ -47,7 +49,7 @@
 
 ## Compatibility / Portability
 - [ ] Docker instructions for Windows
-- [ ] GitBash support => unfeasible
+- [x] GitBash support => unfeasible
 - [ ] Plain windows support from cmd/PowerShell. Options:
     - Just pseudo-tty to CMD after minor translations, e.g. $EnvVar => %EnvVar%
     - Interpret the bash AST tree, execute [ShellJS](https://github.com/shelljs/shelljs)
