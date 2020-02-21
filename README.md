@@ -43,7 +43,7 @@ Pressing F1 at any time displays a list of all keyboard shoutcuts and their corr
 	- Accessing small or short-lived environments, such as a docker container.
 - Configurable [color palette](docs/manual.md#configuring-colors). Colors can be configured by
 	name (e.g. "red", "gren", etc.) or by RGB hex as in CSS (e.g. #a6e22e).
-- [Configuration](manual.md#configuration) and extensions are implemented as plain JavaScript code,
+- [Configuration](docs/manual.md#configuration) and extensions are implemented as plain JavaScript code,
 	centered around the `~/.nash/nashrc.js` file, which is loaded during startup. Example
 	configuration and extensions are provided in the `~/.nash` directory, which is populated when
 	`nash` is started for the first time. For instance:
