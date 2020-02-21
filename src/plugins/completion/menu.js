@@ -69,9 +69,19 @@ function shortenPath(p, isDir) {
     return p
 }
 
+function optionMatch(opt) {
+    return opt.split(',')[0]
+        .split(' ')[0]
+        .split('=')[0]
+        .split('[')[0]
+}
+
 function replaceWordWithMatch(left, word, match) {
     let cutLen = word.length
-    // Normalize and simplify path
+    // Handle options
+    if (match.startsWith('-'))
+        return cutLastChars(left, cutLen) + optionMatch(match)
+    // Handle paths: normalize and simplify path
     let isDir = match.endsWith('/')
     match = shortenPath(match, isDir)
     // Quote blanks in file names

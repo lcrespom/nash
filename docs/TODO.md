@@ -26,7 +26,9 @@
 - [ ] Test multi-line prompt with completion, dir history, long lines, etc.
 
 ## Completion
-- [ ] Option completion: parse option, remove extra chars (**next**)
+- [x] Option completion: parse option, remove extra chars
+- [ ] Completion is only case insensitive while showing the menu. It
+    should also be case insensitive when pressing tab. (**next**)
 - [ ] Mouse support
     - Keypress module supports it
     - Implement in menu module
