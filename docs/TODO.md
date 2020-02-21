@@ -28,7 +28,8 @@
 ## Completion
 - [x] Option completion: parse option, remove extra chars
 - [ ] Completion is only case insensitive while showing the menu. It
-    should also be case insensitive when pressing tab. (**next**)
+    should also be case insensitive when pressing tab.
+     => Hard: `ls` command is case-sensitive.
 - [ ] Mouse support
     - Keypress module supports it
     - Implement in menu module
