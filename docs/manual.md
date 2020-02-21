@@ -107,9 +107,7 @@ The prompt plugin supports the following configuration options:
         the **maxDirs** parameter has shortened it.
 
 ### Tab completion
-
 ![File completion, with scrollbar and file description](img/file-completion.png)
-
 ![Option completion, with description from man pages](img/option-completion.png)
 
 
