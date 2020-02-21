@@ -9,7 +9,7 @@ Nash is implemented in JavaScript and focuses on:
 	as JavaScript. Extensions are written much faster in JS, and are easier to understand by the
 	common developer.
 
-![alt text](docs/nash.png)
+![A screenshot of nash in action](docs/img/nash.png)
 
 Pressing F1 at any time displays a list of all keyboard shoutcuts and their corresponding actions.
 

@@ -1,7 +1,7 @@
 # ToDo
 
 ## Documentation
-- [ ] Screenshots
+- [x] Screenshots
 - [x] Features
 - [x] Examples directory with documented customizations
 - [x] Copy examples to `~/.nash` upon first startup
