@@ -1,10 +1,11 @@
-const { verticalMenu } = require('node-terminal-menu')
+const { tableMenu } = require('node-terminal-menu')
 
 const { memoize, removeRepeatedItems } = require('../utils')
 const { bindKey } = require('../key-bindings')
 const prompt = require('../prompt')
 const { history, dirHistory } = require('../history')
-const { highlight, colorize } = require('./syntax-highlight')
+const syntaxHL = require('./syntax-highlight')
+const { colorizer } = require('../colors')
 const { runCommand } = require('../runner')
 const editor = require('../editor')
 const env = require('../env')
@@ -12,8 +13,8 @@ const terminal = require('../terminal')
 
 
 function highlightCommand(cmd) {
-    let hls = highlight(cmd)
-    let colCmd = colorize(cmd, hls)
+    let hls = syntaxHL.highlight(cmd)
+    let colCmd = syntaxHL.colorize(cmd, hls)
     return terminal.substrWithColors(colCmd, 0, process.stdout.columns - 2)
 }
 
@@ -46,6 +47,7 @@ class HistoryMenu {
         this.updateLine = updateLine
         this.runIt = runIt
         this.filter = filter
+        this.width = this.computeWidth(items)
     }
 
     open() {
@@ -60,7 +62,7 @@ class HistoryMenu {
         let menuDone = () => {}
         let initialItems = this.items
         let initialLen = this.line.left.length
-        this.menu = this.openVerticalMenu(sel => {
+        this.menu = this.openMenuWidget(sel => {
             process.stdout.clearScreenDown()
             if (sel >= 0)
                 this.line = this.updateLine({ left: this.items[sel], right: '' })
@@ -84,15 +86,16 @@ class HistoryMenu {
         return new Promise(resolve => menuDone = resolve)
     }
 
-    openVerticalMenu(done) {
+    openMenuWidget(done) {
         process.stdout.write('\n')
         let height = Math.min(process.stdout.rows - 10, this.items.length)
         prompt.adjustPromptPosition(height + 1)
-        return verticalMenu({
+        return tableMenu({
             items: this.items,
-            height,
+            height, columnWidth: this.width, columns: 1,
+            scrollBarCol: this.width + 1,
             selection: this.items.length - 1,
-            decorate: this.decorate,
+            colors: this.initColors(),
             done
         })
     }
@@ -115,6 +118,21 @@ class HistoryMenu {
         return items
     }
 
+    initColors() {
+        return {
+            //TODO cut item to menu width
+            item: i => colorizer('/#272822')(this.decorate(i, false)),
+            selectedItem: i => this.decorate(i, true),
+            scrollArea: colorizer('/#272822'),
+            scrollBar: colorizer('whiteBright')
+        }
+    }
+
+    computeWidth(items) {
+        let w = items.reduce((w, i) => Math.max(w, i.length), 0)
+        return Math.min(w + 2, process.stdout.columns - 3)
+    }
+    
 }
 
 
