@@ -36,8 +36,8 @@
     - Send command '\x1b[?1005h' to enable mouse x > 95
 
 ## History menu
-- [ ] Discard vertical menu, use single-column table menu /
-    scroll bar / cool background (**next**)
+- [x] Discard vertical menu, use single-column table menu /
+    scroll bar / cool background
 - [ ] Delete key removes line from history
 
 ## Syntax highlight
