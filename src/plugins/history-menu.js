@@ -14,8 +14,7 @@ const terminal = require('../terminal')
 
 function highlightCommand(cmd) {
     let hls = syntaxHL.highlight(cmd)
-    let colCmd = syntaxHL.colorize(cmd, hls)
-    return terminal.substrWithColors(colCmd, 0, process.stdout.columns - 2)
+    return syntaxHL.colorize(cmd, hls)
 }
 
 function startsWith(item, text) {
@@ -120,7 +119,6 @@ class HistoryMenu {
 
     initColors() {
         return {
-            //TODO cut item to menu width
             item: i => colorizer('/#272822')(this.decorate(i, false)),
             selectedItem: i => this.decorate(i, true),
             scrollArea: colorizer('/#272822'),
@@ -155,10 +153,7 @@ function dirHistoryMenu(line) {
     let cwd = env.cwd()
     // Remove current directory from list (user is already there)
     items = items.filter(i => i != cwd)
-    let decorate = (o, sel) => {
-        if (!o.endsWith('/')) o += '/'
-        return sel ? inverse(o) : white(o)
-    }
+    let decorate = (o, sel) => sel ? inverse(o) : white(o)
     let updateLine = l => ({ left: 'cd ' + l.left, right: l.right })
     let hm = new HistoryMenu(line, items,
         { decorate, updateLine, runIt: true, filter: includes })
