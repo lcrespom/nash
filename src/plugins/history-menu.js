@@ -1,15 +1,16 @@
 const { tableMenu } = require('node-terminal-menu')
 
 const { memoize, removeRepeatedItems } = require('../utils')
+const { getOption, setDefaultOptions } = require('../startup')
 const { bindKey } = require('../key-bindings')
 const prompt = require('../prompt')
 const { history, dirHistory } = require('../history')
-const syntaxHL = require('./syntax-highlight')
 const { colorizer } = require('../colors')
 const { runCommand } = require('../runner')
 const editor = require('../editor')
 const env = require('../env')
 const terminal = require('../terminal')
+const syntaxHL = require('./syntax-highlight')
 
 
 function highlightCommand(cmd) {
@@ -118,11 +119,14 @@ class HistoryMenu {
     }
 
     initColors() {
+        let colors = getOption('colors.history')
         return {
-            item: i => colorizer('/#272822')(this.decorate(i, false)),
-            selectedItem: i => this.decorate(i, true),
-            scrollArea: colorizer('/#272822'),
-            scrollBar: colorizer('whiteBright')
+            item:
+                i => colorizer(colors.item)(this.decorate(i, false)),
+            selectedItem:
+                i => colorizer(colors.selectedItem)(this.decorate(i, true)),
+            scrollArea: colorizer(colors.scrollArea),
+            scrollBar: colorizer(colors.scrollBar)
         }
     }
 
@@ -160,8 +164,18 @@ function dirHistoryMenu(line) {
     return hm.open()
 }
 
+function setDefaults() {
+    let defaultColors = {
+        item: '/#272822',
+        selectedItem: '',
+		scrollArea: '/#272822',
+        scrollBar: 'whiteBright',
+    }
+    setDefaultOptions('colors.history', defaultColors)
+}
 
 function start() {
+    setDefaults()
     bindKey('pageup', cmdHistoryMenu,
         'Show menu with matching command history lines')
     bindKey('pagedown', dirHistoryMenu,
