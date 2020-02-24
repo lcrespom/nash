@@ -183,9 +183,10 @@ The suggestion color can be configured with the **colors.suggestion.scol** prope
 ![Interactive command history, each line with syntax highlight](img/command-history.png)
 
 Nash keeps track of both command and directory history:
-- **Command history**: all executed commands are recorded and added to the `~/.nash/history` file.
+- **Command history**: all executed commands are recorded and added to the
+    `~/.nash/history/[hostname].history` file.
 - **Directory history**: all directories visited via `cd` are recorded and added to the
-    `~/.nash/dirHistory` file.
+    `~/.nash/history/[hostname].dirHistory` file.
 
 This plugin provides menus for displaying and interactively searching through both of them:
 - When the user types the `page-up` key, a drop-down menu with recent commands is shown,
