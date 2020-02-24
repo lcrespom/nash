@@ -11,9 +11,12 @@
     - [x] Writing your own plugin (start/stop, etc)
 - [ ] Contribution guide
 - [ ] Make it visible
-    - [ ] Twitter
+    - [x] Twitter
     - [ ] Blog post
     - [ ] Youtube walkthrough
+
+## Installation
+- [ ] Create npm package so it can be installed via `npm install`.
 
 ## Resiliency
 - [ ] Ensure default color palette / truecolor setting is good
