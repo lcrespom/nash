@@ -1,5 +1,5 @@
 # Nash
-Nash is a command-line editor for `bash` and compatible shells. It handles user input to provide a better user experience, but when the user hits the `Enter` key, it simply passes the command to `bash` for processing.
+Nash is a command-line editor for `bash` and compatible shells. It handles user input to provide a better user experience, and when the user hits the `Enter` key, it simply passes the command to `bash` for processing.
 
 Nash is implemented in JavaScript and focuses on:
 - Providing great UX and productivity to the command-line.
@@ -9,11 +9,10 @@ Nash is implemented in JavaScript and focuses on:
 	as JavaScript. Extensions are written much faster in JS, and are easier to understand by the
 	common developer.
 
-![A screenshot of nash in action](docs/img/nash.png)
+## Quick links
+- If you want to see how `nash` looks like, check some [screenshots](docs/screenshots.md).
+- Check the [user manual](docs/manual.md) for a detailed description of `nash` functions.
 
-Pressing F1 at any time displays a list of all keyboard shoutcuts and their corresponding actions.
-
-> **Check the [user manual](docs/manual.md) for a detailed description of `nash` functions.**
 
 ## Main features
 - Flexible [prompt](docs/manual.md#prompt), configurable by settings and by JavaScript code.
