@@ -23,8 +23,8 @@ VERSION=$1
 echo "Building binary distribution (warnings are expected)"
 mkdir -p dist
 npx pkg --targets linux,macos .
-mv nash-linux build/linux/nash
-mv nash-macos build/mac/nash
+mv bnash-linux build/linux/nash
+mv bnash-macos build/mac/nash
 # Package linux version
 echo "Packaging linux version..."
 cd build/linux

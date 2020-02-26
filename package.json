@@ -1,5 +1,5 @@
 {
-  "name": "nash",
+  "name": "bnash",
   "version": "1.10.0",
   "description": "A command-line editor for bash or compatible shells, aiming to provide great UX and productivity",
   "main": "src/nash.js",

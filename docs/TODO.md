@@ -16,7 +16,7 @@
     - [ ] Youtube walkthrough
 
 ## Installation
-- [ ] Create npm package so it can be installed via `npm install`.
+- [x] Create npm package so it can be installed via `npm install`.
 
 ## Resiliency
 - [ ] Ensure default color palette / truecolor setting is good

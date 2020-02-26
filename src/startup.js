@@ -64,10 +64,14 @@ function createNashDirIfRequired() {
 	if (fs.existsSync(nashDir)) return	// Nash is already installed
 	// Perform initial installation - check if examples dir exists
 	let exdir = path.join(process.cwd(), 'examples')
-	if (!fs.existsSync(exdir))
-		throw new Error(
-			'Nash installation error: could not find examples directory at\n' +
-			'    ' + exdir + '\n')
+	if (!fs.existsSync(exdir)) {
+		exdir = path.join(path.dirname(__dirname), 'examples')
+		if (!fs.existsSync(exdir)) {
+			throw new Error(
+				'Nash installation error: could not find examples ' +
+				'directory at\n    ' + exdir + '\n')
+		}
+	}
 	// Everything is ready for installation
 	fs.mkdirSync(path.join(nashDir, 'history'), { recursive: true })
 	createRC(path.join(nashDir, 'nashrc'))
