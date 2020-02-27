@@ -80,7 +80,8 @@ Then just type `bnash` to launch it.
 > $ sudo apt-get install build-essential
 > ```
 > You can get more details in the [node-gyp installation document](https://github.com/nodejs/node-gyp#installation).
-> ...or you can just download the binary installation: see the next section.
+>
+> ...Or you can just download the binary installation: see the next section.
 
 ### Binary installation
 The [releases](https://github.com/lcrespom/nash/releases) page contains binary packages for Linux and MacOS.
