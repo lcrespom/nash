@@ -35,6 +35,6 @@
     "node-terminal-menu": "^3.4.1"
   },
   "pkg": {
-    "scripts": "src/plugins/**/*.js"
+    "scripts": ["src/plugins/**/*.js", "examples/*.js"]
   }
 }

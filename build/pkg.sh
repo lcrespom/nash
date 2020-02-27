@@ -3,13 +3,9 @@
 function nash_package() {
     PLATFORM=$1
     rm -f *.tar *.gz
-    rm -rf examples
-    mkdir examples
-    cp ../../examples/* examples
     tar -cf nash-$VERSION-$PLATFORM.tar *
     gzip nash-$VERSION-$PLATFORM.tar
     mv nash-$VERSION-$PLATFORM.tar.gz ../../dist
-    rm -rf examples
     rm nash
 }
 

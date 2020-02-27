@@ -80,6 +80,7 @@ Then just type `bnash` to launch it.
 > $ sudo apt-get install build-essential
 > ```
 > You can get more details in the [node-gyp installation document](https://github.com/nodejs/node-gyp#installation).
+> ...or you can just download the binary installation: see the next section.
 
 ### Binary installation
 The [releases](https://github.com/lcrespom/nash/releases) page contains binary packages for Linux and MacOS.
@@ -89,20 +90,23 @@ choice. For example:
 $ mkdir ~/nash-inst
 $ cd ~/nash-inst
 $ # Use the appropirate link for nash-[version]-[platform].tar.gz
-$ curl -OL https://github.com/lcrespom/nash/releases/download/1.10.0/nash-1.10.0-linux.tar.gz
-$ tar -xzf nash-1.10.0-linux.tar.gz
+$ curl -OL https://github.com/lcrespom/nash/releases/download/1.10.1/nash-1.10.1-linux.tar.gz
+$ tar -xzf nash-1.10.1-linux.tar.gz
 ```
 Finally, to run nash:
 ```bash
 $ ./nash
 ```
-It is important that the first time `nash` is executed from the directory where the `.tar.gz` file is
-extracted, so it can copy the example code to `~/.nash`. After that, you can copy the extracted files
-somewhere in your `$PATH`. An appropriate place is `/usr/local/bin`:
+To easily launch `nash` in the future, you can copy the extracted files somewhere in your `$PATH`.
+An appropriate place is `/usr/local/bin`:
 ```bash
 $ sudo cp nash pty.node /usr/local/bin
 ```
 From then on, you can simply launch it by typing `nash`.
+
+> The binary distribution packages nash code along with the node.js runtime in a single executable,
+> except for the `pty.node` file, which must be placed alongside. The packaging is done using the great
+> [pkg tool](https://github.com/zeit/pkg).
 
 ### From source code
 If you want to run `nash` from the source code (and maybe help with development), just clone the repo and type `npm install`. Then, to open a shell, type `node src/nash`.
