@@ -61,6 +61,10 @@ Check the [ToDo](docs/TODO.md) for a list of features under development and plan
 
 ## Installation
 
+> If after a successful installation you get strange behavior, see
+> [Starting nash](docs/manual.md#starting-nash) for troubleshooting. Also, check the
+> [Recommended prerequisites](#recommended-prerequisites) section below.
+
 ### If you have `node` and `npm` installed
 As usual:
 ```bash
@@ -70,11 +74,12 @@ $ npm install -g bnash  # the "nash" name was taken in npm ¯\_(ツ)_/¯
 Then just type `bnash` to launch it.
 
 > If you get installation errors containing `node-gyp` in the error messages, this is because you need
-> to install the Linux build tools first. That installation depends on the Linux distribution - for example,
-> for Ubuntu the following command installs those prerequisites:
+> to install the native build tools first. That installation depends on the OS - for example, for Ubuntu
+> the following command installs those prerequisites:
 > ```bash
 > $ sudo apt-get install build-essential
 > ```
+> You can get more details in the [node-gyp installation document](https://github.com/nodejs/node-gyp#installation).
 
 ### Binary installation
 The [releases](https://github.com/lcrespom/nash/releases) page contains binary packages for Linux and MacOS.
@@ -98,8 +103,6 @@ somewhere in your `$PATH`. An appropriate place is `/usr/local/bin`:
 $ sudo cp nash pty.node /usr/local/bin
 ```
 From then on, you can simply launch it by typing `nash`.
-
-> See [Starting nash](docs/manual.md#starting-nash) if you experience any problems when running it.
 
 ### From source code
 If you want to run `nash` from the source code (and maybe help with development), just clone the repo and type `npm install`. Then, to open a shell, type `node src/nash`.
