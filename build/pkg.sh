@@ -3,13 +3,9 @@
 function nash_package() {
     PLATFORM=$1
     rm -f *.tar *.gz
-    rm -rf examples
-    mkdir examples
-    cp ../../examples/* examples
     tar -cf nash-$VERSION-$PLATFORM.tar *
     gzip nash-$VERSION-$PLATFORM.tar
     mv nash-$VERSION-$PLATFORM.tar.gz ../../dist
-    rm -rf examples
     rm nash
 }
 
@@ -23,8 +19,8 @@ VERSION=$1
 echo "Building binary distribution (warnings are expected)"
 mkdir -p dist
 npx pkg --targets linux,macos .
-mv nash-linux build/linux/nash
-mv nash-macos build/mac/nash
+mv bnash-linux build/linux/nash
+mv bnash-macos build/mac/nash
 # Package linux version
 echo "Packaging linux version..."
 cd build/linux

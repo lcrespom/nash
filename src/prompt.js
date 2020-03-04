@@ -1,4 +1,5 @@
 const env = require('./env')
+const terminal = require('./terminal')
 
 
 let cursor = null
@@ -32,18 +33,12 @@ function put(str) {
 	process.stdout.write(str)
 }
 
-const HIDE_CURSOR = '\x1b[?25l'
-const SHOW_CURSOR = '\x1b[?25h'
-const HIDE_TEXT = '\x1b[30m' + HIDE_CURSOR
-const SHOW_TEXT = '\x1b[0m' + SHOW_CURSOR
-const GET_CURSOR_POS = '\x1b[6n'
-
 function hideCursor() {
-	put(HIDE_CURSOR)
+	put(terminal.HIDE_CURSOR)
 }
 
 function showCursor() {
-	put(SHOW_CURSOR)
+	put(terminal.SHOW_CURSOR)
 }
 
 let cursorCB = null
@@ -64,7 +59,7 @@ function captureCursorPosition() {
 			x: parseInt(m[2]) - 1,
 			y: parseInt(m[1]) - 1
 		}
-		put(SHOW_TEXT)
+		put(terminal.SHOW_TEXT + terminal.SHOW_CURSOR)
 		cursorCB(cursor)
 		cursorCB = null
 		captureBuf = ''
@@ -84,7 +79,7 @@ async function putPrompt() {
 	let promptStr = await prompt(env.getUserStatus())
 	put(promptStr)
 	cursor = null
-    put(HIDE_TEXT + GET_CURSOR_POS)
+    put(terminal.HIDE_TEXT + terminal.HIDE_CURSOR + terminal.GET_CURSOR_POS)
 	return new Promise(resolve => cursorCB = resolve)
 }
 
@@ -101,10 +96,6 @@ function putCursorAtPrompt(lineLen) {
 	process.stdout.cursorTo(x, cursor.y + h)
 }
 
-function setTerminalTitle(title) {
-	process.stdout.write(`\x1b]0;${title}\x07`)
-}
-
 
 captureCursorPosition()
 
@@ -118,6 +109,5 @@ module.exports = {
 	lineEndPosition,
 	promptOwnsInput,
 	getPromptPosition,
-	adjustPromptPosition,
-	setTerminalTitle
+	adjustPromptPosition
 }

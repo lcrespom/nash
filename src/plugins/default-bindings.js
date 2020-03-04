@@ -7,6 +7,7 @@ const { history } = require('../history')
 const { getOption } = require('../startup')
 const { colorize } = require('../colors')
 const editor = require('../editor')
+const terminal = require('../terminal')
 
 
 //--------------- Line movement and deletion ---------------
@@ -174,7 +175,7 @@ function downLineOrHistory(line) {
 //--------------- Keys that break the editing process ---------------
 
 function enterRemoteMode() {
-	process.stdout.write('\x1b[30m')
+	process.stdout.write(terminal.HIDE_TEXT)
 	runner.write("\x05\x15PS1=$'\\x1E\\x1E>'\n")
 }
 

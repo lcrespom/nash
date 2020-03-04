@@ -1,7 +1,7 @@
 # ToDo
 
 ## Documentation
-- [ ] Screenshots
+- [x] Screenshots
 - [x] Features
 - [x] Examples directory with documented customizations
 - [x] Copy examples to `~/.nash` upon first startup
@@ -11,9 +11,12 @@
     - [x] Writing your own plugin (start/stop, etc)
 - [ ] Contribution guide
 - [ ] Make it visible
-    - [ ] Twitter
+    - [x] Twitter
     - [ ] Blog post
     - [ ] Youtube walkthrough
+
+## Installation
+- [x] Create npm package so it can be installed via `npm install`.
 
 ## Resiliency
 - [ ] Ensure default color palette / truecolor setting is good
@@ -26,18 +29,23 @@
 - [ ] Test multi-line prompt with completion, dir history, long lines, etc.
 
 ## Completion
+- [x] Option completion: parse option, remove extra chars
+- [ ] Completion is only case insensitive while showing the menu. It
+    should also be case insensitive when pressing tab.
+     => Hard: `ls` command is case-sensitive.
 - [ ] Mouse support
     - Keypress module supports it
     - Implement in menu module
     - Send command '\x1b[?1005h' to enable mouse x > 95
 
 ## History menu
-- [ ] Discard vertical menu, use single-column table menu + scroll bar
+- [x] Discard vertical menu, use single-column table menu /
+    scroll bar / cool background
 - [ ] Delete key removes line from history
 
 ## Syntax highlight
 - [ ] Aliases are not detected by the which command => implement
-    via runHiddenCommand at startup
+    via runHiddenCommand at startup (**next**)
  
 ## Inline JavaScript
 - [ ] Highlight JavaScript (and avoid bash parser error)
@@ -46,20 +54,9 @@
 - [ ] ...Or maybe just get rid of it
 
 ## Compatibility / Portability
-- [ ] GitBash support
-    - [ ] Just pty.spawn() the full commnand, then append the magic
-        *get status* sequence at the end of the command.
 - [ ] Docker instructions for Windows
-
-## Misc
-- [ ] Refactor all terminal escape codes in a separate module
-
-## GitBash support
-- [ ] Remove nasty clear screen at start of Git Bash
-- [ ] Implement user status gathering at end of runCommand
-- [ ] Improve startup code to locate bash in path or in default directory
-- [ ] Document how to launch it, in case bash.exe is not located
-- [ ] Properly parse PATH by accounting for ';' as the Windows path separator
-- [ ] Always display / instead of \
-    - [ ] In prompt
-    - [ ] While navigating through directories in completion menu
+- [x] GitBash support => unfeasible
+- [ ] Plain windows support from cmd/PowerShell. Options:
+    - Just pseudo-tty to CMD after minor translations, e.g. $EnvVar => %EnvVar%
+    - Interpret the bash AST tree, execute [ShellJS](https://github.com/shelljs/shelljs)
+        when available

@@ -15,7 +15,7 @@ class History {
         this.history = []
         this.index = 0
         this.maxSize = maxSize
-        this.historyPath = os.homedir() + '/.nash/' + filename
+        this.historyPath = os.homedir() + '/.nash/history/' + filename
         this.fd = null
     }
 

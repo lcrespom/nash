@@ -70,6 +70,8 @@ via the `module.exports` object:
 ## Plugins
 
 ### Prompt
+![The prompt, showing different git statuses](img/git-prompt.png)
+
 The prompt plugin displays the prompt in front of the cursor, and is made up of the following *segments*:
 - **User @ Host**: the user name and host name.
 - **Directory**: the current working directory.
@@ -105,6 +107,10 @@ The prompt plugin supports the following configuration options:
         the **maxDirs** parameter has shortened it.
 
 ### Tab completion
+![File completion, with scrollbar and file description](img/file-completion.png)
+![Option completion, with description from man pages](img/option-completion.png)
+
+
 The tab-completion plugin is activated by typing the `tab` key, and helps the user by completing the
 text at the left of the cursor. If there is only one possible completion, the text is added to the line.
 If multiple completions are available, a menu with all options is displayed, so the user can select
@@ -174,10 +180,13 @@ the end of the line, the `right` key can also be used.
 The suggestion color can be configured with the **colors.suggestion.scol** property.
 
 ### History menu
+![Interactive command history, each line with syntax highlight](img/command-history.png)
+
 Nash keeps track of both command and directory history:
-- **Command history**: all executed commands are recorded and added to the `~/.nash/history` file.
+- **Command history**: all executed commands are recorded and added to the
+    `~/.nash/history/[hostname].history` file.
 - **Directory history**: all directories visited via `cd` are recorded and added to the
-    `~/.nash/dirHistory` file.
+    `~/.nash/history/[hostname].dirHistory` file.
 
 This plugin provides menus for displaying and interactively searching through both of them:
 - When the user types the `page-up` key, a drop-down menu with recent commands is shown,

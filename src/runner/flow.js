@@ -55,15 +55,6 @@ function readCommandOutput(data) {
 	}
 }
 
-function chdirOrWarn(dir) {
-	try {
-		env.chdir(dir)
-	}
-	catch (err) {
-		process.stdout.write('\nWARNING: could not chdir to ' + dir + '\n')
-	}
-}
-
 function dataFromShell(data) {
 	switch (state) {
 		case TermState.waitingCommand:
@@ -106,6 +97,15 @@ function write(txt) {
 
 
 //-------------------- Running --------------------
+
+function chdirOrWarn(dir) {
+	try {
+		env.chdir(dir)
+	}
+	catch (err) {
+		process.stdout.write('\nWARNING: could not chdir to ' + dir + '\n')
+	}
+}
 
 async function runCommandInternal(cmd) {
 	return new Promise(resolve => {

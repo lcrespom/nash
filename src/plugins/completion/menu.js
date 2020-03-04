@@ -4,9 +4,8 @@ const { computeTableLayout, tableMenu } = require('node-terminal-menu')
 
 const requireNash = m => require('../../' + m)
 const env = requireNash('env')
-const {
-    startsWithCaseInsensitive, cutLastChars, removeAnsiCodes
-} = requireNash('utils')
+const { startsWithCaseInsensitive, cutLastChars } = requireNash('utils')
+const { removeAnsiCodes } = requireNash('terminal')
 const { adjustPromptPosition } = requireNash('prompt')
 const editor = requireNash('editor')
 const { colorize } = requireNash('colors')
@@ -70,9 +69,19 @@ function shortenPath(p, isDir) {
     return p
 }
 
+function optionMatch(opt) {
+    return opt.split(',')[0]
+        .split(' ')[0]
+        .split('=')[0]
+        .split('[')[0]
+}
+
 function replaceWordWithMatch(left, word, match) {
     let cutLen = word.length
-    // Normalize and simplify path
+    // Handle options
+    if (match.startsWith('-'))
+        return cutLastChars(left, cutLen) + optionMatch(match)
+    // Handle paths: normalize and simplify path
     let isDir = match.endsWith('/')
     match = shortenPath(match, isDir)
     // Quote blanks in file names
