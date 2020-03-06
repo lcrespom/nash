@@ -54,19 +54,19 @@ function start() {
 }
 
 function loadRunner() {
-	let burst = false
+	let spawn = false
 	if (process.platform.includes('win32'))
-		burst = true
+		spawn = true
 	for (let i = 2; i < process.argv.length; i++) {
-		if (process.argv[i] == '--burst')
-			burst = true
-		else if (process.argv[i] == '--flow')
-			burst = false
+		if (process.argv[i] == '--spawn')
+			spawn = true
+		else if (process.argv[i] == '--pty')
+			spawn = false
 	}
-	if (burst)
-		return require('./burst')
+	if (spawn)
+		return require('./spawn')
 	else
-		return require('./flow')
+		return require('./pty')
 }
 
 function setup() {
