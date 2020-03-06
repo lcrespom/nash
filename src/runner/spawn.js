@@ -1,88 +1,79 @@
 const childproc = require('child_process')
-const pty = require('node-pty')
 
 const { nashShutdown } = require('../startup')
 const env = require('../env')
 
 let shellName, shellParams
-let ptyProcess = null
-let pos = 0
+let status = null
 
-
-//-------------------- PTY --------------------
-
-function toHex(str) {
-    let hex = str.split('')
-        .map(ch => ch < ' '
-            ? '<' + ch.charCodeAt(0).toString(16) + '>'
-            : ch
-        )
-        .join('')
-    return hex + '\n---\n'
+function errorData(data) {
+    data = data.toString()
+    if (status == null) {
+        if (data.startsWith('~@%'))
+            status = data
+        else
+            process.stderr.write(data)
+    }
+    else {
+        status += data
+    }
 }
 
-function clearEscapes(data) {
-    return data
-        .replace('\x1b[2J', '')
-        .replace('\x1b[H', '')
-}
-
-function dataFromShell(data) {
-    // process.stdout.write(toHex(data))
-    // Skip initial clear screen
-    if (pos == 0) data = clearEscapes(data)
-    process.stdout.write(data)
-    pos += data.length
-    // TODO detect and grab user status
-    // let statusCmd = "__rc=$?;echo $'\x1E\x1E>';" +
-    //     'hostname;whoami;pwd;echo $HOME;echo $__rc;$(exit $__rc)'
-	// let output = await runHiddenCommand(statusCmd)
-	// let ustatus = parseUserStatus(output)
-	// env.setUserStatus(ustatus)
-	// if (pushDir)
-	// 	dirHistory.push(ustatus.cwd)
-	// if (process.cwd() != ustatus.cwdfull)
-	// 	chdirOrWarn(ustatus.cwdfull)
-}
-
-function createPTY(cmd) {
-    let term = process.env.TERM || 'xterm-256color'
-	let dir = process.cwd() || process.env.HOME
-    process.env.PS1 = env.NASH_MARK
-    let args = shellParams.concat(['-i', '-c', cmd])
-    return pty.spawn(shellName, args, {
-        name: term,
-        cols: process.stdout.columns,
-        rows: process.stdout.rows,
-        cwd: dir,
-        env: process.env
-	})
-}
-
-function resizePTY() {
-    ptyProcess.resize(process.stdout.columns, process.stdout.rows)
+function spawnBash(cmd) {
+    let suffix = '; { __rc=$?; echo ~@%; hostname;whoami;pwd;echo $HOME;echo $__rc; } >&2'
+    let args = shellParams.concat(['-i', '-c', cmd + suffix])
+    return childproc.spawn(shellName, args, { stdio: ['inherit', 'inherit', 'pipe'] })
 }
 
 async function runCommand(cmd, { pushDir }) {
     process.stdout.write('\n')
     if (cmd == 'exit')
         return shutdown()
-    pos = 0
-    ptyProcess = createPTY(cmd)
-    process.stdout.on('resize', resizePTY)
-    ptyProcess.onData(dataFromShell)
+    status = null
+    let spwn = spawnBash(cmd)
+    spwn.on('error', err => console.log(`Got error: ${err}`))
+    spwn.stderr.on('data', errorData)
     return new Promise(resolve => 
-        ptyProcess.onExit(evt => {
-            ptyProcess.kill(evt.signal)
-            process.stdout.off('resize', resizePTY)
-            ptyProcess = null
+        spwn.on('exit', rc => {
+            let ustatus = parseUserStatus(status)
+            env.setUserStatus(ustatus)
+            if (pushDir)
+                dirHistory.push(ustatus.cwd)
+            if (process.cwd() != ustatus.cwdfull)
+                chdirOrWarn(ustatus.cwdfull)
             resolve()
         })
     )
 }
 
+function parseUserStatus(output) {
+    let lines = output.split('\n')
+        .slice(1)
+		.map(l => l.trim())
+		.filter(l => l.length > 0)
+	return {
+		hostname: lines[0],
+		username: lines[1],
+		cwd: lines[2],
+		home: lines[3],
+		retCode: lines[4]
+	}
+}
+
+function chdirOrWarn(dir) {
+	try {
+        dir = dir.replace(/^\/([a-zA-Z])\//, '$1:\\')
+            .replace(/\//g, '\\')
+		env.chdir(dir)
+	}
+	catch (err) {
+		process.stdout.write('\nWARNING: could not chdir to ' + dir + '\n')
+	}
+}
+
 function write(txt) {
-	ptyProcess.write(txt)
+    throw new Exception('oops, spawn.write:' + txt)
+	//ptyProcess.write(txt)
 }
 
 
