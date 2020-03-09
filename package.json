@@ -1,6 +1,6 @@
 {
   "name": "bnash",
-  "version": "1.10.2",
+  "version": "1.10.3",
   "description": "A command-line editor for bash or compatible shells, aiming to provide great UX and productivity",
   "main": "src/nash.js",
   "bin": "src/nash.js",
@@ -24,7 +24,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^24.9.1",
-    "jest": "^24.9.0",
+    "jest": "^25.1.0",
     "pkg": "^4.4.3"
   },
   "dependencies": {
@@ -35,6 +35,9 @@
     "node-terminal-menu": "^3.4.1"
   },
   "pkg": {
-    "scripts": ["src/plugins/**/*.js", "examples/*.js"]
+    "scripts": [
+      "src/plugins/**/*.js",
+      "examples/*.js"
+    ]
   }
 }
