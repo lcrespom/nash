@@ -40,7 +40,7 @@ function setUserStatus(ustat) {
 	userStatus.fqdn = ustat.hostname
 	userStatus.hostname = ustat.fqdn.split('.')[0]
 	userStatus.cwdfull = ustat.cwd
-	userStatus.cwd = pathFromHome(ustat.cwd)
+	userStatus.cwd = ustat.cwd ? pathFromHome(ustat.cwd) : ''
 	userStatus.isRemote = userStatus.fqdn != os.hostname()
 	if (userStatus.isRemote != wasRemote) {
 		history.initialize(userStatus.fqdn)
