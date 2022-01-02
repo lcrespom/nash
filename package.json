@@ -1,43 +1,43 @@
 {
-  "name": "bnash",
-  "version": "1.10.3",
-  "description": "A command-line editor for bash or compatible shells, aiming to provide great UX and productivity",
-  "main": "src/nash.js",
-  "bin": "src/nash.js",
-  "scripts": {
-    "test": "jest --watch",
-    "start": "node src/nash.js $(which bash)",
-    "dist": "build/pkg.sh $npm_package_version"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/lcrespom/nash.git"
-  },
-  "keywords": [
-    "node",
-    "shell",
-    "bash",
-    "oh-my-zsh",
-    "productivity"
-  ],
-  "author": "Luis Crespo <lcrespom@gmail.com> (https://github.com/lcrespom)",
-  "license": "MIT",
-  "devDependencies": {
-    "@types/jest": "^24.9.1",
-    "jest": "^25.1.0",
-    "pkg": "^4.4.3"
-  },
-  "dependencies": {
-    "bash-parser": "^0.5.0",
-    "chalk": "^3.0.0",
-    "keypress": "^0.2.1",
-    "node-pty": "^0.9.0",
-    "node-terminal-menu": "^3.4.1"
-  },
-  "pkg": {
-    "scripts": [
-      "src/plugins/**/*.js",
-      "examples/*.js"
-    ]
-  }
+	"name": "bnash",
+	"version": "1.10.3",
+	"description": "A command-line editor for bash or compatible shells, aiming to provide great UX and productivity",
+	"main": "src/nash.js",
+	"bin": "src/nash.js",
+	"scripts": {
+		"test": "jest --watch",
+		"start": "node src/nash.js $(which bash)",
+		"dist": "build/pkg.sh $npm_package_version"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/lcrespom/nash.git"
+	},
+	"keywords": [
+		"node",
+		"shell",
+		"bash",
+		"oh-my-zsh",
+		"productivity"
+	],
+	"author": "Luis Crespo <lcrespom@gmail.com> (https://github.com/lcrespom)",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/jest": "^24.9.1",
+		"jest": "^25.1.0",
+		"pkg": "^4.4.3"
+	},
+	"dependencies": {
+		"bash-parser": "^0.5.0",
+		"chalk": "^3.0.0",
+		"keypress": "^0.2.1",
+		"node-pty": "^0.10.1",
+		"node-terminal-menu": "^3.4.1"
+	},
+	"pkg": {
+		"scripts": [
+			"src/plugins/**/*.js",
+			"examples/*.js"
+		]
+	}
 }
