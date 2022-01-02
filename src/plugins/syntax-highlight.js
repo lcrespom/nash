@@ -1,11 +1,14 @@
 const { registerLineDecorator } = require('../editor')
 const {
-    NodeType, NodeTypeNames, builtins, parseBash, traverseAST
+    NodeType,
+    NodeTypeNames,
+    builtins,
+    parseBash,
+    traverseAST
 } = require('../parser')
 const { getOption, setDefaultOptions } = require('../startup')
 const colors = require('../colors')
 const env = require('../env')
-
 
 function makeHL(type, loc) {
     return {
@@ -16,38 +19,28 @@ function makeHL(type, loc) {
 }
 
 function getCommandType(cmd) {
-    if (builtins.includes(cmd))
-        return NodeType.builtin
+    if (builtins.includes(cmd)) return NodeType.builtin
     let whichOut = env.which(cmd)
-    if (!whichOut)
-        return NodeType.commandError
+    if (!whichOut) return NodeType.commandError
     // This `which` output does not work in all bash environments ¯\_(ツ)_/¯
-    if (whichOut.endsWith('shell built-in command'))
-        return NodeType.builtin
-    if (whichOut.includes(': aliased to '))
-        return NodeType.alias
+    if (whichOut.endsWith('shell built-in command')) return NodeType.builtin
+    if (whichOut.includes(': aliased to ')) return NodeType.alias
     return NodeType.program
 }
 
 function getSuffixType(s, line) {
-    if (s.type == 'Redirect')
-        return NodeType.redirect
-    if (s.text[0] == '$')
-        return NodeType.environment
-    if (s.text[0] == '-')
-        return NodeType.option
+    if (s.type == 'Redirect') return NodeType.redirect
+    if (s.text[0] == '$') return NodeType.environment
+    if (s.text[0] == '-') return NodeType.option
     let ch = line[s.loc.start.char]
-    if (ch == '"' || ch == "'")
-        return NodeType.quote
+    if (ch == '"' || ch == "'") return NodeType.quote
     return NodeType.parameter
 }
 
 function highlightNode(node, hls, line) {
-    if (node.type != 'Command')
-        return
+    if (node.type != 'Command') return
     if (node.prefix)
-        for (let p of node.prefix)
-            hls.push(makeHL(NodeType.assignment, p.loc))
+        for (let p of node.prefix) hls.push(makeHL(NodeType.assignment, p.loc))
     if (node.name)
         hls.push(makeHL(getCommandType(node.name.text), node.name.loc))
     if (node.suffix)
@@ -70,8 +63,7 @@ function highlightComment(line, ast, hls) {
 function highlight(line) {
     let ast = parseBash(line)
     let hls = []
-    if (!ast)
-        return hls
+    if (!ast) return hls
     traverseAST(ast, n => {
         highlightNode(n, hls, line)
     })
@@ -80,8 +72,7 @@ function highlight(line) {
 }
 
 function colorize(line, hls, colorFunc = applyColor) {
-    if (hls.length == 0)
-        return line
+    if (hls.length == 0) return line
     let pos = 0
     let result = ''
     for (let hl of hls) {
@@ -92,11 +83,10 @@ function colorize(line, hls, colorFunc = applyColor) {
         result += colorFunc(chunk, hl)
         pos = hl.end + 1
     }
-    lastHL = hls.pop()
+    let lastHL = hls.pop()
     result += line.substr(lastHL.end + 1)
     return result
 }
-
 
 let hlColors = null
 
@@ -135,7 +125,6 @@ function start() {
     })
     setDefaults()
 }
-
 
 // Exports used only for testing
 module.exports = {

@@ -35,15 +35,15 @@ function expandJS(line) {
 //-------------------- Terminal state machine --------------------
 
 let TermState = {
-    waitingCommand: 'waiting',
-    readingCommand: 'reading',
-    runningCommand: 'running'
+    waitingCmd: 'waiting',
+    readingCmd: 'reading',
+    runningCmd: 'running'
 }
 
 let promptCB = null
 let theCommand = null
 let grabOutput = false
-let state = TermState.waitingCommand
+let state = TermState.waitingCmd
 let cmdOutput = ''
 
 function hideCommand(data) {
@@ -52,7 +52,7 @@ function hideCommand(data) {
         data = data.substr(cic)
         theCommand = theCommand.substr(cic)
         if (theCommand.length === 0) {
-            state = TermState.runningCommand
+            state = TermState.runningCmd
             if (data.length > 0) dataFromShell(data)
         }
     }
@@ -68,7 +68,7 @@ function readCommandOutput(data) {
     if (data.endsWith(env.NASH_MARK)) {
         data = data.substr(0, data.length - env.NASH_MARK.length)
         processCommandOutput(data)
-        state = TermState.waitingCommand
+        state = TermState.waitingCmd
         promptCB()
     } else {
         processCommandOutput(data)
@@ -77,11 +77,11 @@ function readCommandOutput(data) {
 
 function dataFromShell(data) {
     switch (state) {
-        case TermState.waitingCommand:
+        case TermState.waitingCmd:
             return
-        case TermState.readingCommand:
+        case TermState.readingCmd:
             return hideCommand(data)
-        case TermState.runningCommand:
+        case TermState.runningCmd:
             return readCommandOutput(data)
     }
 }
@@ -138,8 +138,7 @@ async function runCommandInternal(cmd) {
     return new Promise(resolve => {
         theCommand = cmd
         promptCB = resolve
-        state =
-            cmd.length > 0 ? TermState.readingCommand : TermState.runningCommand
+        state = cmd.length > 0 ? TermState.readingCmd : TermState.runningCmd
         ptyProcess.write(theCommand + '\n')
     })
 }
