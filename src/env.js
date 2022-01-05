@@ -1,56 +1,53 @@
 const os = require('os')
 const { execFileSync } = require('child_process')
+const fs = require('fs')
 
 const { memoize } = require('./utils')
 const history = require('./history')
-
 
 const NASH_MARK = '\x1E\x1E>'
 let userStatus = null
 let runnerRHC = undefined
 
-
 function runHiddenCommand(cmd) {
-	if (!runnerRHC)
-		runnerRHC = require('./runner').runHiddenCommand
-	return runnerRHC(cmd)
+    if (!runnerRHC) runnerRHC = require('./runner').runHiddenCommand
+    return runnerRHC(cmd)
 }
 
 function initUserStatus() {
-	let fqdn = os.hostname()
-	return {
-		cwd: pathFromHome(process.cwd(), os.homedir()),
-		username: os.userInfo().username,
-		hostname: fqdn.split('.')[0],
-		fqdn,
-		home: os.homedir(),
-		retCode: 0
-	}
+    let fqdn = os.hostname()
+    return {
+        cwd: pathFromHome(process.cwd(), os.homedir()),
+        username: os.userInfo().username,
+        hostname: fqdn.split('.')[0],
+        fqdn,
+        home: os.homedir(),
+        retCode: 0
+    }
 }
 
 function getUserStatus() {
-	if (!userStatus)
-		userStatus = initUserStatus()
-	return userStatus
+    if (!userStatus) userStatus = initUserStatus()
+    return userStatus
 }
 
 function setUserStatus(ustat) {
-	let wasRemote = userStatus ? userStatus.isRemote : false
-	userStatus = ustat
-	userStatus.fqdn = ustat.hostname
-	userStatus.hostname = ustat.fqdn.split('.')[0]
-	userStatus.cwdfull = ustat.cwd
-	userStatus.cwd = ustat.cwd ? pathFromHome(ustat.cwd) : ''
-	userStatus.isRemote = userStatus.fqdn != os.hostname()
-	if (userStatus.isRemote != wasRemote) {
-		history.initialize(userStatus.fqdn)
-		if (userStatus.isRemote) initWhichRemote()
-	}
+    let wasRemote = userStatus ? userStatus.isRemote : false
+    userStatus = ustat
+    userStatus.fqdn = ustat.hostname
+    userStatus.hostname = ustat.fqdn.split('.')[0]
+    userStatus.cwdfull = ustat.cwd
+    userStatus.cwd = ustat.cwd ? pathFromHome(ustat.cwd) : ''
+    userStatus.isRemote = userStatus.fqdn != os.hostname()
+    if (userStatus.isRemote != wasRemote) {
+        history.initialize(userStatus.fqdn)
+        // if (userStatus.isRemote)
+        initWhichRemote()
+    }
 }
 
 function chdir(dir) {
-	if (!getUserStatus().isRemote)
-		process.chdir(dir)
+    if (!getUserStatus().isRemote) process.chdir(dir)
 }
 
 function cwd() {
@@ -58,7 +55,7 @@ function cwd() {
 }
 
 function homedir() {
-	return getUserStatus().home
+    return getUserStatus().home
 }
 
 /**
@@ -68,43 +65,41 @@ function homedir() {
  * @param {string} home optional - the user's home directory
  */
 function pathFromHome(cwd, home) {
-	if (!home) home = homedir()
-	if (cwd.startsWith(home))
-		cwd = '~' + cwd.substr(home.length)
-	return cwd
+    if (!home) home = homedir()
+    if (cwd.startsWith(home)) cwd = '~' + cwd.substr(home.length)
+    return cwd
 }
 
 function commandOut2Array(out) {
-	let arr = out
-		.trim()
-		.split('\n')
-		.map(l => l.trim())
-		.filter(l => l.length > 0)
-	let rc = arr.pop()
-	return rc === '0' ? arr : []
+    let arr = out
+        .trim()
+        .split('\n')
+        .map(l => l.trim())
+        .filter(l => l.length > 0)
+    let rc = arr.pop()
+    return rc === '0' ? arr : []
 }
 
 function parseLSL(line) {
-	let m = line.match(/\d (\d\d:\d\d| \d\d\d\d) /)
-	if (!m) return line
-	let p = m.index + m[0].length
-	let name = line.substr(p).split(' -> ')[0]
-	let desc = line.substr(0, p - 1)
-	return name + '##' + desc
+    let m = line.match(/\d (\d\d:\d\d| \d\d\d\d) /)
+    if (!m) return line
+    let p = m.index + m[0].length
+    let name = line.substr(p).split(' -> ')[0]
+    let desc = line.substr(0, p - 1)
+    return name + '##' + desc
 }
 
 function escapeSpecialChars(str) {
-	return str.replace(/([\s\(\)])/g, '\\$1')
+    return str.replace(/([\s\(\)])/g, '\\$1')
 }
 
 async function glob(path) {
-	let command = `ls -plhd ${escapeSpecialChars(path)} | cat; echo $?`
-	let out = await runHiddenCommand(command)
-	return commandOut2Array(out)
-		.map(parseLSL)
-		.filter(f => f.includes('##'))
+    let command = `ls -plhd ${escapeSpecialChars(path)} | cat; echo $?`
+    let out = await runHiddenCommand(command)
+    return commandOut2Array(out)
+        .map(parseLSL)
+        .filter(f => f.includes('##'))
 }
-
 
 //------------------------- Which -------------------------
 
@@ -112,58 +107,75 @@ let whichLocal
 let remoteCommands
 
 function whichLocalSlow(command) {
-	try {
-		return execFileSync('/usr/bin/which', [ command ]).toString().trim()
-	}
-	catch (e) {
-		return null
-	}
+    try {
+        return execFileSync('/usr/bin/which', [command]).toString().trim()
+    } catch (e) {
+        return null
+    }
 }
 
 function refreshWhich() {
-	whichLocal = memoize(whichLocalSlow)
+    whichLocal = memoize(whichLocalSlow)
 }
 
 function whichRemote(command) {
-	if (!remoteCommands) return 'yes'
-	return remoteCommands.has(command) ? 'yes' : ''
+    if (!remoteCommands) return 'yes'
+    return remoteCommands.has(command) ? 'yes' : ''
 }
 
 async function sleep(delay) {
-	return new Promise(resolve => setTimeout(resolve, delay))
+    return new Promise(resolve => setTimeout(resolve, delay))
 }
 
 async function initWhichRemote() {
-	await sleep(200)
-	let path = await runHiddenCommand('echo $PATH')
-	path = path.trim().replace(/:/g, ' ')
-	let dircmd = `ls -1F ${path} | cat; echo $?`
-	await sleep(200)
-	let out = await runHiddenCommand(dircmd)
-	let dirs = commandOut2Array(out)
-		.filter(l => l.match(/[*@]$/))
-		.map(l => l.replace(/[*@]$/, ''))
-	if (dirs.length > 0)
-		remoteCommands = new Set(dirs)
-	else
-		remoteCommands = null
+    await sleep(200)
+    let path = await runHiddenCommand('echo $PATH')
+    if (!path || !path.trim()) path = process.env.PATH
+    // console.error('hello2')
+    // console.error(path)
+    // console.error(path.split(':'))
+    // console.error(JSON.stringify(path.split(':').map(p => `"${p}"`)))
+    path = path
+        .split(':')
+        .map(p => `"${p}"`)
+        .join(' ')
+    let dircmd = `ls -1F ${path} | cat; echo $?`
+    console.error(dircmd)
+    console.error('>>>>>1')
+    await sleep(200)
+    console.error('>>>>>2')
+    let out = await runHiddenCommand(dircmd)
+    console.error('>>>>>3')
+    console.error(out)
+    let dirs = commandOut2Array(out)
+        .filter(l => l.match(/[*@]$/))
+        .map(l => l.replace(/[*@]$/, ''))
+    if (dirs.length > 0) remoteCommands = new Set(dirs)
+    else remoteCommands = null
+    console.error(JSON.stringify(remoteCommands))
+    //console.log('remoteCommands:', remoteCommands)
 }
-
 
 function which(command) {
-	if (getUserStatus().isRemote)
-		return whichRemote(command)
-	else
-		return whichLocal(command)
+    return whichRemote(command)
+    // if (getUserStatus().isRemote)
+    // 	return whichRemote(command)
+    // else
+    // 	return whichLocal(command)
 }
 
-
 refreshWhich()
-
+initWhichRemote()
 
 module.exports = {
     NASH_MARK,
-	getUserStatus, setUserStatus,
-	cwd, chdir, homedir, glob, pathFromHome,
-	which, refreshWhich,
+    getUserStatus,
+    setUserStatus,
+    cwd,
+    chdir,
+    homedir,
+    glob,
+    pathFromHome,
+    which,
+    refreshWhich
 }
