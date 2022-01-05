@@ -4,8 +4,8 @@
  * @returns the converted string
  */
 function ucfirst(str) {
-	if (str == '') return str
-	return str.charAt(0).toUpperCase() + str.substr(1)
+    if (str == '') return str
+    return str.charAt(0).toUpperCase() + str.substr(1)
 }
 
 /**
@@ -14,22 +14,21 @@ function ucfirst(str) {
  * @param {string} s2 The starting string
  */
 function startsWithCaseInsensitive(s1, s2) {
-    return s1.toLocaleLowerCase()
-        .startsWith(s2.toLocaleLowerCase())
+    return s1.toLocaleLowerCase().startsWith(s2.toLocaleLowerCase())
 }
 
 /**
  * Counts the number of common characters at the start of two strings
- * @param {string} str1 
- * @param {string} str2 
+ * @param {string} str1
+ * @param {string} str2
  */
 function commonInitialChars(str1, str2) {
-	let len = Math.min(str1.length, str2.length)
-	let i
-	for (i = 0; i < len; i++) {
-		if (str1[i] !== str2[i]) break
-	}
-	return i
+    let len = Math.min(str1.length, str2.length)
+    let i
+    for (i = 0; i < len; i++) {
+        if (str1[i] !== str2[i]) break
+    }
+    return i
 }
 
 /**
@@ -41,36 +40,32 @@ function cutLastChars(str, numch) {
     return str.substr(0, str.length - numch)
 }
 
-
 /**
  * Creates a cache for the results of a given function
  * @param {Function} func the function to memoize
  * @returns a new function that gets values from the cache when available
  */
 function memoize(func) {
-	var cache = {}
-	return function () {
-		var key = JSON.stringify(arguments)
-		if (cache[key] !== undefined) {
-			return cache[key]
-		}
-		else {
-			val = func.apply(null, arguments)
-			cache[key] = val
-			return val
-		}
-	}
+    var cache = {}
+    return function () {
+        var key = JSON.stringify(arguments)
+        if (cache[key] !== undefined) {
+            return cache[key]
+        } else {
+            let val = func.apply(null, arguments)
+            cache[key] = val
+            return val
+        }
+    }
 }
-
 
 /**
  * Removes repeated items from an array
  * @param {Array} arr the input array
  */
 function removeRepeatedItems(arr) {
-	return Array.from(new Set(arr))
+    return Array.from(new Set(arr))
 }
-
 
 /**
  * Extracts a nested property from an object
@@ -81,12 +76,12 @@ function removeRepeatedItems(arr) {
  * @returns the property value, or undefined if the property is not present.
  */
 function getProp(obj, name) {
-	let names = name.split('.')
-	for (let n of names) {
-		obj = obj[n]
-		if (obj === undefined) return obj
-	}
-	return obj
+    let names = name.split('.')
+    for (let n of names) {
+        obj = obj[n]
+        if (obj === undefined) return obj
+    }
+    return obj
 }
 
 /**
@@ -98,13 +93,13 @@ function getProp(obj, name) {
  *  created.
  */
 function setProp(obj, name, value) {
-	let names = name.split('.')
-	let pname = names.pop()
-	for (let n of names) {
-		if (obj[n] === undefined) obj[n] = {}
-		obj = obj[n]
-	}
-	obj[pname] = value
+    let names = name.split('.')
+    let pname = names.pop()
+    for (let n of names) {
+        if (obj[n] === undefined) obj[n] = {}
+        obj = obj[n]
+    }
+    obj[pname] = value
 }
 
 /**
@@ -115,18 +110,17 @@ function setProp(obj, name, value) {
  * @returns the reversed object
  */
 function reverseObject(obj) {
-	return Object.keys(obj).reduce((a, k) => (a[obj[k]] = k, a), {})
+    return Object.keys(obj).reduce((a, k) => ((a[obj[k]] = k), a), {})
 }
 
-
 module.exports = {
-	ucfirst,
-	startsWithCaseInsensitive,
+    ucfirst,
+    startsWithCaseInsensitive,
     commonInitialChars,
-	cutLastChars,
-	memoize,
-	removeRepeatedItems,
-	getProp,
-	setProp,
-	reverseObject
+    cutLastChars,
+    memoize,
+    removeRepeatedItems,
+    getProp,
+    setProp,
+    reverseObject
 }
